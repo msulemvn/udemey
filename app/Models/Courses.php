@@ -10,6 +10,15 @@ class Courses extends Model
 {
     use HasFactory,SoftDeletes;
 
+    protected $fillable = [
+        'title', 
+        'slug', 
+        'description', 
+        'price', 
+        'discounted_price', 
+        'thumbnail_url', 
+        'user_id'
+    ];
    // A Course belongs to a Course Category
    public function category()
    {

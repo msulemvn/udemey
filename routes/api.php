@@ -39,13 +39,14 @@ Route::middleware('auth:api')->group(function () {
         Route::get('managers', 'show');
     });
 
-    //course api
-    Route::controller(CourseController::class)->middleware('role:admin')->group(function () {
-        Route::get('courses', 'index');           // List all courses
-        Route::get('courses/{id}', 'show');       // Get specific course details
-        Route::post('courses', 'store');          // Create a new course
-        Route::put('courses/{id}', 'update');     // Update a course
-        Route::delete('courses/{id}', 'destroy'); // Soft delete a course
-        Route::post('courses/{id}/restore', 'restore'); // Restore a soft-deleted course
+    Route::middleware(['auth:api', 'role:admin'])->group(function () {
+        Route::controller(CourseController::class)->group(function () {
+            Route::get('courses/show/all', 'index');           // List all courses
+            Route::get('courses/show/{id}', 'show');       // Get specific course details
+            Route::post('courses/create', 'store');          // Create a new course (no need for 'create' in URL)
+            Route::put('courses/{id}', 'update');     // Update a course
+            Route::delete('courses/{id}', 'destroy'); // Soft delete a course
+            Route::post('courses/{id}/restore', 'restore'); // Restore a soft-deleted course
+        });
     });
 });
