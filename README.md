@@ -9,7 +9,7 @@ composer install
 ```
 ### .env Setup
 ```
-DB_DATABASE=test-gorilla
+DB_DATABASE=udemey
 QUEUE_CONNECTION=database
 ```
 SMTP config
