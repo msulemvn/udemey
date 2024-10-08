@@ -5,6 +5,10 @@ use App\Http\Controllers\Auth\SendPasswordResetLinkController;
 use App\Http\Controllers\Auth\SendEmailVerificationNotificationController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\RegisterController;
+
+use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -12,7 +16,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 |--------------------------------------------------------------------------
 */
 
-Route::post('/register', [AuthController::class, 'register'])
+Route::post('/register', [RegisterController::class, 'register'])
     ->name('register');
 
 Route::post('/login', [AuthController::class, 'login'])

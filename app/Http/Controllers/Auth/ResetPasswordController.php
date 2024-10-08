@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Password;
-use App\Helpers\ApiResponse;
 use Illuminate\Support\Str;
+use App\Helpers\ApiResponse;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Validation\ValidationException;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 
 class ResetPasswordController extends Controller
 {

@@ -41,6 +41,11 @@ class AppServiceProvider extends ServiceProvider
 			\App\Interfaces\QuizRecordServiceInterface::class,
 			\App\Services\QuizRecordService::class
 		);
+
+		$this->app->bind(
+			\App\Interfaces\RegisterServiceInterface::class,
+			\App\Services\RegisterService::class
+		);
     }
 
     /**

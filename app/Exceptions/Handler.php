@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
             'ip' => $request->ip(),
         ]);
         ErrorLog::create($dto->toArray());
-        \Log::info('error_log_dto', $dto->toArray());
+        Log::info('error_log_dto', $dto->toArray());
 
         return response()->json(['error' => $e->getMessage()], 500);
     }
