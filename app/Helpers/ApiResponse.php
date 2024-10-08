@@ -23,6 +23,7 @@ class ApiResponse
     public static function success(
         $data = [],
         string $message = 'success',
+        int $statusCode = 200,
     ): JsonResponse {
         $response['message'] = $message;
 
@@ -55,7 +56,7 @@ class ApiResponse
             $response['data']['access_token'] = $access_token;
         }
 
-        return response()->json($response);
+        return response()->json($response, $statusCode);
     }
 
     /**
