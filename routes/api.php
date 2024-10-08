@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\Student\StudentController;
@@ -36,5 +37,15 @@ Route::middleware('auth:api')->group(function () {
         Route::post('add-manager', 'store');
         Route::post('delete-manager/{manager}', 'destroy');
         Route::get('managers', 'show');
+    });
+
+    //course api
+    Route::controller(CourseController::class)->middleware('role:admin')->group(function () {
+        Route::get('courses', 'index');           // List all courses
+        Route::get('courses/{id}', 'show');       // Get specific course details
+        Route::post('courses', 'store');          // Create a new course
+        Route::put('courses/{id}', 'update');     // Update a course
+        Route::delete('courses/{id}', 'destroy'); // Soft delete a course
+        Route::post('courses/{id}/restore', 'restore'); // Restore a soft-deleted course
     });
 });
