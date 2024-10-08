@@ -4,11 +4,8 @@ namespace App\Exceptions;
 
 use App\Models\ErrorLog;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use PhpParser\Node\Expr\Throw_;
 use Throwable;
 use App\DTOs\ErrorLogsDTO;
-use Illuminate\Support\Facades\Log;
-use function Ramsey\Uuid\v1;
 
 class Handler extends ExceptionHandler
 {
