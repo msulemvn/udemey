@@ -1,11 +1,12 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\SendPasswordResetLinkController;
-use App\Http\Controllers\Auth\SendEmailVerificationNotificationController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\SendPasswordResetLinkController;
+use App\Http\Controllers\Auth\SendEmailVerificationNotificationController;
 
 /*
 |--------------------------------------------------------------------------
