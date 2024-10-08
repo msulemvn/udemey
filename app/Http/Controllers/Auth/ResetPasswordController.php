@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Password;
 use App\Helpers\ApiResponse;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\Auth\ResetPasswordRequest;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Validation\ValidationException;
 
 class ResetPasswordController extends Controller
 {
