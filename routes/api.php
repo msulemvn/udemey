@@ -58,7 +58,6 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/delete-manager/{manager}', 'destroy');
         Route::get('/managers', 'show');
     });
-
     
     Route::middleware('role:admin')->group(function () {
 
