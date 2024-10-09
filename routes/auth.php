@@ -7,7 +7,7 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SendPasswordResetLinkController;
 use App\Http\Controllers\Auth\SendEmailVerificationNotificationController;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auth\TwoFactorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,4 +47,6 @@ Route::middleware('auth:api')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])
         ->name('logout');
+
+    Route::post('/2fa', [TwoFactorController::class, 'verify'])->name('2fa.verify');
 });
