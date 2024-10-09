@@ -82,6 +82,7 @@ class ApiResponse
 
         if ($errors != null && !is_array($errors)) {
             $errors = $errors->toArray();
+            $response['errors'] = $errors;
         }
 
         return response()->json($response, $statusCode);
