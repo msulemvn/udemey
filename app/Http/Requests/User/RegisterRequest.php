@@ -33,4 +33,10 @@ class RegisterRequest extends BaseRequest
             'password_confirmation.same' => 'Passwords do not match',
         ];
     }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = $this->validator->errors();
+        throw new HttpResponseException(ApiResponse::validationError(errors: $errors, statusCode: 422));
+    }
 }
