@@ -33,4 +33,6 @@ class RegisterRequest extends FormRequest
             'password_confirmation.same' => 'Passwords do not match',
         ];
     }
+
+    
 }
