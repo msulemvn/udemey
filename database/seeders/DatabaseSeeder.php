@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
             CategoriesSeeder::class,
             CourseCategoriesSeeder::class
         ]);
+        $this->call(ArticleSeeder::class);
     }
 }
