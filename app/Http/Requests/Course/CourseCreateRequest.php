@@ -29,6 +29,7 @@ class CourseCreateRequest extends FormRequest
             'price' => 'required|numeric',
             'discounted_price' => 'nullable|numeric',
             'thumbnail_url' => 'nullable|string',
+            'course_categories_id' => 'required|exists:course_categories,id', // Validation for course_categories_id
         ];
     }
     public function messages()

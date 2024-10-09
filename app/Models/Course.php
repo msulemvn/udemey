@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Courses extends Model
+class Course extends Model
 {
     use HasFactory,SoftDeletes;
 
@@ -17,17 +17,19 @@ class Courses extends Model
         'price', 
         'discounted_price', 
         'thumbnail_url', 
-        'user_id'
+        'user_id',
+        'course_categories_id'
     ];
    // A Course belongs to a Course Category
    public function category()
    {
-       return $this->belongsTo(CourseCategories::class, 'category_id');
+       return $this->belongsTo(CourseCategorie::class, 'course_categories_id');
    }
+   
 
    // A Course has many Articles
-   public function articles()
+   public function article()
    {
-       return $this->hasMany(Articles::class);
+       return $this->hasMany(Article::class);
    }
 }

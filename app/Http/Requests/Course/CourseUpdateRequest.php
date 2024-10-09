@@ -29,6 +29,7 @@ class CourseUpdateRequest extends FormRequest
             'price' => 'sometimes|numeric',
             'discounted_price' => 'nullable|numeric',
             'thumbnail_url' => 'nullable|string',
+            'course_categories_id' => 'sometimes|exists:course_categories,id'
         ];
     }
 }
