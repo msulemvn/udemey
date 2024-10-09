@@ -56,6 +56,7 @@ Route::controller(CourseCategoryController::class)->group(function () {
 Route::middleware('auth:api')->group(function () {
     Route::controller(UserController::class)->group(function () {
         Route::get('/profile', 'showUser');
+        Route::post('/2fa', 'Auth\TwoFactorController@verify')->name('2fa.verify');
     });
 
     /*
