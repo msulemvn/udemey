@@ -5,6 +5,9 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\Student\StudentController;
+
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\MenuItemController;
 // included auth.php
 require __DIR__ . '/auth.php';
 
@@ -39,7 +42,8 @@ Route::middleware('auth:api')->group(function () {
         Route::get('managers', 'show');
     });
 
-    Route::middleware(['auth:api', 'role:admin'])->group(function () {
+
+    Route::middleware( 'role:admin')->group(function () {
         Route::controller(CourseController::class)->group(function () {
             Route::get('courses/show/all', 'index');           // List all courses
             Route::get('courses/show/{id}', 'show');       // Get specific course details
@@ -50,3 +54,14 @@ Route::middleware('auth:api')->group(function () {
         });
     });
 });
+
+
+// Dynamic Page Management Routes
+Route::post('create-page', [PageController::class, 'create']);
+Route::put('update-page/{page}', [PageController::class, 'updatePage']);
+Route::delete('delete-page/{pageId}' , [PageController::class, 'deletePage']);
+Route::get('get-page-by-slug/{slug}', [PageController::class, 'getPageBySlug']);
+
+// Dynamic Menu Management Routes
+Route::post('menu-items', [MenuItemController::class, 'create']);
+Route::put('menu-items/{menuItem}', [MenuItemController::class, 'update']);
