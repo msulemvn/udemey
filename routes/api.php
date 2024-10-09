@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\Student\StudentController;
@@ -47,6 +48,16 @@ Route::middleware('auth:api')->group(function () {
             Route::put('courses/{id}', 'update');     // Update a course
             Route::delete('courses/{id}', 'destroy'); // Soft delete a course
             Route::post('courses/{id}/restore', 'restore'); // Restore a soft-deleted course
+
+            Route::post('/articles', [ArticleController::class, 'store']);  // Create new article
+            Route::get('/articles', [ArticleController::class, 'index']);  // Get all articles
+            Route::put('/articles/{id}', [ArticleController::class, 'update']);  // Update article
+            Route::delete('/articles/{id}', [ArticleController::class, 'destroy']);  // Delete article
+
         });
+    });
+
+    Route::middleware('auth:api')->group(function () {
+        Route::get('/articles/{id}', [ArticleController::class, 'show']); // Show article
     });
 });
