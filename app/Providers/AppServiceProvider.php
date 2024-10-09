@@ -46,6 +46,11 @@ class AppServiceProvider extends ServiceProvider
 			\App\Interfaces\RegisterServiceInterface::class,
 			\App\Services\RegisterService::class
 		);
+
+		$this->app->bind(
+			\App\Interfaces\CourseServiceInterface::class,
+			\App\Services\CourseService::class
+		);
     }
 
     /**

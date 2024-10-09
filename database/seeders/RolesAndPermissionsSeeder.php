@@ -55,6 +55,11 @@ class RolesAndPermissionsSeeder extends Seeder
             ]);
 
         $routeCollection = Route::getRoutes()->get();
+        $routeCollection = array_filter($routeCollection, function ($route) {
+            return !(
+                strpos($route->uri, '_ignition') === 0 || $route->uri === 'sanctum/csrf-cookie'
+            );
+        });
         // dd($routeCollection);
         foreach ($routeCollection as $value) {
             $name = $value->action;

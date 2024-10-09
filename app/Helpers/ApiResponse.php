@@ -73,12 +73,17 @@ class ApiResponse
         ], $statusCode);
     }
 
-    public static function validationError($errors)
-    {
-        return response()->json([
-            'success' => false,
-            'message' => 'Validation errors',
-            'errors' => $errors
-        ], 422);
+    public static function validationError(
+        $message = 'Validation errors',
+        $errors = [],
+        int $statusCode = 422,
+    ): JsonResponse {
+        $response['message'] = $message;
+
+        if ($errors != null && !is_array($errors)) {
+            $errors = $errors->toArray();
+        }
+
+        return response()->json($response, $statusCode);
     }
 }
