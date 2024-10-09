@@ -2,60 +2,64 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Helpers\ApiResponse;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Services\Auth\TwoFactorService;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Request;
+use PragmaRX\Google2FA\Google2FA;
+use Illuminate\Validation\ValidationException;
 
 class TwoFactorController extends Controller
 {
-    private $TwoFactorService;
 
-    public function __construct(TwoFactorService $TwoFactorService)
+    public function verify(Request $request)
     {
-        $this->TwoFactorService = $TwoFactorService;
-    }
+        $request->validate([
+            'one_time_password' => 'required|string',
+        ]);
 
-    public function verify2FA(Request $request)
-    {
-        $response = $this->TwoFactorService->verify2FA($request);
-        return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::error(message: $response['message'] ?? null, errors: $response['errors'], request: $response['request'] ?? null, exception: $response['exception'] ?? null, statusCode: $response['statusCode'] ?? Response::HTTP_BAD_REQUEST);
-    }
+        $user_id = $request->session()->get('2fa:user:id');
+        $remember = $request->session()->get('2fa:auth:remember', false);
+        $attempt = $request->session()->get('2fa:auth:attempt', false);
 
-    /**
-     * Generate a secret key for Google 2-Factor Authentication.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function generateSecretKey(Request $request)
-    {
-        $response = $this->TwoFactorService->generateSecretKey($request);
-        return $response ? ApiResponse::success(message: $response['message'], data: $response['data'] ?? []) : ApiResponse::error(message: $response['message'], errors: $response['errors'], request: $response['request'], exception: $response['exception'], statusCode: $response['statusCode']);
-    }
+        if (!$user_id || !$attempt) {
+            return redirect()->route('login');
+        }
 
-    /**
-     * Enable Google 2-Factor Authentication for the current user.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function enable2FA(Request $request)
-    {
-        $response = $this->TwoFactorService->enable2FA($request);
-        return $response ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::error(message: $response['message'] ?? null, errors: $response['errors'], request: $response['request'], exception: $response['exception'], statusCode: $response['statusCode']);
-    }
+        $user = User::find($user_id);
 
-    /**
-     * Disable Google 2-Factor Authentication for the current user.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function disable2FA(Request $request)
-    {
-        $response = $this->TwoFactorService->disable2FA($request);;
-        return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::error(message: $response['message'] ?? null, errors: $response['errors'], request: $response['request'] ?? null, exception: $response['exception'] ?? null, statusCode: $response['statusCode'] ?? Response::HTTP_INTERNAL_SERVER_ERROR);
+        if (!$user || !$user->uses_two_factor_auth) {
+            return redirect()->route('login');
+        }
+
+        $google2fa = new Google2FA();
+        $otp_secret = $user->google2fa_secret;
+
+        if (!$google2fa->verifyKey($otp_secret, $request->one_time_password)) {
+            throw ValidationException::withMessages([
+                'one_time_password' => [__('The one time password is invalid.')],
+            ]);
+        }
+
+        $guard = config('auth.defaults.guard');
+        $credentials = [$user->getAuthIdentifierName() => $user->getAuthIdentifier(), 'password' => $user->getAuthPassword()];
+
+        if ($remember) {
+            $guard = config('auth.defaults.remember_me_guard', $guard);
+        }
+
+        if ($attempt) {
+            $guard = config('auth.defaults.attempt_guard', $guard);
+        }
+
+        if (Auth::guard($guard)->attempt($credentials, $remember)) {
+            $request->session()->remove('2fa:user:id');
+            $request->session()->remove('2fa:auth:remember');
+            $request->session()->remove('2fa:auth:attempt');
+
+            return redirect()->intended('/');
+        }
+
+        return redirect()->route('login')->withErrors([
+            'password' => __('The provided credentials are incorrect.'),
+        ]);
     }
 }
