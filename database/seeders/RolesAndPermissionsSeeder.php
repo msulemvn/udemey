@@ -18,20 +18,41 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run()
     {
-        $adminRole = Role::create(['name' => 'admin']);
-        $managerRole = Role::create(['name' => 'manager']);
-        $studentRole = Role::create(['name' => 'student']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $managerRole = Role::firstOrCreate(['name' => 'manager']);
+        $studentRole = Role::firstOrCreate(['name' => 'student']);
 
-        // $permissions = [];
+        $permissions = [
+            'user can create courses',
+            'user can edit courses',
+            'user can delete courses',
+            'user can view courses',
+            'user can manage users',
+            'user can manage course content',
+            'user can purchase courses',
+            'user can access purchased courses',
+        ];
 
-        // foreach ($permissions as $permission) {
-        //     Permission::create(['name' => $permission]);
-        // }
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
 
-        // $adminRole->givePermissionTo([]);
-        // $managerRole->givePermissionTo([]);
-        // $studentRole->givePermissionTo([]);
+        if ($adminRole)
+            $adminRole->givePermissionTo([
+                'user can create courses',
+                'user can edit courses',
+                'user can delete courses',
+                'user can view courses',
+                'user can manage users',
+                'user can manage course content',
+            ]);
 
+        if ($studentRole)
+            $studentRole->givePermissionTo([
+                'user can view courses',
+                'user can purchase courses',
+                'user can access purchased courses',
+            ]);
 
         $routeCollection = Route::getRoutes()->get();
         $routeCollection = array_filter($routeCollection, function ($route) {
@@ -53,12 +74,13 @@ class RolesAndPermissionsSeeder extends Seeder
             }
         }
 
-        $adminUser = User::create([
+        $adminUser = User::firstOrCreate([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
             'password' => bcrypt('password'),
         ]);
 
-        $adminUser->assignRole('admin');
+        if ($adminUser)
+            $adminUser->assignRole('admin');
     }
 }
