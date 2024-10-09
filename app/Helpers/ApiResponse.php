@@ -85,5 +85,6 @@ class ApiResponse
         }
 
         return response()->json($response, $statusCode);
+
     }
 }
