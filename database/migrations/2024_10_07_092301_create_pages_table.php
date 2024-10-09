@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('pages', function (Blueprint $table) {
             $table->id(); // Primary key
             $table->string('title'); // Page title
-            $table->text('body')->nullable(); // Page content (optional)
+            $table->longtext('body')->nullable(); // Page content (optional)
             $table->string('slug')->unique(); // SEO-friendly slug
             $table->softDeletes();
             $table->timestamps(); // created_at and updated_at timestamps

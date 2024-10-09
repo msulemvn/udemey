@@ -2,22 +2,10 @@
 
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Requests\BaseRequest;
 
-class SendPasswordResetLinkRequest extends FormRequest
+class SendPasswordResetLinkRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -37,15 +25,5 @@ class SendPasswordResetLinkRequest extends FormRequest
             'email.email' => 'Invalid email format',
             'email.exists' => 'This email address is not linked to an existing account.'
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        $errors = $this->validator->errors();
-
-        $response =  response()->json([
-            'validation errors' => $errors
-        ], 400);
-        throw new HttpResponseException($response);
     }
 }

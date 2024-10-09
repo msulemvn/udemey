@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ArticleService;
-use App\Http\Requests\ArticleRequest;
+use App\Http\Requests\StoreArticleRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Exception;
@@ -33,7 +33,7 @@ class ArticleController extends Controller
     }
 
     // Create a new article (only for admin and managers)
-    public function store(ArticleRequest $request)
+    public function store(StoreArticleRequest $request)
     {
         try {
 

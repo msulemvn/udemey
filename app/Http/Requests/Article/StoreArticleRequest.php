@@ -2,17 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
-
-
-class ArticleRequest extends FormRequest
+class StoreArticleRequest extends BaseRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
 
     public function rules()
     {
@@ -48,14 +39,5 @@ class ArticleRequest extends FormRequest
 
             'body.string' => 'Body must be a string',
         ];
-    }
-    protected function failedValidation(Validator $validator)
-    {
-        $errors = $this->validator->errors();
-
-        $response =  response()->json([
-            'validation errors' => $errors
-        ], 400);
-        throw new HttpResponseException($response);
     }
 }

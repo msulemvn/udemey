@@ -8,15 +8,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -40,15 +31,5 @@ class StoreRequest extends FormRequest
             'email.email' => 'The email must be a valid email address.',
             'email.unique' => 'Account already exists. Consider signing in.',
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        $errors = $this->validator->errors();
-
-        $response =  response()->json([
-            'validation errors' => $errors
-        ], 400);
-        throw new HttpResponseException($response);
     }
 }

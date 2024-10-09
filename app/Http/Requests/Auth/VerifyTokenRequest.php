@@ -2,23 +2,11 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Helpers\ApiResponse;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Requests\BaseRequest;
 
-class VerifyTokenRequest extends FormRequest
+
+class VerifyTokenRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -30,10 +18,5 @@ class VerifyTokenRequest extends FormRequest
             'email' => 'required|email|max:255|exists:users,email',
             'token' => 'required|string',
         ];
-    }
-
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(ApiResponse::error('Invalid or expired token', 401));
     }
 }
