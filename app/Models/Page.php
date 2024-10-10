@@ -13,24 +13,37 @@ class Page extends Model
     {
         parent::boot();
 
-        // Automatically create the slug when creating a new page
-        static::creating(function ($page)
-        {
-            // Generate the slug from the title if it's not already set
-            $page->slug = Str::slug($page->title);
+
+        static::creating(function ($page){
+
+            $page->slug = static::generateUniqueSlug($page->title);
         });
 
         static::saving(function ($page) {
-            // Check if the title has changed and update the slug accordingly
+
             if ($page->isDirty('title')) {
-                $page->slug = Str::slug($page->title);
+            
+                $page->slug = static::generateUniqueSlug($page->title);
             }
         });
     }
 
-    // protected $guarded = [
-    //     'slug'
-    // ];
+    protected static function generateUniqueSlug($title)
+    {
+        
+        $slug = Str::slug($title);
+        $originalSlug = $slug;
+        $count = 1;
+
+        while (static::where('slug', $slug)->exists()) {
+
+            $slug = "{$originalSlug}-{$count}";
+            $count++;
+        }
+
+        return $slug;
+    }
+
     protected $fillable = [
         'title',
         'body',

@@ -7,7 +7,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\Student\StudentController;
 
-use App\Http\Controllers\PageController;
+use App\Http\Controllers\Page\PageController;
 use App\Http\Controllers\MenuItemController;
 // included auth.php
 require __DIR__ . '/auth.php';
@@ -63,9 +63,25 @@ Route::middleware('auth:api')->group(function () {
 
 
         Route::controller(CourseController::class)->group(function () {
+
             Route::post('/create-course', 'store');
             Route::put('/update-course/{id}', 'update');
             Route::delete('/delete-course/{id}', 'destroy');
+
+            Route::get('courses/show/all', 'index');           
+            Route::get('courses/show/{id}', 'show');      
+            Route::post('courses/create', 'store');          
+            Route::put('courses/{id}', 'update');     
+            Route::delete('courses/{id}', 'destroy'); 
+            Route::post('courses/{id}/restore', 'restore'); 
+        });
+
+        Route::controller(PageController::class)->group(function () {
+
+            Route::post('pages/create', 'create');
+            Route::put('pages/update/{pageId}', 'update');
+            Route::delete('pages/delete/{pageId}' , 'destroy');
+
         });
 
         Route::controller(ArticleController::class)->group(function () {
@@ -78,15 +94,14 @@ Route::middleware('auth:api')->group(function () {
     Route::controller(ArticleController::class)->group(function () {
         Route::get('/articles/{id}', 'show');
     });
+
 });
 
-
-// Dynamic Page Management Routes
-Route::post('create-page', [PageController::class, 'create']);
-Route::put('update-page/{page}', [PageController::class, 'updatePage']);
-Route::delete('delete-page/{pageId}' , [PageController::class, 'deletePage']);
-Route::get('get-page-by-slug/{slug}', [PageController::class, 'getPageBySlug']);
-
-// Dynamic Menu Management Routes
 Route::post('menu-items', [MenuItemController::class, 'create']);
 Route::put('menu-items/{menuItem}', [MenuItemController::class, 'update']);
+
+Route::controller(PageController::class)->group(function () {
+
+Route::get('pages/get-page-by-slug/{slug}', 'getPageBySlug');
+
+});
