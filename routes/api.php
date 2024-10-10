@@ -31,6 +31,11 @@ Route::controller(CourseController::class)->group(function () {
     Route::get('/courses/{id}', 'show');       
     Route::get('/courses/{id}/articles', 'getArticlewithCourse');
 });
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('/categories', 'index');           // List all courses
+    Route::get('/categories/{id}', 'show');      // Get specific course details
+    Route::get('/categories/{id}/course-categories', 'getCategoryCourseCategories');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -77,12 +82,9 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('/delete-course/{id}', 'destroy');
         });
         Route::controller(CategoryController::class)->group(function () {
-            Route::get('/categories', 'index');
             Route::post('/create-category', 'store');
-            Route::get('/categories/{id}', 'show');
             Route::put('/update-category/{id}', 'update');
             Route::delete('/delete-category/{id}', 'destroy');
-            Route::get('/categories/{id}/course-categories', 'getCategoryCourseCategories');
         });
         Route::controller(UserController::class)->group(function () {
             Route::get('/users', 'show');
