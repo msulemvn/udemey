@@ -42,6 +42,16 @@ class PageController extends Controller
         return $this->pageService->getPageBySlug($slug);
     }
 
+    public function getPageById($pageId)
+    {
+        return $this->pageService->getPageById($pageId);
+    }
+
+    public function getPages()
+    {
+        return $this->pageService->getPages();
+    }
+    
     public function destroy($pageId)
     {
         return $this->pageService->deletePage($pageId);
