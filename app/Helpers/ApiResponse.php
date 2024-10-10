@@ -73,7 +73,6 @@ class ApiResponse
      */
     public static function error(string $message = 'An error occurred', Request $request = null, Throwable $exception = null,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR)
     {
-        //Response::HTTP_OK
         if ($request && $exception) {
             $dto = new ErrorLogsDTO([
                 'request_log_id' => $request['request_log_id'],
