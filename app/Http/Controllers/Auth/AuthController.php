@@ -14,7 +14,7 @@ class AuthController extends Controller
         // Retrieve the validated input data...
         $validated = $request->validated();
         $token = Auth::attempt($validated);
-        return $token ? ApiResponse::success(data: ['access_token' => $token]) : ApiResponse::error('Invalid credentials', 401);
+        return $token ? ApiResponse::success(data: ['access_token' => $token]) : ApiResponse::error('Invalid credentials', statusCode: Response::HTTP_UNAUTHORIZED);
     }
 
     public function logout()

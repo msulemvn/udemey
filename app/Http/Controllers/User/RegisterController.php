@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\User;
 
 use App\Helpers\ApiResponse;
-use App\Services\RegisterService;
+use App\Services\User\RegisterService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\User\RegisterRequest;
 
 class RegisterController extends Controller
 {
@@ -18,7 +18,7 @@ class RegisterController extends Controller
 
     public function register(RegisterRequest $request)
     {
-    $user = $this->registerService->registerUser($request->validated());
-    return ApiResponse::success(message: 'You are successfully registered');
+        $user = $this->registerService->registerUser($request->validated());
+        return ApiResponse::success(message: 'You are successfully registered');
     }
 }

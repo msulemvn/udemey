@@ -14,11 +14,11 @@ class CreateCategoriesTable extends Migration
     public function up()
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->string('title')->unique(); // Category name (unique)
+            $table->id();
+            $table->string('title')->unique();
             $table->string('slug')->unique();
             $table->softDeletes();
-            $table->timestamps(); // created_at and updated_at timestamps
+            $table->timestamps();
         });
     }
 

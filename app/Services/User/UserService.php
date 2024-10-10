@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\ApiResponse;
 use \Illuminate\Http\JsonResponse;
-
+use Symfony\Component\HttpFoundation\Response;
 
 class UserService implements UserServiceInterface
 {
@@ -30,11 +30,11 @@ class UserService implements UserServiceInterface
 
         // Check if the current password is correct
         if (!Hash::check($data['current_password'], $user->password)) {
-            return ApiResponse::error('Current password is incorrect', 401);
+            return ApiResponse::error(message: 'Current password is incorrect', statusCode: Response::HTTP_UNAUTHORIZED);
         }
 
         if (Hash::check($data['new_password'], $user->password)) {
-            return ApiResponse::error('New password cannot be same as old', 401);
+            return ApiResponse::error(message: 'New password cannot be same as old', statusCode: Response::HTTP_UNAUTHORIZED);
         }
 
         // Update the user's password

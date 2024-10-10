@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Manager;
 
-use App\DTOs\UserDTO;
-use App\DTOs\ManagerDTO;
+use App\DTOs\User\UserDTO;
+use App\DTOs\Manager\ManagerDTO;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\Manager\StoreRequest;
 use App\Http\Requests\Manager\UpdateRequest;
@@ -12,7 +12,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
-
+use Symfony\Component\HttpFoundation\Response;
 
 class ManagerController extends Controller
 {
@@ -38,9 +38,9 @@ class ManagerController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            return ApiResponse::error(error: 'An error occurred while adding manager.');
+            return ApiResponse::error(message: 'An error occurred while adding manager.');
         }
-        return ApiResponse::error(error: 'Adding manager failed.', statusCode: 500);
+        return ApiResponse::error(message: 'Adding manager failed.', statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -102,7 +102,7 @@ class ManagerController extends Controller
             $manager->user->delete();
             $manager->delete();
         } catch (\Throwable $th) {
-            return ApiResponse::error(error: 'An error occured while deleting manager.');
+            return ApiResponse::error(message: 'An error occured while deleting manager.');
         }
 
         return ApiResponse::success(message: 'Successfully deleted manager.');

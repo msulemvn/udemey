@@ -1,13 +1,12 @@
 <?php
 
-namespace App\DTOs;
+namespace App\DTOs\Student;
 
 use App\DTOs\BaseDTO;
 
-class ManagerDTO extends BaseDTO
+class StudentDTO extends BaseDTO
 {
     public $account_id;
-
     public function __construct($applicationData)
     {
         $this->account_id = $applicationData['account_id'];

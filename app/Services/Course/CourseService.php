@@ -8,7 +8,7 @@ use App\Helpers\ApiResponse;
 use App\Interfaces\CourseServiceInterface;
 use App\Http\Requests\Course\CourseCreateRequest;
 use App\Http\Requests\Course\CourseUpdateRequest;
-
+use Symfony\Component\HttpFoundation\Response;
 
 class CourseService implements CourseServiceInterface
 {
@@ -16,7 +16,7 @@ class CourseService implements CourseServiceInterface
     public function index()
     {
         $courses = Course::all();
-        return ApiResponse::success(message: 'All courses', data: $courses, statusCode: 201);
+        return ApiResponse::success(message: 'All courses', data: $courses, statusCode: Response::HTTP_CREATED);
     }
 
     // Store a newly created course
@@ -56,7 +56,7 @@ class CourseService implements CourseServiceInterface
             'course_categories_id' => $validatedData['course_categories_id'], // Adding the category
         ]);
 
-        return ApiResponse::success(message: 'You have successfully created the course', data: $course, statusCode: 201);
+        return ApiResponse::success(message: 'You have successfully created the course', data: $course, statusCode: Response::HTTP_CREATED);
     }
 
 
@@ -66,7 +66,7 @@ class CourseService implements CourseServiceInterface
             $course = Course::findOrFail($id);
             return ApiResponse::success(message: 'Your specified course', data: $course);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return ApiResponse::error(error: 'Course not found', statusCode: 404);
+            return ApiResponse::error(message: 'Course not found', statusCode: Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -107,7 +107,7 @@ class CourseService implements CourseServiceInterface
 
             return ApiResponse::success(message: 'You are successfully update course', data: $course);
         } catch (\Exception $e) {
-            return ApiResponse::error(error: 'Course not found', statusCode: 404);
+            return ApiResponse::error(message: 'Course not found', statusCode: Response::HTTP_NOT_FOUND);
         }
     }
     // Remove the specified course
@@ -118,7 +118,7 @@ class CourseService implements CourseServiceInterface
             $course->delete(); // Use the delete() method for soft deletion
             return ApiResponse::success(message: 'You are successfully deleted the course');
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return ApiResponse::error(error: 'Course not found', statusCode: 404);
+            return ApiResponse::error(message: 'Course not found', statusCode: Response::HTTP_NOT_FOUND);
         }
     }
 }

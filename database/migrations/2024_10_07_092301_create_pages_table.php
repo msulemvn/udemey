@@ -14,12 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('pages', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->string('title'); // Page title
-            $table->longtext('body')->nullable(); // Page content (optional)
-            $table->string('slug')->unique(); // SEO-friendly slug
+            $table->id();
+            $table->string('title');
+            $table->longtext('body')->nullable();
+            $table->string('slug')->unique();
             $table->softDeletes();
-            $table->timestamps(); // created_at and updated_at timestamps
+            $table->timestamps();
         });
     }
 

@@ -19,8 +19,8 @@ return new class extends Migration
             $table->text('body')->nullable();
             $table->string('slug')->unique();
             $table->string('image_url')->nullable();
-            $table->foreignId('user_id')->constrained('users'); // Author of the article
-            $table->foreignId('course_id')->constrained('courses'); // Foreign key linking to courses
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('course_id')->constrained('courses');
             $table->enum('status', ['draft', 'published'])->default('draft');
             $table->softDeletes();
             $table->timestamps();

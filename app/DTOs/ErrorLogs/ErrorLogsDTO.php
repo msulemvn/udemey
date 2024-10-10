@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTOs;
+namespace App\DTOs\ErrorLogs;
 
 use App\DTOs\BaseDTO;
 

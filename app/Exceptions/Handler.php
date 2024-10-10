@@ -6,7 +6,7 @@ use App\Models\ErrorLog;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Log;
 use Throwable;
-use App\DTOs\ErrorLogsDTO;
+use App\DTOs\ErrorLogs\ErrorLogsDTO;
 
 class Handler extends ExceptionHandler
 {

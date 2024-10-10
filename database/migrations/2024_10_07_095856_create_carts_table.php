@@ -14,12 +14,12 @@ class CreateCartsTable extends Migration
     public function up()
     {
         Schema::create('cart', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Foreign key referencing users
-            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade'); // Foreign key referencing courses
-            $table->integer('quantity')->default(1); // Quantity of the course in the cart
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
+            $table->integer('quantity')->default(1);
             $table->softDeletes();
-            $table->timestamps(); // created_at and updated_at timestamps
+            $table->timestamps();
         });
     }
 

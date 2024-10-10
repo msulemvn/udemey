@@ -24,15 +24,5 @@ class ArticleSeeder extends Seeder
             'course_id' => 1, // assuming the course with ID 1 exists
             'status' => 'published',
         ]);
-
-        Article::create([
-            'title' => 'Advanced Techniques',
-            'body' => 'This article dives into advanced PHP techniques.',
-            'slug' => Str::slug('Advanced Techniques'),
-            'image_url' => 'https://example.com/php-advanced.jpg',
-            'user_id' => 1, // assuming the user with ID 2 exists
-            'course_id' => 2, // assuming the course with ID 2 exists
-            'status' => 'draft',
-        ]);
     }
 }

@@ -14,16 +14,17 @@ class CreateCoursesTable extends Migration
     public function up()
     {
         Schema::create('courses', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->string('title'); // Course title
+            $table->id();
+            $table->string('title');
             $table->string('slug')->unique();
-            $table->text('description'); // Course description
-            $table->decimal('price', 10, 2); // Course price
-            $table->decimal('discounted_price', 10, 2)->nullable(); // Discounted price (nullable)
-            $table->string('thumbnail_url')->nullable(); // Thumbnail URL (nullable)
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Foreign key referencing the instructor (user)
+            $table->text('description');
+            $table->decimal('price', 10, 2);
+            $table->decimal('discounted_price', 10, 2)->nullable();
+            $table->string('thumbnail_url')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('course_categories_id')->constrained('course_categories')->onDelete('cascade');
             $table->softDeletes();
-            $table->timestamps(); // created_at and updated_at timestamps
+            $table->timestamps();
         });
     }
 

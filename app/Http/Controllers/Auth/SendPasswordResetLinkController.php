@@ -21,7 +21,7 @@ class SendPasswordResetLinkController extends Controller
         if ($status === Password::RESET_LINK_SENT) {
             return ApiResponse::success(message: 'Reset link sent successfully');
         } else {
-            return ApiResponse::error(error: 'Failed to send reset link');
+            return ApiResponse::error(message: 'Failed to send reset link');
         }
     }
 }

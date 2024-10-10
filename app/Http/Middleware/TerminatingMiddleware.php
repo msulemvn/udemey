@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use \App\Models\HttpRequest;
-use \App\DTOs\HttpRequestDTO;
+use \App\DTOs\HttpRequest\HttpRequestDTO;
 
 
 class TerminatingMiddleware

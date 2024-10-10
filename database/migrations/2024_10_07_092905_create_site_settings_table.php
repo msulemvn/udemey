@@ -14,10 +14,10 @@ class CreateSiteSettingsTable extends Migration
     public function up()
     {
         Schema::create('site_settings', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->string('key')->unique(); // Setting key (e.g., 'site_title', 'logo_url')
-            $table->text('value'); // Corresponding value for the setting
-            $table->timestamps(); // created_at and updated_at timestamps
+            $table->id();
+            $table->string('key')->unique();
+            $table->text('value');
+            $table->timestamps();
         });
     }
 

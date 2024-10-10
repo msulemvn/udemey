@@ -14,10 +14,11 @@ class CreateCourseCategoriesTable extends Migration
     public function up()
     {
         Schema::create('course_categories', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade'); // Foreign key referencing courses
-            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade'); // Foreign key referencing categories
-            $table->timestamps(); // created_at and updated_at timestamps
+            $table->id();
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->string('title');
+            $table->string('slug')->unique();
+            $table->timestamps();
         });
     }
 

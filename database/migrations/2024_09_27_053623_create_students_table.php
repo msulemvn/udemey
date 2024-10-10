@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('account_id');
             $table->foreign('account_id')->references('id')->on('users');
-            $table->string('phone', 12)->unique();
+            $table->string('photo')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -14,15 +14,15 @@ class CreateSubscriptionsTable extends Migration
     public function up()
     {
         Schema::create('subscriptions', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Foreign key referencing users
-            $table->string('plan'); // Subscription plan name
-            $table->timestamp('start_date')->default(now()); // Start date of the subscription
-            $table->timestamp('end_date')->nullable(); // End date of the subscription
-            $table->enum('status', ['active', 'inactive', 'expired'])->default('active'); // Subscription status
-            $table->boolean('is_trial')->default(true); // Indicates if the subscription is in trial period
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('plan');
+            $table->timestamp('start_date')->default(now());
+            $table->timestamp('end_date')->nullable();
+            $table->enum('status', ['active', 'inactive', 'expired'])->default('active');
+            $table->boolean('is_trial')->default(true);
             $table->softDeletes();
-            $table->timestamps(); // created_at and updated_at timestamps
+            $table->timestamps();
         });
     }
 

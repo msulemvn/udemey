@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTOs;
+namespace App\DTOs\HttpRequest;
 
 use App\DTOs\BaseDTO;
 

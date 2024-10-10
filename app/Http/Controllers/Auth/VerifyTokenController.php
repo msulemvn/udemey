@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\VerifyTokenRequest;
 use Illuminate\Support\Facades\Password;
 use App\Models\User;
+use Symfony\Component\HttpFoundation\Response;
 
 class VerifyTokenController extends Controller
 {
@@ -23,7 +24,7 @@ class VerifyTokenController extends Controller
         if (!$user) {
             return ApiResponse::error(
                 error: 'Invalid or expired token.',
-                statusCode: 401
+                statusCode: Response::HTTP_UNAUTHORIZED
             );
         }
 
@@ -36,7 +37,7 @@ class VerifyTokenController extends Controller
         } else {
             return ApiResponse::error(
                 error: 'Invalid or expired token',
-                statusCode: 401
+                statusCode: Response::HTTP_UNAUTHORIZED
             );
         }
     }

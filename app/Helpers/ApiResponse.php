@@ -2,12 +2,14 @@
 
 namespace App\Helpers;
 
-use Illuminate\Console\Concerns\HasParameters;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Spatie\Permission\Models\Role;
+use App\DTOs\ErrorLogs\ErrorLogsDTO;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Traits\HasRoles;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasPermissions;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApiResponse
 {
@@ -23,7 +25,7 @@ class ApiResponse
     public static function success(
         $data = [],
         string $message = 'success',
-        int $statusCode = 200,
+        int $statusCode = Response::HTTP_OK,
     ): JsonResponse {
         $response['message'] = $message;
 
@@ -63,20 +65,35 @@ class ApiResponse
      * Returns a JSON response with an error message and a specified status code.
      *
      * @param string $message The error message to be included in the response. Defaults to 'An error occurred'.
-     * @param int $statusCode The HTTP status code for the response. Defaults to 400.
+     * @param int $statusCode The HTTP status code for the response.
      * @return JsonResponse
      */
-    public static function error(string $error = 'An error occurred', int $statusCode = 400)
+    public static function error(string $message = 'An error occurred', Request $request = null, Throwable $exception = null,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR)
     {
+        //Response::HTTP_OK
+        if ($request && $exception) {
+            $dto = new ErrorLogsDTO([
+                'request_log_id' => $request['request_log_id'],
+                'line_number' => $exception->getLine(),
+                'function' => debug_backtrace()[1]['function'],
+                'file' => $exception->getFile(),
+                'exception_message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
+                'ip' => $request->ip(),
+            ]);
+            ErrorLog::create($dto->toArray());
+            Log::info('error_log_dto', $dto->toArray());
+        }
+
         return response()->json([
-            'error' => $error
+            'message' => $message
         ], $statusCode);
     }
 
     public static function validationError(
         $message = 'Validation errors',
         $errors = [],
-        int $statusCode = 422,
+        int $statusCode = Response::HTTP_BAD_REQUEST,
     ): JsonResponse {
         $response['message'] = $message;
 
