@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Article;
 
 use App\Services\ArticleService;
 use App\Http\Requests\StoreArticleRequest;
-use Illuminate\Http\Request;
+use App\Http\Controller;
 use Illuminate\Support\Facades\Auth;
 use Exception;
 

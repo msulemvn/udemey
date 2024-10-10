@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Course;
 
-use App\Models\Course;
-use Illuminate\Support\Str;
-use App\Helpers\ApiResponse;
 use App\Http\Requests\Course\CourseCreateRequest;
 use App\Http\Requests\Course\CourseUpdateRequest;
 use App\Services\CourseService;
-use Illuminate\Http\Request;
+use App\Http\Controller;
+
 
 class CourseController extends Controller
 {
@@ -23,14 +21,12 @@ class CourseController extends Controller
     public function index()
     {
         return $this->courseService->index();
-
     }
 
     // Store a newly created course
     public function store(CourseCreateRequest $request)
     {
         return $this->courseService->store($request);
-    
     }
 
 
@@ -42,7 +38,7 @@ class CourseController extends Controller
     // Update the specified course
     public function update(CourseUpdateRequest $request, $id)
     {
-        return $this->courseService->update($request,$id);
+        return $this->courseService->update($request, $id);
     }
     // Remove the specified course
     public function destroy($id)
