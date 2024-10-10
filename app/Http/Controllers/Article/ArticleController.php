@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Article;
 
 use App\Services\ArticleService;
 use App\Http\Requests\StoreArticleRequest;
-use App\Http\Controllers\Controller;
+use App\Http\Controller;
 use Illuminate\Support\Facades\Auth;
 use Exception;
 
