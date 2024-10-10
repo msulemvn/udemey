@@ -8,6 +8,8 @@ use App\Helpers\ApiResponse;
 use App\DTOs\Category\CategoryDTO;
 use Illuminate\Support\Facades\Log;
 use App\Interfaces\Category\CategoryServiceInterface;
+use Symfony\Component\HttpFoundation\Response;
+
 
 
 class CategoryService implements CategoryServiceInterface
@@ -18,7 +20,7 @@ class CategoryService implements CategoryServiceInterface
     {
         $categories = Category::all();
         if ($categories->isEmpty()) {
-            return ApiResponse::error(error: 'No categories available', statusCode: 200);
+            return ApiResponse::error(message: 'No categories available', statusCode: Response::HTTP_NOT_FOUND);
         }
         return ApiResponse::success(message: 'All categories retrieved successfully', data: $categories, statusCode: 201);
     }
@@ -52,7 +54,7 @@ class CategoryService implements CategoryServiceInterface
         } catch (\Exception $e) {
             // Log the error and return a generic response
             Log::error('Error creating category', ['message' => $e->getMessage()]);
-            return ApiResponse::error(error: 'Failed to create category', statusCode: 500);
+            return ApiResponse::error(message: 'Failed to create category', statusCode: Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -89,7 +91,7 @@ class CategoryService implements CategoryServiceInterface
             return ApiResponse::success(message: 'Category updated successfully', data: $category);
         } catch (\Exception $e) {
             Log::error('Error updating category', ['message' => $e->getMessage()]);
-            return ApiResponse::error(error: 'Failed to update category', statusCode: 500);
+            return ApiResponse::error(message: 'Failed to update category', statusCode: Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -103,7 +105,7 @@ class CategoryService implements CategoryServiceInterface
 
             return ApiResponse::success(message: 'Category deleted successfully');
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return ApiResponse::error(error: 'Category not found', statusCode: 404);
+            return ApiResponse::error(message: 'Category not found', statusCode: Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -114,7 +116,7 @@ class CategoryService implements CategoryServiceInterface
 
         // Check if the category exists
         if (!$category) {
-            return ApiResponse::error(error: 'Category not found', statusCode: 404);
+            return ApiResponse::error(message: 'Category not found', statusCode: Response::HTTP_NOT_FOUND);
         }
 
         // Return the course categories associated with the category
