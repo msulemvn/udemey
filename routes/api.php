@@ -32,8 +32,8 @@ Route::controller(CourseController::class)->group(function () {
     Route::get('/courses/{id}/articles', 'getArticlewithCourse');
 });
 Route::controller(CategoryController::class)->group(function () {
-    Route::get('/categories', 'index');           // List all courses
-    Route::get('/categories/{id}', 'show');      // Get specific course details
+    Route::get('/categories', 'index');      
+    Route::get('/categories/{id}', 'show');      
     Route::get('/categories/{id}/course-categories', 'getCategoryCourseCategories');
 });
 
