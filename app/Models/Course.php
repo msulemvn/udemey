@@ -20,11 +20,12 @@ class Course extends Model
         'user_id',
         'course_categories_id'
     ];
-    // A Course belongs to a Course Category
-    public function category()
-    {
-        return $this->belongsTo(CourseCategory::class, 'course_categories_id');
-    }
+
+   // A Course belongs to a Course Category
+   public function category()
+   {
+       return $this->belongsTo(CourseCategory::class, 'course_categories_id');
+   }
 
 
     // A Course has many Articles
