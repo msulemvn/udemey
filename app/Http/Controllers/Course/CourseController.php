@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Course;
 
+use App\Services\CourseService;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\CourseCreateRequest;
 use App\Http\Requests\Course\CourseUpdateRequest;
-use App\Services\CourseService;
-use App\Http\Controller;
 
 
 class CourseController extends Controller
