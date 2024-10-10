@@ -6,10 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Spatie\Permission\Models\Role;
 use App\DTOs\ErrorLogs\ErrorLogsDTO;
+use App\Models\ErrorLog;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Traits\HasPermissions;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class ApiResponse
 {
