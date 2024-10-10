@@ -9,10 +9,10 @@ use Illuminate\Support\Str;
 class Page extends Model
 {
     use HasFactory;
+
     protected static function boot()
     {
         parent::boot();
-
 
         static::creating(function ($page){
 
@@ -30,7 +30,6 @@ class Page extends Model
 
     protected static function generateUniqueSlug($title)
     {
-        
         $slug = Str::slug($title);
         $originalSlug = $slug;
         $count = 1;
@@ -40,10 +39,9 @@ class Page extends Model
             $slug = "{$originalSlug}-{$count}";
             $count++;
         }
-
         return $slug;
     }
-
+    
     protected $fillable = [
         'title',
         'body',
