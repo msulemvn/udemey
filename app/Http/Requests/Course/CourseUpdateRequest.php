@@ -14,7 +14,7 @@ class CourseUpdateRequest extends BaseRequest
     public function rules()
     {
         return [
-            'title' => 'sometimes|string|max:255',
+            'title' => 'sometimes|string|max:255' . $this->route('id'),
             'description' => 'sometimes|string',
             'price' => 'sometimes|numeric',
             'discounted_price' => 'nullable|numeric',

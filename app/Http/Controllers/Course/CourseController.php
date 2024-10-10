@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Course;
 
+use App\Services\Course\CourseService;
+use App\DTOs\Course\CourseDeleteDTO;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\CourseCreateRequest;
 use App\Http\Requests\Course\CourseUpdateRequest;
-use App\Services\CourseService;
-use App\Http\Controllers\Controller;
+
 
 
 class CourseController extends Controller
@@ -43,6 +45,7 @@ class CourseController extends Controller
     // Remove the specified course
     public function destroy($id)
     {
-        return $this->courseService->destroy($id);
+        $courseDeleteDTO = new CourseDeleteDTO($id);
+        return $this->courseService->destroy($courseDeleteDTO);
     }
 }
