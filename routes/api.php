@@ -6,9 +6,8 @@ use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\Student\StudentController;
-
 use App\Http\Controllers\Page\PageController;
-use App\Http\Controllers\MenuItemController;
+
 // included auth.php
 require __DIR__ . '/auth.php';
 
@@ -97,11 +96,10 @@ Route::middleware('auth:api')->group(function () {
 
 });
 
-Route::post('menu-items', [MenuItemController::class, 'create']);
-Route::put('menu-items/{menuItem}', [MenuItemController::class, 'update']);
-
 Route::controller(PageController::class)->group(function () {
-
-Route::get('pages/get-page-by-slug/{slug}', 'getPageBySlug');
+    
+    Route::get('pages/get-page-by-slug/{slug}', 'getPageBySlug');
+    Route::get('pages/get-page-by-id/{pageId}', 'getPageById');
+    Route::get('pages/get-pages', 'getPages');
 
 });
