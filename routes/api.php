@@ -6,6 +6,7 @@ use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\Student\StudentController;
+use App\Http\Controllers\Category\CategoryController;
 // included auth.php
 require __DIR__ . '/auth.php';
 
@@ -74,6 +75,14 @@ Route::middleware('auth:api')->group(function () {
             Route::post('/create-course', 'store');
             Route::put('/update-course/{id}', 'update');
             Route::delete('/delete-course/{id}', 'destroy');
+        });
+        Route::controller(CategoryController::class)->group(function () {
+            Route::get('/categories', 'index');
+            Route::post('/create-category', 'store');
+            Route::get('/categories/{id}', 'show');
+            Route::put('/update-category/{id}', 'update');
+            Route::delete('/delete-category/{id}', 'destroy');
+            Route::get('/categories/{id}/course-categories', 'getCategoryCourseCategories');
         });
         Route::controller(UserController::class)->group(function () {
             Route::get('/users', 'show');

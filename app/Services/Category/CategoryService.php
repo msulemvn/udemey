@@ -106,4 +106,18 @@ class CategoryService implements CategoryServiceInterface
             return ApiResponse::error(error: 'Category not found', statusCode: 404);
         }
     }
+
+    public function getCategoryCourseCategories($id)
+    {
+        // Retrieve the category along with its course categories
+        $category = Category::with('courseCategories')->find($id);
+
+        // Check if the category exists
+        if (!$category) {
+            return ApiResponse::error(error: 'Category not found', statusCode: 404);
+        }
+
+        // Return the course categories associated with the category
+        return ApiResponse::success(message: 'Course categories retrieved successfully', data: $category->courseCategories);
+    }
 }
