@@ -2,12 +2,9 @@
 
 namespace App\Http\Requests\Page;
 
-use App\Helpers\ApiResponse;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Requests\BaseRequest;
 
-class PageRequest extends FormRequest
+class PageRequest extends BaseRequest
 {
     public function authorize()
     {
@@ -32,8 +29,4 @@ class PageRequest extends FormRequest
         ];
     }
 
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(ApiResponse::validationError($validator->errors()));
-    }
 }
