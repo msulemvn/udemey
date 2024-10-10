@@ -18,7 +18,7 @@ class PageService
             'body' => $pageDTO->body,
         ]);
 
-        return ApiResponse::success( $page->toArray(), 'Page created successfully!', Response::HTTP_OK);
+        return ApiResponse::success( $page->toArray(), 'Page created successfully!', Response::HTTP_CREATED);
     }
 
     public function updatePage($pageId, UpdatePageDTO $updatePageDTO)
@@ -26,7 +26,7 @@ class PageService
         $page = Page::find($pageId);
 
         if (!$page) {
-            return ApiResponse::error(message:'Page not found!', 404);
+            return ApiResponse::error(message:'Page not found!', statusCode:Response::HTTP_NOT_FOUND);
         }
 
         $page->update([
@@ -41,10 +41,35 @@ class PageService
         $page = Page::where('slug', $slug)->first();
 
         if (!$page) {
-            return ApiResponse::error('Page not found!', 404);
+            return ApiResponse::error(message:'Page not found!',statusCode: Response::HTTP_NOT_FOUND);
         }
 
         return ApiResponse::success($page->toArray(), 'Page retrieved successfully!');
+    }
+
+    public function getPageById( $pageId)
+    {
+        $page = Page::where('id', $pageId)->first();
+
+        if (!$page) {
+            return ApiResponse::error(message:'Page not found!', statusCode: Response::HTTP_NOT_FOUND);
+        }
+
+        return ApiResponse::success($page->toArray(), 'Page retrieved successfully!');
+    }
+
+    public function getPages()
+    {
+        $pages = Page::all();
+
+        if(!$pages)
+        {
+            return ApiResponse::error(message:'Pages not found!', statusCode:Response::HTTP_NOT_FOUND);
+        }
+        else
+        {
+            return ApiResponse::success($pages->toArray(), message:'Pages retrieved successfully!', statusCode:Response::HTTP_OK);
+        }
     }
 
     public function deletePage(int $pageId)
@@ -52,11 +77,11 @@ class PageService
         $page = Page::find($pageId);
 
         if (!$page) {
-            return ApiResponse::error('Page not found!', 404);
+            return ApiResponse::error(message:'Page not found!', statusCode:Response::HTTP_NOT_FOUND);
         }
 
         $page->delete();
 
-        return ApiResponse::success('Page deleted successfully!');
+        return ApiResponse::success(null, 'Page deleted successfully!');
     }
 }
