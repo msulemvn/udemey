@@ -43,7 +43,6 @@ class ApiResponse
      */
     public static function error(string $message = null, array $errors = [], Request $request = null, Throwable $exception = null,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR)
     {
-        $response['message'] = $message ?? Response::$statusTexts[$statusCode];
         if ($request && $exception) {
             $dto = new ErrorLogsDTO([
                 'request_log_id' => $request['request_log_id'],
