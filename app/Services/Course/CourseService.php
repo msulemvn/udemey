@@ -3,13 +3,16 @@
 namespace App\Services\Course;
 
 use App\Models\Course;
-use App\DTOs\CourseDTO;
 use App\Models\ErrorLog;
 use App\DTOs\ErrorLogsDTO;
 use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
-use App\DTOs\CourseUpdateDTO;
+use App\DTOs\Course\CourseDTO;
+use App\DTOs\Course\CourseShowDTO;
+use App\DTOs\Course\CourseIndexDTO;
 use Illuminate\Support\Facades\Log;
+use App\DTOs\Course\CourseDeleteDTO;
+use App\DTOs\Course\CourseUpdateDTO;
 use App\Interfaces\CourseServiceInterface;
 use App\Http\Requests\Course\CourseCreateRequest;
 use App\Http\Requests\Course\CourseUpdateRequest;
@@ -21,21 +24,30 @@ class CourseService implements CourseServiceInterface
 
     public function index()
     {
-
+        // Get all courses
         $courses = Course::all();
+
         // Check if there are no courses
         if ($courses->isEmpty()) {
-            // Return a custom response for no courses
             return ApiResponse::error(error: 'No courses available at the moment', statusCode: 200);
         }
-        return ApiResponse::success(message: 'All courses retrieved successfully', data: $courses, statusCode: 201);
+
+        // Map each course to a CourseIndexDTO
+        $coursesDTO = $courses->map(function ($course) {
+            return (new CourseIndexDTO($course))->toArray();
+        });
+
+        // Return success response with DTO data
+        return ApiResponse::success(message: 'All courses retrieved successfully', data: $coursesDTO, statusCode: 201);
     }
+
 
     /************************************ Store a newly created course ************************************/
 
     public function store(CourseCreateRequest $request)
     {
         try {
+
             // Validate the incoming request
             $validatedData = $request->validated();
 
@@ -55,7 +67,6 @@ class CourseService implements CourseServiceInterface
             if ($slugCount > 0) {
                 $slug .= '-' . ($slugCount + 1);
             }
-
             // Prepare the course data using the DTO
             $courseDTO = new CourseDTO([
                 'title' => $validatedData['title'],
@@ -99,13 +110,21 @@ class CourseService implements CourseServiceInterface
 
     public function show($id)
     {
-        $course = Course::findOrFail($id);
-        if ($course->isEmpty()) {
-            // Return a custom response for no courses
-            return ApiResponse::error(error: 'Course not found', statusCode: 200);
+        try {
+            // Fetch the course by ID
+            $course = Course::findOrFail($id);
+
+            // Create a CourseShowDTO instance with the fetched course
+            $courseDTO = new CourseShowDTO($course);
+
+            // Return a successful response with the DTO data
+            return ApiResponse::success(data: $courseDTO->toArray());
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Handle case where course is not found
+            return ApiResponse::error(error: 'Course not found', statusCode: 404);
         }
-        return ApiResponse::success(message: 'Course retrieved successfully', data: $course);
     }
+
 
     /************************************ Update the specified course ************************************/
 
@@ -164,11 +183,11 @@ class CourseService implements CourseServiceInterface
 
     /************************************ Remove the specified course ************************************/
 
-    public function destroy($id)
+    public function destroy(CourseDeleteDTO $courseDeleteDTO)
     {
         try {
             // Find the course by ID or fail with an exception
-            $course = Course::findOrFail($id);
+            $course = Course::findOrFail($courseDeleteDTO->id);
 
             // Perform soft deletion
             $course->delete(); // This will perform soft delete if the model uses SoftDeletes

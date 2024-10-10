@@ -1,6 +1,8 @@
 <?php
 
-namespace App\DTOs;
+namespace App\DTOs\Course;
+
+use App\DTOs\BaseDTO;
 
 class CourseUpdateDTO extends BaseDTO
 {
