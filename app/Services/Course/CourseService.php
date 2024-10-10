@@ -4,7 +4,6 @@ namespace App\Services\Course;
 
 use App\Models\Course;
 use App\Models\ErrorLog;
-use App\DTOs\ErrorLogsDTO;
 use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use App\DTOs\Course\CourseDTO;
@@ -13,10 +12,11 @@ use App\DTOs\Course\CourseIndexDTO;
 use Illuminate\Support\Facades\Log;
 use App\DTOs\Course\CourseDeleteDTO;
 use App\DTOs\Course\CourseUpdateDTO;
+use App\DTOs\ErrorLogs\ErrorLogsDTO;
 use App\Interfaces\CourseServiceInterface;
+use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Course\CourseCreateRequest;
 use App\Http\Requests\Course\CourseUpdateRequest;
-use Symfony\Component\HttpFoundation\Response;
 
 class CourseService implements CourseServiceInterface
 {
@@ -29,7 +29,7 @@ class CourseService implements CourseServiceInterface
 
         // Check if there are no courses
         if ($courses->isEmpty()) {
-            return ApiResponse::error(error: 'No courses available at the moment', statusCode: 200);
+            return ApiResponse::error(message: 'No courses available at the moment', statusCode: Response::HTTP_NOT_FOUND);
         }
 
         // Map each course to a CourseIndexDTO
@@ -38,7 +38,7 @@ class CourseService implements CourseServiceInterface
         });
 
         // Return success response with DTO data
-        return ApiResponse::success(message: 'All courses retrieved successfully', data: $coursesDTO, statusCode: 201);
+        return ApiResponse::success(message: 'You have successfully created the course', data: $coursesDTO, statusCode: Response::HTTP_CREATED);
     }
 
 
@@ -56,7 +56,7 @@ class CourseService implements CourseServiceInterface
 
             if ($existingCourse) {
                 // If a course with the same title exists, return an error response
-                return ApiResponse::error(error: 'A course with this title already exists.', statusCode: 422);
+                return ApiResponse::error(message: 'A course with this title already exists.', statusCode: Response::HTTP_NOT_FOUND);
             }
 
             // Generate slug from title
@@ -81,8 +81,7 @@ class CourseService implements CourseServiceInterface
 
             // Create the course
             $course = Course::create($courseDTO->toArray());
-
-            return ApiResponse::success(message: 'Course created successfully', data: $course, statusCode: 201);
+            return ApiResponse::success(message: 'You have successfully created the course', data: $course, statusCode: Response::HTTP_CREATED);
         } catch (\Exception $e) {
             // Log the error in the database using the ErrorLogsDTO
             $dto = new ErrorLogsDTO([
@@ -100,9 +99,7 @@ class CourseService implements CourseServiceInterface
 
             // Also log the error using Laravel's logging system
             Log::error('Error updating course', $dto->toArray());
-
-            // Return a generic error response
-            return ApiResponse::error(error: 'Failed to create course', statusCode: 500);
+            return ApiResponse::error(message: 'Failed to create course', statusCode: Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -118,10 +115,11 @@ class CourseService implements CourseServiceInterface
             $courseDTO = new CourseShowDTO($course);
 
             // Return a successful response with the DTO data
-            return ApiResponse::success(data: $courseDTO->toArray());
+
+            return ApiResponse::success(data: $courseDTO->toArray(), statusCode: Response::HTTP_CREATED);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             // Handle case where course is not found
-            return ApiResponse::error(error: 'Course not found', statusCode: 404);
+            return ApiResponse::error(message: 'Course not found', statusCode: Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -136,8 +134,7 @@ class CourseService implements CourseServiceInterface
 
             // If a course with the same title exists, return an error response
             if ($existingCourse) {
-
-                return ApiResponse::error(error: 'A course with this title already exists.', statusCode: 200);
+                return ApiResponse::error(message: 'A course with this title already exists.', statusCode: Response::HTTP_NOT_FOUND);
             }
 
             // Generate slug from title
@@ -156,8 +153,7 @@ class CourseService implements CourseServiceInterface
 
             // Update the course using the DTO
             $course->update($courseUpdateDTO->toArray());
-
-            return ApiResponse::success(message: 'Course updated successfully', data: $course);
+            return ApiResponse::success(message: 'Course updated successfully', data: $course->toArray(), statusCode: Response::HTTP_CREATED);
         } catch (\Exception $e) {
             // Log the error in the database using the ErrorLogsDTO
             $dto = new ErrorLogsDTO([
@@ -177,7 +173,7 @@ class CourseService implements CourseServiceInterface
             Log::error('Error updating course', $dto->toArray());
 
             // Return a generic error response
-            return ApiResponse::error(error: 'Failed to update course', statusCode: 500);
+            return ApiResponse::error(message: 'Failed to update course', statusCode: Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -195,7 +191,7 @@ class CourseService implements CourseServiceInterface
             return ApiResponse::success(message: 'You have successfully deleted the course');
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             // Handle the case where the course is not found
-            return ApiResponse::error(error: 'Course not found', statusCode: 404);
+            return ApiResponse::error(message: 'Course not found', statusCode: Response::HTTP_NOT_FOUND);
         }
     }
 }
