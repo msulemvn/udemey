@@ -12,9 +12,4 @@ class UpdatePageDTO extends BaseDTO
     $this->body = $body;
   }
 
-  // public function getBody()
-  // {
-  //   return $this->body;
-  // }
-
 }
