@@ -2,9 +2,12 @@
 
 namespace App\Helpers;
 
+use Throwable;
+use App\Models\ErrorLog;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Log;
 use App\DTOs\ErrorLogs\ErrorLogsDTO;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Traits\HasRoles;

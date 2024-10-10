@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Article;
 
-use App\Services\ArticleService;
-use App\Http\Requests\StoreArticleRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Helpers\ApiResponse;
 use Exception;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Article\ArticleRequest;
+use App\Services\Article\ArticleService;
+use Symfony\Component\HttpFoundation\Response;
 
 class ArticleController extends Controller
 {
@@ -21,26 +23,29 @@ class ArticleController extends Controller
     public function index()
     {
         try {
-            if (Auth::user()->role === 'admin' || Auth::user()->role === 'manager' || Auth::user()->is_subscribed) {
-                $articles = $this->articleService->getAllArticles();
-                return response()->json(['articles' => $articles], 200);
-            }
+            //if (Auth::user()->role === 'admin' || Auth::user()->role === 'manager' || Auth::user()->is_subscribed) {
+            $articles = $this->articleService->getAllArticles();
+            // return response()->json(, 200);
+            return ApiResponse::success(data: ['articles' => $articles]);
 
-            return response()->json(['message' => 'Access denied. You must be subscribed.'], 403);
+            //}
+
+            //return response()->json(['message' => 'Access denied. You must be subscribed.'], 403);
         } catch (Exception $e) {
             return response()->json(['message' => 'Failed to retrieve articles', 'error' => $e->getMessage()], 500);
         }
     }
 
     // Create a new article (only for admin and managers)
-    public function store(StoreArticleRequest $request)
+    public function store(ArticleRequest $request)
     {
         try {
 
             $article = $this->articleService->createArticle($request->validated());
             return response()->json(['message' => 'Article created successfully', 'article' => $article], 201);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Failed to create article', 'error' => $e->getMessage()], 500);
+            return response()->json(['message' => 'Failed to create article', 'error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            //return ApiResponse::success(['message' => 'Failed to create article', 'error' => $e->getMessage()]);
         }
     }
 
@@ -48,17 +53,17 @@ class ArticleController extends Controller
     public function show($id)
     {
         try {
-            if (Auth::user()->role === 'admin' || Auth::user()->role === 'manager' || Auth::user()->is_subscribed) {
-                $article = $this->articleService->getArticleById($id);
+            //if (Auth::user()->role === 'admin' || Auth::user()->role === 'manager' || Auth::user()->is_subscribed) {
+            $article = $this->articleService->getArticleById($id);
 
-                if (!$article) {
-                    return response()->json(['message' => 'Article not found'], 404);
-                }
+            if (!$article) {
+                return response()->json(['message' => 'Article not found'], 404);
+                //  }
 
                 return response()->json(['article' => $article], 200);
             }
 
-            return response()->json(['message' => 'Access denied. You must be subscribed.'], 403);
+            //return response()->json(['message' => 'Access denied. You must be subscribed.'], 403);
         } catch (Exception $e) {
             return response()->json(['message' => 'Failed to retrieve article', 'error' => $e->getMessage()], 500);
         }
