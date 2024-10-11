@@ -106,7 +106,7 @@ Route::middleware('auth:api')->group(function () {
 
         Route::controller(PageController::class)->group(function () {
             Route::post('/create-page', 'create');
-            Route::put('/update-page', 'update');
+            Route::put('/update-page/{pageId}', 'update');
             Route::delete('/delete-page/{pageId}', 'destroy');
         });
         
