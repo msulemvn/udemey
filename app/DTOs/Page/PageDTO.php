@@ -10,7 +10,7 @@ class PageDTO extends BaseDTO
 
     public function __construct($pageData)
     {
-      $this->title = $pageData['title'];
-      $this->body = $pageData['body'];
+      $this->title = $pageData['title'] ?? null;
+      $this->body = $pageData['body'] ?? null;
     }
 }
