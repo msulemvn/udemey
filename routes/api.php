@@ -97,25 +97,26 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/managers', 'show');
         });
     });
-
      /*
     |--------------------------------------------------------------------------
     | Authenticated Routes: admin
     |--------------------------------------------------------------------------
     */
-
     Route::middleware('role:admin')->group(function () {
 
         Route::controller(PageController::class)->group(function () {
             Route::post('/create-page', 'create');
             Route::put('/update-page', 'update');
-            Route::get('/get-page-by-slug/{slug}', 'getPageBySlug');
-            Route::get('/get-page-by-id/{pageId}', 'getPageById');
-            Route::get('/get-all-pages', 'getPages');
             Route::delete('/delete-page/{pageId}', 'destroy');
-
-          
         });
         
     });
+    Route::controller(PageController::class)->group(function () {
+
+        Route::get('/get-all-pages', 'getPages');
+        Route::get('/get-page-by-id/{pageId}', 'getPageById');
+        Route::get('/get-page-by-slug/{slug}', 'getPageBySlug');
+
+    });
+
 });

@@ -50,20 +50,24 @@ class PageService
         return $page;
     }
 
+    // public function getPages()
+    // {
+    //     $pages = Page::all();
+
+    //     if(!$pages)
+    //     {
+    //         return ApiResponse::error(message:'Pages not found!', statusCode:Response::HTTP_NOT_FOUND);
+    //     }
+    //     else
+    //     {
+    //         return $pages;
+    //     }
+    // }
     public function getPages()
     {
         $pages = Page::all();
-
-        if(!$pages)
-        {
-            return ApiResponse::error(message:'Pages not found!', statusCode:Response::HTTP_NOT_FOUND);
-        }
-        else
-        {
-            return $pages;
-        }
+        return $pages;
     }
-
     public function deletePage(int $pageId)
     {
         $page = Page::find($pageId);
