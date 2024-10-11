@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Page\PageRequest;
 use App\Http\Requests\Page\CreatePageRequest;
 use App\Http\Requests\Page\UpdatePageRequest;
+use App\Models\Page;
+use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
 class PageController extends Controller
@@ -62,8 +64,25 @@ class PageController extends Controller
     
     public function destroy($pageId)
     {
-        $finalResponse = $this->pageService->deletePage($pageId);
+      try
+      {
+        $page = Page::find($pageId);
+        
+        if (!$page)
+        {
+          return ApiResponse::error(message: 'No page found with the provided ID',statusCode: Response::HTTP_NOT_FOUND);
+        }
+        $this->pageService->deletePage($pageId);
         return ApiResponse::success(message:'Page deleted successfully!', statusCode:Response::HTTP_OK);
+      }catch(Exception $e)
+      {
+        return ApiResponse::error(
+          message: 'Failed to delete the page',
+          exception: $e,
+          statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+      );
+      }
+        
 
     }
 }
