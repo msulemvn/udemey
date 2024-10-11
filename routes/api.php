@@ -5,6 +5,7 @@ use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Manager\ManagerController;
+use App\Http\Controllers\SiteSetting\SiteSettingController;
 use App\Http\Controllers\Student\StudentController;
 // included auth.php
 require __DIR__ . '/auth.php';
@@ -84,7 +85,6 @@ Route::middleware('auth:api')->group(function () {
     | Authenticated Routes: admin, manager
     |--------------------------------------------------------------------------
     */
-
     Route::middleware('role:admin,manager')->group(function () {
         Route::controller(StudentController::class)->group(function () {
             Route::post('/delete-student/{student}', 'destroy');
@@ -96,5 +96,10 @@ Route::middleware('auth:api')->group(function () {
             Route::post('/delete-manager/{manager}', 'destroy');
             Route::get('/managers', 'show');
         });
+    });
+
+    Route::controller(SiteSettingController::class)->group(function ()
+    {
+        Route::post('/create-site-setting', 'createSetting');
     });
 });
