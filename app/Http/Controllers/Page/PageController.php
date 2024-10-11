@@ -98,8 +98,22 @@ class PageController extends Controller
           exception: $e,
           statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
       );
-      }
-        
-
+      } 
     }
+    public function restore($pageId)
+    {
+        $restoredPage = $this->pageService->restorePage($pageId);
+
+        if (!$restoredPage) {
+            return ApiResponse::error(
+                message: 'Page not found!',
+                statusCode: Response::HTTP_NOT_FOUND
+            );
+        }
+        return ApiResponse::success(
+            message: 'Page restored successfully!',
+            statusCode: Response::HTTP_OK
+        );
+    }
+
 }
