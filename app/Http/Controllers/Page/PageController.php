@@ -33,13 +33,13 @@ class PageController extends Controller
 
     public function update(UpdatePageRequest $request, $pageId)
     {
-        $updatePageDTO = new PageDTO(
-            $request->input('body')
+        $updatedPage = $this->pageService->updatePage($pageId, $request->all());
+        if (!$updatedPage) {
+            return ApiResponse::error(message: 'Page not found!', statusCode: Response::HTTP_NOT_FOUND);
+        }
+        return ApiResponse::success(data: $updatedPage->toArray(), message: 'Page updated successfully!',
+        statusCode: Response::HTTP_OK
         );
-
-        $finalResponse = $this->pageService->updatePage($pageId, $updatePageDTO);
-        return ApiResponse::success(data:$finalResponse->toArray(),message:'Page updated successfully!', statusCode:Response::HTTP_OK);
-
     }
 
     public function getPageBySlug(string $slug)
@@ -59,51 +59,24 @@ class PageController extends Controller
     public function getPages()
     {
 
-      try {
+      try 
+      {
         $finalResponse = $this->pageService->getPages();
 
-        // Check if the response is empty
-        if ($finalResponse->isEmpty()) {
-            return ApiResponse::error(message: 'Pages not found!', statusCode: Response::HTTP_NOT_FOUND);
+        if ($finalResponse->isEmpty()) 
+        {
+          return ApiResponse::error(message: 'Pages not found!', statusCode: Response::HTTP_NOT_FOUND);
         }
 
         return ApiResponse::success(data: $finalResponse->toArray(), message: 'Pages retrieved successfully!', statusCode: Response::HTTP_OK);
-    } catch (Exception $e) {
-        return ApiResponse::error(
-            message: 'Unable to fetch pages',
-            exception: $e,
-            statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-        );
-    }
-      // try
-      // {
-      //     $finalResponse = $this->pageService->getPages();
-      //     // dd($finalResponse); // Make sure to remove this line for production or uncomment it for debugging
-      //     return ApiResponse::success(data: $finalResponse->toArray(), message: 'Pages retrieved successfully!', statusCode: Response::HTTP_OK);
-      // }
-      // catch(Exception $e)
-      // {
-      //     return ApiResponse::error(
-      //         message: 'Unable to fetch pages: ' . $e->getMessage(), // Include the exception message for debugging
-      //         exception: $e,
-      //         statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-      //     );
-      // }
-      // try
-      // {
-      //   $finalResponse = $this->pageService->getPages();
-      //   dd($finalResponse);
-      //   return ApiResponse::success(data:$finalResponse->toArray(), message:'Pages retrieved successfully!', statusCode:Response::HTTP_OK);
-      // }
-      // catch(Exception $e)
-      // {
-      //   return ApiResponse::error(
-      //     message: 'Unable to fetch pages',
-      //     exception: $e,
-      //     statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-      // );
-      // }
-        
+      }catch(Exception $e) 
+        {
+          return ApiResponse::error(
+              message: 'Unable to fetch pages',
+              exception: $e,
+              statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+          );
+        }   
     }
     
     public function destroy($pageId)
