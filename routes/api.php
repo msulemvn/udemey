@@ -6,6 +6,9 @@ use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\Page\PageController;
+
+use App\Http\Controllers\SiteSetting\SiteSettingController;
+
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\CourseCategory\CourseCategoryController;
@@ -146,4 +149,9 @@ Route::middleware('auth:api')->group(function () {
 
     });
 
+
+    Route::controller(SiteSettingController::class)->group(function ()
+    {
+        Route::post('/create-site-setting', 'createSetting');
+    });
 });
