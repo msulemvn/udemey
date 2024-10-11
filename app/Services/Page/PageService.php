@@ -16,19 +16,25 @@ class PageService
           return $page;
     }
 
-    public function updatePage($pageId, PageDTO $updatePageDTO)
+    public function updatePage($pageId, array $pageData)
     {
         $page = Page::find($pageId);
-
-        if (!$page) {
-            return ApiResponse::error(message:'Page not found!', statusCode:Response::HTTP_NOT_FOUND);
+    
+        if (!$page) 
+        {
+            return null; 
         }
-
-        $page->update([
-            'body' => $updatePageDTO->body,
-        ]);
-        return $page;
+    
+        $pageDTO = new PageDTO($pageData);
+    
+        $updateData = array_filter($pageDTO->toArray(), function ($value) {
+            return !is_null($value);
+        });
+    
+        $page->update($updateData);
+        return $page; 
     }
+
 
     public function getPageBySlug(string $slug)
     {
@@ -50,19 +56,6 @@ class PageService
         return $page;
     }
 
-    // public function getPages()
-    // {
-    //     $pages = Page::all();
-
-    //     if(!$pages)
-    //     {
-    //         return ApiResponse::error(message:'Pages not found!', statusCode:Response::HTTP_NOT_FOUND);
-    //     }
-    //     else
-    //     {
-    //         return $pages;
-    //     }
-    // }
     public function getPages()
     {
         $pages = Page::all();
@@ -75,7 +68,6 @@ class PageService
         if (!$page) {
             return ApiResponse::error(message:'Page not found!', statusCode:Response::HTTP_NOT_FOUND);
         }
-
         return $page->delete();
 
     }
