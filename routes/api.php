@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Article\ArticleController;
-use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\Page\PageController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\CourseCategory\CourseCategoryController;
 // included auth.php
 require __DIR__ . '/auth.php';
 
@@ -33,9 +34,14 @@ Route::controller(CourseController::class)->group(function () {
     Route::get('/courses/{id}/articles', 'getArticlewithCourse');
 });
 Route::controller(CategoryController::class)->group(function () {
-    Route::get('/categories', 'index');      
-    Route::get('/categories/{id}', 'show');      
+    Route::get('/categories', 'index');
+    Route::get('/categories/{id}', 'show');
     Route::get('/categories/{id}/course-categories', 'getCategoryCourseCategories');
+});
+Route::controller(CourseCategoryController::class)->group(function () {
+    Route::get('/course-categories', 'index');
+    Route::get('/course-categories/{id}', 'show');
+    Route::get('/course-categories/{id}/course', 'getCoursewithCourseCategories');
 });
 
 /*
@@ -87,8 +93,16 @@ Route::middleware('auth:api')->group(function () {
             Route::put('/update-category/{id}', 'update');
             Route::delete('/delete-category/{id}', 'destroy');
         });
-        Route::controller(UserController::class)->group(function () {
-            Route::get('/users', 'show');
+        Route::controller(CourseCategoryController::class)->group(function () {
+            Route::post('/create-course-categories', 'store');
+            Route::put('/update+-course-categories/{id}', 'update');
+            Route::delete('/course-categories/{id}', 'destroy');
+        });
+
+        Route::controller(ArticleController::class)->group(function () {
+            Route::post('/create-article', 'store');
+            Route::get('/articles', 'index');
+            Route::delete('/delete-article/{id}', 'destroy');
         });
     });
 

@@ -53,6 +53,7 @@ class CategoryController extends Controller
     {
         return $this->categoryService->destroy($id);
     }
+    /************************************ get Course_Categories ************************************/
 
     public function getCategoryCourseCategories($id)
     {

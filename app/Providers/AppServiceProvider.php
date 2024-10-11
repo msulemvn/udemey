@@ -56,6 +56,11 @@ class AppServiceProvider extends ServiceProvider
 			\App\Interfaces\Category\CategoryServiceInterface::class,
 			\App\Services\Category\CategoryService::class
 		);
+
+		$this->app->bind(
+			\App\Interfaces\CourseCategory\CourseCategoryServiceInterface::class,
+			\App\Services\CourseCategory\CourseCategoryService::class
+		);
     }
 
     /**

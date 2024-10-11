@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Helpers\ApiResponse;
-use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Auth\LoginRequest;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Traits\HasPermissions;
-use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
