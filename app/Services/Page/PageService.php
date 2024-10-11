@@ -71,4 +71,17 @@ class PageService
         return $page->delete();
 
     }
+
+    public function restorePage($pageId)
+    {
+        $page = Page::withTrashed()->find($pageId);
+        
+        if (!$page) 
+        {
+            return null;
+        }
+        $page->restore();
+        return $page;
+    }
+
 }
