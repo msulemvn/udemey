@@ -7,6 +7,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 use App\DTOs\ErrorLogs\ErrorLogsDTO;
+use App\Helpers\ApiResponse;
 
 class Handler extends ExceptionHandler
 {
@@ -40,21 +41,9 @@ class Handler extends ExceptionHandler
     ];
 
 
-    public function render($request, Throwable $e)
+    public function render($request, Throwable $th)
     {
-        $dto = new ErrorLogsDTO([
-            'request_log_id' => $request['request_log_id'],
-            'line_number' => $e->getLine(),
-            'function' => __FUNCTION__,
-            'file' => $e->getFile(),
-            'exception_message' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
-            'ip' => $request->ip(),
-        ]);
-        ErrorLog::create($dto->toArray());
-        Log::info('error_log_dto', $dto->toArray());
-
-        return response()->json(['error' => $e->getMessage()], 500);
+        return ApiResponse::error(errors: ['render' => $th->getMessage()], request: $request, exception: $th);
     }
 
     /**
