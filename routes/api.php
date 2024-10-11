@@ -160,4 +160,20 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/get-site-settings/{id}', 'getSettings');
 
         });
+
+     /*
+    |--------------------------------------------------------------------------
+    | Authenticated Routes: admin
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('role:admin')->group(function () {
+
+        Route::controller(PageController::class)->group(function () {
+            Route::post('/create-page', 'create');
+          
+        });
+        
+    });
+
 });
