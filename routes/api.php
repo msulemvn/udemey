@@ -32,29 +32,41 @@ Route::controller(CourseController::class)->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Authenticated Routes
+| Authenticated Routes: auth
 |--------------------------------------------------------------------------
 */
-
 Route::middleware('auth:api')->group(function () {
     Route::controller(UserController::class)->group(function () {
         Route::get('/profile', 'showUser');
     });
-
-    Route::controller(UserController::class)->middleware('role:admin')->group(function () {
-        Route::get('/users', 'show');
+    Route::controller(ArticleController::class)->group(function () {
+        Route::post('/create-article', 'store');
+        Route::get('/articles', 'index');
+        Route::delete('/delete-article/{id}', 'destroy');
+        Route::get('/articles/{id}', 'show');
     });
 
-    Route::controller(StudentController::class)->middleware('role:admin,manager')->group(function () {
-        Route::post('/delete-student/{student}', 'destroy');
-        Route::get('/students', 'show');
-    });
+    /*
+    |--------------------------------------------------------------------------
+    | Authenticated Routes: student
+    |--------------------------------------------------------------------------
+    */
 
-    Route::controller(ManagerController::class)->middleware('role:admin')->group(function () {
-        Route::post('/add-manager', 'store');
-        Route::post('/delete-manager/{manager}', 'destroy');
-        Route::get('/managers', 'show');
-    });
+    Route::middleware('role:student')->group(function () {});
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authenticated Routes: manager
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('role:manager')->group(function () {});
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authenticated Routes: admin
+    |--------------------------------------------------------------------------
+    */
 
     Route::middleware('role:admin')->group(function () {
         Route::controller(CourseController::class)->group(function () {
@@ -62,15 +74,27 @@ Route::middleware('auth:api')->group(function () {
             Route::put('/update-course/{id}', 'update');
             Route::delete('/delete-course/{id}', 'destroy');
         });
-
-        Route::controller(ArticleController::class)->group(function () {
-            Route::post('/create-article', 'store');
-            Route::get('/articles', 'index');
-            Route::delete('/delete-article/{id}', 'destroy');
+        Route::controller(UserController::class)->group(function () {
+            Route::get('/users', 'show');
         });
     });
 
-    Route::controller(ArticleController::class)->group(function () {
-        Route::get('/articles/{id}', 'show');
+    /*
+    |--------------------------------------------------------------------------
+    | Authenticated Routes: admin, manager
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('role:admin,manager')->group(function () {
+        Route::controller(StudentController::class)->group(function () {
+            Route::post('/delete-student/{student}', 'destroy');
+            Route::get('/students', 'show');
+        });
+
+        Route::controller(ManagerController::class)->group(function () {
+            Route::post('/add-manager', 'store');
+            Route::post('/delete-manager/{manager}', 'destroy');
+            Route::get('/managers', 'show');
+        });
     });
 });

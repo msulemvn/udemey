@@ -24,21 +24,25 @@ class CourseService implements CourseServiceInterface
 
     public function index()
     {
-        // Get all courses
-        $courses = Course::all();
+        try {
+            // Get all courses
+            $courses = Course::all();
 
-        // Check if there are no courses
-        if ($courses->isEmpty()) {
-            return ApiResponse::error(message: 'No courses available at the moment', statusCode: Response::HTTP_NOT_FOUND);
+            // Check if there are no courses
+            if ($courses->isEmpty()) {
+                return ApiResponse::error(message: 'No courses available at the moment', statusCode: Response::HTTP_NOT_FOUND);
+            }
+
+            // Map each course to a CourseIndexDTO
+            $coursesDTO = $courses->map(function ($course) {
+                return (new CourseIndexDTO($course))->toArray();
+            });
+
+            // Return success response with DTO data
+            return ApiResponse::success(message: 'You have successfully created the course', data: $coursesDTO, statusCode: Response::HTTP_CREATED);
+        } catch (\Throwable $th) {
+            return ApiResponse::error(message: 'Failed to show course', exception: $th, statusCode: Response::HTTP_NOT_FOUND);
         }
-
-        // Map each course to a CourseIndexDTO
-        $coursesDTO = $courses->map(function ($course) {
-            return (new CourseIndexDTO($course))->toArray();
-        });
-
-        // Return success response with DTO data
-        return ApiResponse::success(message: 'You have successfully created the course', data: $coursesDTO, statusCode: Response::HTTP_CREATED);
     }
 
 
@@ -82,24 +86,8 @@ class CourseService implements CourseServiceInterface
             // Create the course
             $course = Course::create($courseDTO->toArray());
             return ApiResponse::success(message: 'You have successfully created the course', data: $course, statusCode: Response::HTTP_CREATED);
-        } catch (\Exception $e) {
-            // Log the error in the database using the ErrorLogsDTO
-            $dto = new ErrorLogsDTO([
-                'request_log_id' => $request->get('request_log_id', null),
-                'line_number' => $e->getLine(),
-                'function' => __FUNCTION__,
-                'file' => $e->getFile(),
-                'exception_message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'ip' => $request->ip(),
-            ]);
-
-            // Create a log entry in the ErrorLog model
-            ErrorLog::create($dto->toArray());
-
-            // Also log the error using Laravel's logging system
-            Log::error('Error updating course', $dto->toArray());
-            return ApiResponse::error(message: 'Failed to create course', statusCode: Response::HTTP_NOT_FOUND);
+        } catch (\Throwable $th) {
+            return ApiResponse::error('Failed to create course', $request, $th, statusCode: Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -117,9 +105,8 @@ class CourseService implements CourseServiceInterface
             // Return a successful response with the DTO data
 
             return ApiResponse::success(data: $courseDTO->toArray(), statusCode: Response::HTTP_CREATED);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            // Handle case where course is not found
-            return ApiResponse::error(message: 'Course not found', statusCode: Response::HTTP_NOT_FOUND);
+        } catch (\Throwable $th) {
+            return ApiResponse::error(message: 'Failed to show course', exception: $th, statusCode: Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -154,26 +141,8 @@ class CourseService implements CourseServiceInterface
             // Update the course using the DTO
             $course->update($courseUpdateDTO->toArray());
             return ApiResponse::success(message: 'Course updated successfully', data: $course->toArray(), statusCode: Response::HTTP_CREATED);
-        } catch (\Exception $e) {
-            // Log the error in the database using the ErrorLogsDTO
-            $dto = new ErrorLogsDTO([
-                'request_log_id' => $request->get('request_log_id', null),
-                'line_number' => $e->getLine(),
-                'function' => __FUNCTION__,
-                'file' => $e->getFile(),
-                'exception_message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'ip' => $request->ip(),
-            ]);
-
-            // Create a log entry in the ErrorLog model
-            ErrorLog::create($dto->toArray());
-
-            // Also log the error using Laravel's logging system
-            Log::error('Error updating course', $dto->toArray());
-
-            // Return a generic error response
-            return ApiResponse::error(message: 'Failed to update course', statusCode: Response::HTTP_NOT_FOUND);
+        } catch (\Throwable $th) {
+            return ApiResponse::error(message: 'Failed to update course', request: $request, exception: $th, statusCode: Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -189,9 +158,8 @@ class CourseService implements CourseServiceInterface
             $course->delete(); // This will perform soft delete if the model uses SoftDeletes
 
             return ApiResponse::success(message: 'You have successfully deleted the course');
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            // Handle the case where the course is not found
-            return ApiResponse::error(message: 'Course not found', statusCode: Response::HTTP_NOT_FOUND);
+        } catch (\Throwable $th) {
+            return ApiResponse::error(message: 'Failed to delete course', exception: $th, statusCode: Response::HTTP_NOT_FOUND);
         }
     }
 }
