@@ -166,7 +166,6 @@ Route::middleware('auth:api')->group(function () {
     | Authenticated Routes: admin
     |--------------------------------------------------------------------------
     */
-
     Route::middleware('role:admin')->group(function () {
 
         Route::controller(PageController::class)->group(function () {
