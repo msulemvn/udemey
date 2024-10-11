@@ -8,7 +8,7 @@ class CreatePageRequest extends BaseRequest
 {
     public function authorize()
     {
-        return true; // Allow all authenticated users (customize as needed)
+        return true;
     }
 
     public function rules()
