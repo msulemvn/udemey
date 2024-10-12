@@ -28,7 +28,8 @@ require __DIR__ . '/auth.php';
 */
 Route::controller(CourseController::class)->group(function () {
     Route::get('/courses', 'index');           // List all courses
-    Route::get('/courses/{id}', 'show');       // Get specific course details
+    Route::get('/courses/{id}', 'show');       
+    Route::get('/courses/{id}/articles', 'getArticlewithCourse');
 });
 
 /*

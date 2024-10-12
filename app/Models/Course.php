@@ -21,7 +21,7 @@ class Course extends Model
 
 
     // A Course has many Articles
-    public function article()
+    public function articles()
     {
         return $this->hasMany(Article::class);
     }

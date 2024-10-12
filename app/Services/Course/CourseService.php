@@ -113,6 +113,25 @@ class CourseService implements CourseServiceInterface
         }
     }
 
+    public function getArticlewithCourse($id)
+    {
+        try {
+            $course = Course::with('articles')->find($id);
+
+            if (!$course) {
+                return ApiResponse::error(message: 'Course not found', statusCode: Response::HTTP_NOT_FOUND);
+            }
+            if ($course->articles->isEmpty()) {
+                return ApiResponse::error(message: 'No articles found for this course', statusCode: Response::HTTP_NOT_FOUND);
+            }
+
+            return ApiResponse::success(message: 'Articles retrieved successfully', data: $course->articles->toArray());
+        } catch (\Throwable $th) {
+            return ApiResponse::error(message: 'Failed to get articles', exception: $th);
+        }
+    }
+
+
     private function generateUniqueSlug($title)
     {
         $slug = Str::slug($title, '-');

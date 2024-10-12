@@ -45,4 +45,8 @@ class CourseController extends Controller
     {
         return $this->courseService->destroy($id);
     }
+    public function getArticlewithCourse($id)
+    {
+        return $this->courseService->getArticlewithCourse($id);
+    }
 }
