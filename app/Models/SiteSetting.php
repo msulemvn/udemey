@@ -8,15 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class SiteSetting extends Model
 {
     use HasFactory;
-
+    
     protected $fillable = [
-        'key',
-        'value'
+
+        'site_title',
+        'logo_path',
+        'copyright',
     ];
 
-    protected $hidden = [
-        'created_at',
-        'updated_at'
+    protected $hidden =[
 
+        'created_at',
+        'updated_at',
+        'deleted_at'
     ];
 }
