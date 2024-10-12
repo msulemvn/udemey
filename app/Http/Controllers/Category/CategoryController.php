@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Category;
 
 use App\Helpers\ApiResponse;
-use Illuminate\Http\Request;
 use App\Services\Category\CategoryService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\CategoryCreateRequest;
@@ -39,7 +38,6 @@ class CategoryController extends Controller
     public function show($id)
     {
         return $this->categoryService->show($id);
-        
     }
 
     /************************************ Update the specified category ************************************/

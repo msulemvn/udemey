@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Course;
 
 use App\Services\Course\CourseService;
-use App\DTOs\Course\CourseDeleteDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\CourseCreateRequest;
 use App\Http\Requests\Course\CourseUpdateRequest;

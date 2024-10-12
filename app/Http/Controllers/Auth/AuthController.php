@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Helpers\ApiResponse;
-use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Auth\LoginRequest;

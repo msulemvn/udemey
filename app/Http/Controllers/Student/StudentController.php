@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Student;
 
 use App\Helpers\ApiResponse;
-use App\Http\Requests\Student\StoreRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
 use App\Http\Controllers\Controller;
@@ -34,7 +33,7 @@ class StudentController extends Controller
                 'email' => $student->user->email,
                 'phone' => $student->phone,
             ];
-        }));
+        })->toArray());
     }
 
     /**

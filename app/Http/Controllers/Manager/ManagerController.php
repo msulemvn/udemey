@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Manager;
 use App\DTOs\User\UserDTO;
 use App\DTOs\Manager\ManagerDTO;
 use App\Helpers\ApiResponse;
-use App\Http\Requests\Manager\StoreRequest;
-use App\Http\Requests\Manager\UpdateRequest;
 use App\Models\Manager;
 use App\Models\User;
 use Illuminate\Support\Facades\Password;
@@ -64,7 +62,7 @@ class ManagerController extends Controller
                 'name' => $manager->user->name,
                 'email' => $manager->user->email,
             ];
-        }));
+        })->toArray());
     }
 
     /**
