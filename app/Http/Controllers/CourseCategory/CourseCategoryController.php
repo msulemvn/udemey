@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\CourseCategory;
 
-use App\Helpers\ApiResponse;
-
 use App\Http\Controllers\Controller;
 use App\Services\CourseCategory\CourseCategoryService;
 use App\Http\Requests\CourseCategory\CourseCategoryCreateRequest;
