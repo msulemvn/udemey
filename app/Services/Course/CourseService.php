@@ -20,15 +20,12 @@ class CourseService implements CourseServiceInterface
         try {
             $courses = Course::all();
 
-            if ($courses->isEmpty()) {
-                return ApiResponse::error(message: 'No courses available at the moment', statusCode: Response::HTTP_NOT_FOUND);
-            }
 
             foreach ($courses as $course) {
                 $course->short_description = json_decode($course->short_description);
             }
 
-            return ApiResponse::success(message: 'All courses', data: [$courses]);
+            return ApiResponse::success(message: 'All courses', data: $courses->toArray());
         } catch (\Throwable $th) {
             return ApiResponse::error(message: 'Failed to show courses', exception: $th);
         }
@@ -53,7 +50,7 @@ class CourseService implements CourseServiceInterface
             $courseDTO = new CourseDTO($request);
             $course = Course::create($courseDTO->toArray());
 
-            return ApiResponse::success(message: 'You have successfully created the course', data: [$course], statusCode: Response::HTTP_CREATED);
+            return ApiResponse::success(message: 'You have successfully created the course', data: $course->toArray(), statusCode: Response::HTTP_CREATED);
         } catch (\Throwable $th) {
             return ApiResponse::error(message: 'Failed to create course', request: $request, exception: $th);
         }
@@ -72,7 +69,7 @@ class CourseService implements CourseServiceInterface
 
             $course->short_description = json_decode($course->short_description);
 
-            return ApiResponse::success(message: 'Course fetched successfully', data: [$course]);
+            return ApiResponse::success(message: 'Course fetched successfully', data: $course->toArray());
         } catch (\Throwable $th) {
             return ApiResponse::error(message: 'Failed to show course', exception: $th, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
