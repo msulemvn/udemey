@@ -26,7 +26,7 @@ class UserController extends Controller
         $userId = Auth::user()->id;
         $myRole = Auth::user()->getRoleNames()[0];
         if ($myRole == 'admin') {
-            return ApiResponse::success(data: User::find($userId));
+            return ApiResponse::success(data: User::find($userId)->toArray());
         }
 
         return ApiResponse::success(data: User::with($myRole)->whereId($userId)->get()->mapWithKeys(function ($user) {
