@@ -43,7 +43,6 @@ class CourseController extends Controller
     // Remove the specified course
     public function destroy($id)
     {
-        $courseDeleteDTO = new CourseDeleteDTO($id);
-        return $this->courseService->destroy($courseDeleteDTO);
+        return $this->courseService->destroy($id);
     }
 }

@@ -14,12 +14,15 @@ class CourseUpdateRequest extends BaseRequest
     public function rules()
     {
         return [
-            'title' => 'sometimes|string|max:255' . $this->route('id'),
-            'description' => 'sometimes|string',
-            'price' => 'sometimes|numeric',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'short_description' => 'required|array', // Validate as array
+            'short_description.*' => 'string', // Each element of array should be a string
+            'price' => 'required|numeric',
             'discounted_price' => 'nullable|numeric',
             'thumbnail_url' => 'nullable|string',
-            'course_categories_id' => 'sometimes|exists:course_categories,id'
+            'course_categories_id' => 'required|exists:course_categories,id',
+            'duration' => 'required|numeric',
         ];
     }
 }

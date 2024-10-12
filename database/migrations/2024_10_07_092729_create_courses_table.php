@@ -17,13 +17,14 @@ class CreateCoursesTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug')->unique();
-            $table->jsonb('description');
+            $table->text('description');
+            $table->json('short_description')->nullable();
             $table->decimal('price', 10, 2);
             $table->decimal('discounted_price', 10, 2)->nullable();
             $table->string('thumbnail_url')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('course_categories_id')->constrained('course_categories')->onDelete('cascade');
-            $table->string('duration'); //hours
+            $table->decimal('duration', 10, 2);
             $table->softDeletes();
             $table->timestamps();
         });
