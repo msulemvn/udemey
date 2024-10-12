@@ -23,7 +23,8 @@ class CategoryController extends Controller
 
     public function index()
     {
-        return $this->categoryService->index();
+        $categories = $this->categoryService->index();
+        return ApiResponse::success(message: 'All categories retrieved successfully', data: $categories->toArray());
     }
 
     /************************************ Store a newly created category ************************************/
@@ -38,6 +39,7 @@ class CategoryController extends Controller
     public function show($id)
     {
         return $this->categoryService->show($id);
+        
     }
 
     /************************************ Update the specified category ************************************/
