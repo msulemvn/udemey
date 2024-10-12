@@ -18,11 +18,15 @@ class CategoryService implements CategoryServiceInterface
 
     public function index()
     {
-        $categories = Category::all();
-        if ($categories->isEmpty()) {
-            return ApiResponse::error(message: 'No categories available', statusCode: Response::HTTP_NOT_FOUND);
+        try {
+            $categories = Category::all();
+            if ($categories->isEmpty()) {
+                return ApiResponse::error(message: 'No categories available', statusCode: Response::HTTP_NOT_FOUND);
+            }
+            return $categories;
+        } catch (\Throwable $th) {
+            return ApiResponse::error(message: 'Failed to get categories', exception: $th);
         }
-        return ApiResponse::success(message: 'All categories retrieved successfully', data: $categories, statusCode: 201);
     }
 
     /************************************ Store a newly created category ************************************/
@@ -52,9 +56,7 @@ class CategoryService implements CategoryServiceInterface
 
             return ApiResponse::success(message: 'Category created successfully', data: $category, statusCode: 201);
         } catch (\Exception $e) {
-            // Log the error and return a generic response
-            Log::error('Error creating category', ['message' => $e->getMessage()]);
-            return ApiResponse::error(message: 'Failed to create category', statusCode: Response::HTTP_NOT_FOUND);
+            return ApiResponse::error(message: 'Failed to create category');
         }
     }
 
@@ -62,8 +64,14 @@ class CategoryService implements CategoryServiceInterface
 
     public function show($id)
     {
-        $category = Category::findOrFail($id);
-        return ApiResponse::success(message: 'Category retrieved successfully', data: $category);
+        try {
+            $category = Category::findOrFail($id);
+            return ApiResponse::success(message: 'Category retrieved successfully', data: $category->toarray());
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return ApiResponse::error(message: 'No Category Found', statusCode: Response::HTTP_NOT_FOUND);
+        } catch (\Throwable $th) {
+            return ApiResponse::error(message: 'Failed to get categorie', exception: $th);
+        }
     }
 
     /************************************ Update the specified category ************************************/
@@ -90,7 +98,6 @@ class CategoryService implements CategoryServiceInterface
 
             return ApiResponse::success(message: 'Category updated successfully', data: $category);
         } catch (\Exception $e) {
-            Log::error('Error updating category', ['message' => $e->getMessage()]);
             return ApiResponse::error(message: 'Failed to update category', statusCode: Response::HTTP_NOT_FOUND);
         }
     }
@@ -104,22 +111,22 @@ class CategoryService implements CategoryServiceInterface
             $category->delete();
 
             return ApiResponse::success(message: 'Category deleted successfully');
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return ApiResponse::error(message: 'Category not found', statusCode: Response::HTTP_NOT_FOUND);
+        } catch (\Throwable $th) {
+            return ApiResponse::error(message: 'Failed to delete Category', exception: $th);
         }
     }
 
     public function getCategoryCourseCategories($id)
     {
-        // Retrieve the category along with its course categories
-        $category = Category::with('courseCategories')->find($id);
+        try {
+            $category = Category::with('courseCategories')->find($id);
 
-        // Check if the category exists
-        if (!$category) {
-            return ApiResponse::error(message: 'Category not found', statusCode: Response::HTTP_NOT_FOUND);
+            if (!$category) {
+                return ApiResponse::error(message: 'Course Categories not found', statusCode: Response::HTTP_NOT_FOUND);
+            }
+            return ApiResponse::success(message: 'Course categories retrieved successfully', data: $category->courseCategories->toarray());
+        } catch (\Throwable $th) {
+            return ApiResponse::error(message: 'Failed to get course Categories', exception: $th);
         }
-
-        // Return the course categories associated with the category
-        return ApiResponse::success(message: 'Course categories retrieved successfully', data: $category->courseCategories);
     }
 }
