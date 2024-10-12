@@ -3,20 +3,13 @@
 namespace App\Services\Course;
 
 use App\Models\Course;
-use App\Models\ErrorLog;
 use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use App\DTOs\Course\CourseDTO;
-use App\DTOs\Course\CourseShowDTO;
-use App\DTOs\Course\CourseIndexDTO;
-use Illuminate\Support\Facades\Log;
-use App\DTOs\Course\CourseDeleteDTO;
 use App\DTOs\Course\CourseUpdateDTO;
-use App\DTOs\ErrorLogs\ErrorLogsDTO;
 use App\Interfaces\CourseServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
-use App\Http\Requests\Course\CourseCreateRequest;
-use App\Http\Requests\Course\CourseUpdateRequest;
+
 
 class CourseService implements CourseServiceInterface
 {
@@ -25,141 +18,121 @@ class CourseService implements CourseServiceInterface
     public function index()
     {
         try {
-            // Get all courses
             $courses = Course::all();
 
-            // Check if there are no courses
             if ($courses->isEmpty()) {
                 return ApiResponse::error(message: 'No courses available at the moment', statusCode: Response::HTTP_NOT_FOUND);
             }
 
-            // Map each course to a CourseIndexDTO
-            $coursesDTO = $courses->map(function ($course) {
-                return (new CourseIndexDTO($course))->toArray();
-            });
+            foreach ($courses as $course) {
+                $course->short_description = json_decode($course->short_description);
+            }
 
-            // Return success response with DTO data
-            return ApiResponse::success(message: 'You have successfully created the course', data: $coursesDTO, statusCode: Response::HTTP_CREATED);
+            return ApiResponse::success(message: 'All courses', data: [$courses]);
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to show course', exception: $th, statusCode: Response::HTTP_NOT_FOUND);
+            return ApiResponse::error(message: 'Failed to show courses', exception: $th);
         }
     }
 
-
     /************************************ Store a newly created course ************************************/
 
-    public function store(CourseCreateRequest $request)
+    public function store($request)
     {
         try {
+            // Generate a unique slug from title
+            $slug = $this->generateUniqueSlug($request['title']);
 
-            // Validate the incoming request
-            $validatedData = $request->validated();
+            $request['slug'] = $slug;
+            $request['user_id'] = auth()->id();
 
-            // Check if a course with the same title already exists
-            $existingCourse = Course::where('title', $validatedData['title'])->first();
-
-            if ($existingCourse) {
-                // If a course with the same title exists, return an error response
-                return ApiResponse::error(message: 'A course with this title already exists.', statusCode: Response::HTTP_NOT_FOUND);
+            if (isset($request['short_description'])) {
+                $request['short_description'] = json_encode($request['short_description']);
             }
 
-            // Generate slug from title
-            $slug = Str::slug($validatedData['title'], '-');
 
-            // Ensure the slug is unique
-            $slugCount = Course::where('slug', 'LIKE', "{$slug}%")->count(); // Use singular model name
-            if ($slugCount > 0) {
-                $slug .= '-' . ($slugCount + 1);
-            }
-            // Prepare the course data using the DTO
-            $courseDTO = new CourseDTO([
-                'title' => $validatedData['title'],
-                'slug' => $slug,
-                'description' => $validatedData['description'],
-                'price' => $validatedData['price'],
-                'discounted_price' => $validatedData['discounted_price'],
-                'thumbnail_url' => $validatedData['thumbnail_url'],
-                'user_id' => auth()->id(), // Current authenticated user ID
-                'course_categories_id' => $validatedData['course_categories_id'],
-            ]);
-
-            // Create the course
+            $courseDTO = new CourseDTO($request);
             $course = Course::create($courseDTO->toArray());
-            return ApiResponse::success(message: 'You have successfully created the course', data: $course, statusCode: Response::HTTP_CREATED);
+
+            return ApiResponse::success(message: 'You have successfully created the course', data: [$course], statusCode: Response::HTTP_CREATED);
         } catch (\Throwable $th) {
-            return ApiResponse::error('Failed to create course', $request, $th, statusCode: Response::HTTP_NOT_FOUND);
+            return ApiResponse::error(message: 'Failed to create course', request: $request, exception: $th);
         }
     }
 
     /************************************ specified course  ************************************/
 
-    public function show($id)
+    public function show($slug)
     {
         try {
-            // Fetch the course by ID
-            $course = Course::findOrFail($id);
+            $course = Course::where('slug', $slug)->first();
 
-            // Create a CourseShowDTO instance with the fetched course
-            $courseDTO = new CourseShowDTO($course);
+            if (!$course) {
+                return ApiResponse::error(message: 'Course not found', statusCode: Response::HTTP_NOT_FOUND);
+            }
 
-            // Return a successful response with the DTO data
+            $course->short_description = json_decode($course->short_description);
 
-            return ApiResponse::success(data: $courseDTO->toArray(), statusCode: Response::HTTP_CREATED);
+            return ApiResponse::success(message: 'Course fetched successfully', data: [$course]);
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to show course', exception: $th, statusCode: Response::HTTP_NOT_FOUND);
+            return ApiResponse::error(message: 'Failed to show course', exception: $th, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
 
     /************************************ Update the specified course ************************************/
 
-    public function update(CourseUpdateRequest $request, $id)
+    public function update($request, $id)
     {
         try {
-            // Check if a course with the same title already exists
-            $existingCourse = Course::where('title', $request['title'])->first();
-
-            // If a course with the same title exists, return an error response
-            if ($existingCourse) {
-                return ApiResponse::error(message: 'A course with this title already exists.', statusCode: Response::HTTP_NOT_FOUND);
-            }
-
-            // Generate slug from title
-            $slug = Str::slug($request['title'], '-');
-
-            // Check if the slug is unique, excluding the current course
-            $slugCount = Course::where('slug', $slug)->where('id', '!=', $id)->count();
-            if ($slugCount > 0) {
-                $slug .= '-' . ($slugCount + 1);
-            }
-
             $course = Course::findOrFail($id);
 
-            // Prepare the DTO for updating
-            $courseUpdateDTO = new CourseUpdateDTO($request->all(), $slug);
+            $slug = $this->generateUniqueSlug($request['title']);
 
-            // Update the course using the DTO
+            $courseUpdateDTO = new CourseUpdateDTO($request->all(), $slug);
             $course->update($courseUpdateDTO->toArray());
-            return ApiResponse::success(message: 'Course updated successfully', data: $course->toArray(), statusCode: Response::HTTP_CREATED);
+
+            return ApiResponse::success(message: 'Course updated successfully', data: $course->fresh()->toArray(), statusCode: Response::HTTP_OK);
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to update course', request: $request, exception: $th, statusCode: Response::HTTP_NOT_FOUND);
+            return ApiResponse::error(message: 'Failed to update course', request: $request, exception: $th, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
+
+
     /************************************ Remove the specified course ************************************/
 
-    public function destroy(CourseDeleteDTO $courseDeleteDTO)
+    public function destroy($id)
     {
         try {
-            // Find the course by ID or fail with an exception
-            $course = Course::findOrFail($courseDeleteDTO->id);
 
-            // Perform soft deletion
+            $course = Course::findOrFail($id);
             $course->delete(); // This will perform soft delete if the model uses SoftDeletes
 
-            return ApiResponse::success(message: 'You have successfully deleted the course');
+            return ApiResponse::success(message: 'Deleted the course successfully');
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to delete course', exception: $th, statusCode: Response::HTTP_NOT_FOUND);
+            return ApiResponse::error(message: 'Failed to delete course', exception: $th);
         }
+    }
+
+    private function generateUniqueSlug($title)
+    {
+        $slug = Str::slug($title, '-');
+
+        $existingSlug = Course::where('slug', $slug)->first();
+
+        if ($existingSlug) {
+            // If slug already exists, append a number to make it unique
+            $count = 1;
+            while ($existingSlug) {
+                $newSlug = $slug . '-' . $count;
+                $existingSlug = Course::where('slug', $newSlug)->first();
+                $count++;
+            }
+            return $newSlug;
+        }
+
+        return $slug;
     }
 }
