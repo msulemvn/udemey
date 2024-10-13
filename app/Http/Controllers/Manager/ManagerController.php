@@ -18,7 +18,7 @@ class ManagerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreManagerRequest  $request
+     * @param  \App\Http\Requests\Manager\StoreRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreManagerRequest $request)
@@ -79,7 +79,7 @@ class ManagerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateManagerRequest  $request
+     * @param  \App\Http\Requests\Manager\UpdateRequest  $request
      * @param  \App\Models\Manager  $manager
      * @return \Illuminate\Http\Response
      */

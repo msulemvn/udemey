@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Article;
 
 use App\Services\Article\ArticleService;
-use App\Http\Requests\StoreArticleRequest;
-
+use App\Http\Requests\Article\StoreArticleRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Exception;

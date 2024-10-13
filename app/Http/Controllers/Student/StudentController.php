@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Student;
 
 use App\Helpers\ApiResponse;
-use App\Http\Requests\UpdateStudentRequest;
+use App\Http\Requests\Student\UpdateRequest;
 use App\Models\Student;
 use App\Http\Controllers\Controller;
 
@@ -50,7 +50,7 @@ class StudentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateStudentRequest  $request
+     * @param  \App\Http\Requests\Student\UpdateRequest  $request
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */

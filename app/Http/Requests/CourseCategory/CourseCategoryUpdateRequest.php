@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\CourseCategory;
+namespace App\Http\Requests\Course;
 
 use App\Http\Requests\BaseRequest;
 
