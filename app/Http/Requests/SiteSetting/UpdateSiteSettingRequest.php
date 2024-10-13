@@ -13,23 +13,10 @@ class UpdateSiteSettingRequest extends BaseRequest
 
     public function rules()
     {
-        $key = $this->input('key');
-        $valueRules = 'required';
-
-        switch($key)
-        {
-            case 'log':
-                $valueRules = 'required|file|mimes:jpeg,jpg,png,fig|max:2048';
-                break;
-            case 'title':
-                $valueRules = 'required|string|max:255';
-                break;
-            case 'copyRight':
-                $valueRules = 'required|string|max:500';    
-        }
         return [
-            'key' => 'required|string|max:255|unique:site_settings,key,' . $this->id,
-            'value' => $valueRules,
+            'site_title' => 'sometimes|required|string|max:255',
+            'logo_path' => 'sometimes|file|mimes:jpeg,png,jpg,gif|max:2048',
+            'copyright' => 'sometimes|required|string|max:255',
         ];
     }
 
