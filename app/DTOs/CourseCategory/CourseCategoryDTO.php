@@ -1,6 +1,10 @@
 <?php
 
+namespace App\DTOs\CourseCategory;
+
 use App\DTOs\BaseDTO;
+
+
 
 class CourseCategoryDTO extends BaseDTO
 {
@@ -8,7 +12,7 @@ class CourseCategoryDTO extends BaseDTO
     public string $title;
     public string $slug;
 
-    public function __construct(array $data)
+    public function __construct($data)
     {
 
         $this->category_id = $data['category_id'];

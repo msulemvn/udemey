@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Category;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class CategoryUpdateRequest extends FormRequest
+
+
+class CategoryUpdateRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,7 +22,6 @@ class CategoryUpdateRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255|unique:categories,title,' . $this->route('id'),
-            'slug' => 'nullable|string|max:255|unique:categories,slug,' . $this->route('id'),
         ];
     }
 }

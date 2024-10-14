@@ -7,8 +7,9 @@ use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use App\DTOs\Category\CategoryDTO;
 use Illuminate\Support\Facades\Log;
-use App\Interfaces\Category\CategoryServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\Category\CategoryCreateRequest;
+use App\Interfaces\Category\CategoryServiceInterface;
 
 
 
@@ -34,29 +35,18 @@ class CategoryService implements CategoryServiceInterface
     public function store($request)
     {
         try {
-            $validatedData = $request->validated();
 
-            // Generate slug from title
-            $slug = Str::slug($validatedData['title'], '-');
+            $slug = $this->generateUniqueSlug($request['title']);
 
-            // Ensure the slug is unique
-            $slugCount = Category::where('slug', 'LIKE', "{$slug}%")->count();
-            if ($slugCount > 0) {
-                $slug .= '-' . ($slugCount + 1);
-            }
+            $request['slug'] = $slug;
 
-            // Prepare the DTO (Data Transfer Object)
-            $categoryDTO = new CategoryDTO([
-                'title' => $validatedData['title'],
-                'slug' => $slug,
-            ]);
+            $categoryDTO = new CategoryDTO($request);
 
-            // Create the category
-            $category = Category::create($categoryDTO->toArray());
+            $categoryDTO = Category::create($categoryDTO->toArray());
 
-            return ApiResponse::success(message: 'Category created successfully', data: $category, statusCode: 201);
-        } catch (\Exception $e) {
-            return ApiResponse::error(message: 'Failed to create category');
+            return $categoryDTO;
+        } catch (\Throwable $th) {
+            return ApiResponse::error(message: 'Failed to get categories', exception: $th);
         }
     }
 
@@ -66,9 +56,10 @@ class CategoryService implements CategoryServiceInterface
     {
         try {
             $category = Category::findOrFail($id);
-            return ApiResponse::success(message: 'Category retrieved successfully', data: $category->toarray());
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return ApiResponse::error(message: 'No Category Found', statusCode: Response::HTTP_NOT_FOUND);
+            if (!$category) {
+                return ApiResponse::error(message: 'No Category Found', statusCode: Response::HTTP_NOT_FOUND);
+            }
+            return $category;
         } catch (\Throwable $th) {
             return ApiResponse::error(message: 'Failed to get categorie', exception: $th);
         }
@@ -81,22 +72,15 @@ class CategoryService implements CategoryServiceInterface
         try {
             $category = Category::findOrFail($id);
 
-            // Prepare the DTO
-            $slug = Str::slug($request['title'], '-');
-            $slugCount = Category::where('slug', 'LIKE', "{$slug}%")->where('id', '!=', $id)->count();
-            if ($slugCount > 0) {
-                $slug .= '-' . ($slugCount + 1);
-            }
+            $slug = $this->generateUniqueSlug($request['title']);
 
-            $categoryDTO = new CategoryDTO([
-                'title' => $request['title'],
-                'slug' => $slug,
-            ]);
+            $request['slug'] = $slug;
+
+            $categoryDTO = new CategoryDTO($request);
 
             // Update the category
             $category->update($categoryDTO->toArray());
-
-            return ApiResponse::success(message: 'Category updated successfully', data: $category);
+            return $category;
         } catch (\Exception $e) {
             return ApiResponse::error(message: 'Failed to update category', statusCode: Response::HTTP_NOT_FOUND);
         }
@@ -109,7 +93,6 @@ class CategoryService implements CategoryServiceInterface
         try {
             $category = Category::findOrFail($id);
             $category->delete();
-
             return ApiResponse::success(message: 'Category deleted successfully');
         } catch (\Throwable $th) {
             return ApiResponse::error(message: 'Failed to delete Category', exception: $th);
@@ -124,9 +107,29 @@ class CategoryService implements CategoryServiceInterface
             if (!$category) {
                 return ApiResponse::error(message: 'Course Categories not found', statusCode: Response::HTTP_NOT_FOUND);
             }
-            return ApiResponse::success(message: 'Course categories retrieved successfully', data: $category->courseCategories->toarray());
+            return $category;
         } catch (\Throwable $th) {
             return ApiResponse::error(message: 'Failed to get course Categories', exception: $th);
         }
+    }
+
+    private function generateUniqueSlug($title)
+    {
+        $slug = Str::slug($title, '-');
+
+        $existingSlug = Category::where('slug', $slug)->first();
+
+        if ($existingSlug) {
+            // If slug already exists, append a number to make it unique
+            $count = 1;
+            while ($existingSlug) {
+                $newSlug = $slug . '-' . $count;
+                $existingSlug = Category::where('slug', $newSlug)->first();
+                $count++;
+            }
+            return $newSlug;
+        }
+
+        return $slug;
     }
 }

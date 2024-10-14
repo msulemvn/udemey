@@ -15,7 +15,7 @@ class CourseCategoryUpdateRequest extends BaseRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,7 +26,8 @@ class CourseCategoryUpdateRequest extends BaseRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required|string|max:255|unique:courses,title',
+            'category_id' => 'required|exists:categories,id',
         ];
     }
 }

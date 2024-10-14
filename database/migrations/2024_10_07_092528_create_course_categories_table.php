@@ -18,6 +18,7 @@ class CreateCourseCategoriesTable extends Migration
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->string('title');
             $table->string('slug')->unique();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
