@@ -78,6 +78,28 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('/delete-category/{id}', 'destroy');
         });
 
+        Route::controller(CourseCategoryController::class)->group(function () {
+            Route::post('/create-course-categories', 'store');
+            Route::put('/update-course-categories/{id}', 'update');
+            Route::delete('/course-categories/{id}', 'destroy');
+        });
+
+        Route::controller(ArticleController::class)->group(function () {
+            Route::get('article/{id}', 'show'); // Show article
+            Route::get('/articles/slug/{slug}',  'showBySlug');
+            Route::post('/create-article',  'store');  // Create new article
+            Route::get('/articles',  'index');  // Get all articles
+            Route::put('/update-article/{id}',  'update');  // Update article
+            Route::delete('/delete-article/{id}', 'destroy');  // Delete article
+        });
+    });
+
+    /*
+    |-------------------------------------------------------------------------- 
+    | Authenticated Routes: admin, manager
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('role:admin,manager')->group(function () {
         Route::controller(StudentController::class)->group(function () {
             Route::post('/delete-student/{student}', 'destroy');
             Route::get('/students', 'show');
