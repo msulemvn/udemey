@@ -91,13 +91,11 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('/delete-course/{id}', 'destroy');
         });
 
-
         Route::controller(CategoryController::class)->group(function () {
             Route::post('create-category', 'store');
             Route::put('/update-category/{id}', 'update');
             Route::delete('/delete-category/{id}', 'destroy');
         });
-
 
         Route::controller(CourseCategoryController::class)->group(function () {
             Route::post('/create-course-category', 'store');
@@ -108,34 +106,15 @@ Route::middleware('auth:api')->group(function () {
         Route::controller(ArticleController::class)->group(function () {
             Route::get('article/{id}', 'show'); // Show article
             Route::get('/articles/slug/{slug}',  'showBySlug');
-            Route::get('article/{id}', 'show'); // Show article
-            Route::get('/articles/slug/{slug}',  'showBySlug');
-            Route::post('/create-article',   'store');  // Create new article  // Create new article
-            Route::get('/articles',   'index');  // Get all articles
-            Route::put('/update-article/{id}',  'update');  // Update article  // Get all articles
+            Route::post('/create-article',  'store');  // Create new article
+            Route::get('/articles',  'index');  // Get all articles
             Route::put('/update-article/{id}',  'update');  // Update article
-            Route::delete('/delete-article/{id}', 'destroy');  // Delete article  // Delete article
-        });
-
-        Route::get('/purchases', [PurchaseController::class, 'index']);
-    });
-    Route::middleware('role:student')->group(function () {
-        Route::controller(CartController::class)->group(function () {
-            Route::post('/addtocart/{courseId}', 'addToCart');
-            Route::delete('/delete-cart/{courseId}', 'removeFromCart');
-            Route::get('/viewcart', 'viewCart');
-        });
-
-        Route::post('/purchase', [PurchaseController::class, 'checkout']);
-
-        Route::controller(EnrollmentController::class)->group(function () {
-            Route::get('/enrollments', 'index');
-            Route::get('/enrollments/{courseId}', 'show');
+            Route::delete('/delete-article/{id}', 'destroy');  // Delete article
         });
     });
 
     /*
-    |--------------------------------------------------------------------------  
+    |-------------------------------------------------------------------------- 
     | Authenticated Routes: admin, manager
     |--------------------------------------------------------------------------
     */
@@ -164,13 +143,21 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('/delete-page/{pageId}', 'destroy');
             Route::post('/restore-page/{pageId}', 'restore');
         });
+        
+    });
+    Route::controller(PageController::class)->group(function () {
 
-        Route::controller(SiteSettingController::class)->group(function () {
-            Route::post('/create-site-setting', 'createSetting');
-            Route::put('/update-site-setting/{id}', 'updateSetting');
-            Route::delete('/delete-site-setting/{id}', 'deleteSetting');
-            Route::post('/restore-site-setting/{id}', 'restoreSoftDeletedSetting');
-            Route::get('/get-site-settings/{id}', 'getSettings');
-        });
+        Route::get('/get-all-pages', 'getPages');
+        Route::get('/get-page-by-id/{pageId}', 'getPageById');
+        Route::get('/get-page-by-slug/{slug}', 'getPageBySlug');
+    });
+
+
+    Route::controller(SiteSettingController::class)->group(function () {
+        Route::post('/create-site-setting', 'createSetting');
+        Route::put('/update-site-setting/{id}', 'updateSetting');
+        Route::delete('/delete-site-setting/{id}', 'deleteSetting');
+        Route::post('/restore-site-setting/{id}', 'restoreSoftDeletedSetting');
+        Route::get('/get-site-settings/{id}', 'getSettings');
     });
 });

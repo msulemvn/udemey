@@ -6,6 +6,8 @@ use App\Models\Article;
 use App\DTOs\Article\ArticleDTO;
 use Illuminate\Support\Str;
 use Exception;
+use App\Helpers\ApiResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class ArticleService
 {
@@ -14,25 +16,34 @@ class ArticleService
     {
         try {
             $articles = Article::all();
-            return ['status' => 'success', 'data' => $articles];
+            return ApiResponse::success(data: ['articles' => $articles]);
         } catch (Exception $e) {
-            return ['status' => 'error', 'message' => 'Failed to retrieve articles', 'exception' => $e];
+            return ApiResponse::error(
+                message: 'Failed to retrieve articles',
+                exception: $e,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
     // Create article logic with slug uniqueness check
-    public function createArticle(ArticleDTO $dto)
+    public function createArticle($request)
     {
         try {
-            // Automatically generate a slug from the title if it's not provided
+            $dto = new ArticleDTO($request->validated());
+
             if (!$dto->slug) {
                 $dto->slug = $this->checkSlugExists($dto->title);
             }
 
-            $article = Article::create((array)$dto);
-            return ['status' => 'success', 'data' => $article];
+            $article = Article::create($dto->toArray());
+            return ApiResponse::success(data: ['article' => $article]);
         } catch (Exception $e) {
-            return ['status' => 'error', 'message' => 'Failed to create article', 'exception' => $e];
+            return ApiResponse::error(
+                message: 'Failed to create article',
+                exception: $e,
+                statusCode: Response::HTTP_UNAUTHORIZED
+            );
         }
     }
 
@@ -42,11 +53,15 @@ class ArticleService
         try {
             $article = Article::find($id);
             if (!$article) {
-                return ['status' => 'error', 'message' => 'Article not found'];
+                return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
             }
-            return ['status' => 'success', 'data' => $article];
+            return ApiResponse::success(data: ['article' => $article]);
         } catch (Exception $e) {
-            return ['status' => 'error', 'message' => 'Failed to retrieve article', 'exception' => $e];
+            return ApiResponse::error(
+                message: 'Failed to retrieve article',
+                exception: $e,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -56,32 +71,47 @@ class ArticleService
             $article = Article::where('slug', $slug)->first();
 
             if (!$article) {
-                return ['status' => 'error', 'message' => 'Article not found'];
+                return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
             }
 
-            return ['status' => 'success', 'data' => $article];
+            return ApiResponse::success(data: ['article' => $article]);
         } catch (Exception $e) {
-            return ['status' => 'error', 'message' => 'Failed to retrieve article', 'exception' => $e->getMessage()];
+            return ApiResponse::error(
+                message: 'Failed to retrieve article',
+                exception: $e,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
     // Update article logic with slug uniqueness check
-    public function updateArticle(ArticleDTO $dto, $id)
+    public function updateArticle($request, $id)
     {
         try {
             $article = Article::find($id);
-            if ($article) {
-                // If the title is updated, generate and check slug
-                if (isset($dto->title)) {
-                    $dto->slug = $this->checkSlugExists($dto->title, $id);
-                }
 
-                $article->update((array)$dto);
-                return ['status' => 'success', 'data' => $article];
+            if (!$article) {
+                return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
             }
-            return ['status' => 'error', 'message' => 'Article not found'];
+
+            $dto = new ArticleDTO($request->validated());
+
+            if (isset($dto->title)) {
+                $dto->slug = $this->checkSlugExists($dto->title, $id);
+            }
+
+            $article->update($dto->toArray());
+
+            return ApiResponse::success(
+                data: ['article' => $article],
+                message: 'Article updated successfully'
+            );
         } catch (Exception $e) {
-            return ['status' => 'error', 'message' => 'Failed to update article', 'exception' => $e];
+            return ApiResponse::error(
+                message: 'Failed to update article',
+                exception: $e,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -90,25 +120,28 @@ class ArticleService
     {
         try {
             $article = Article::find($id);
-            if ($article) {
-                $article->delete();
-                return ['status' => 'success', 'message' => 'Article deleted successfully'];
+            if (!$article) {
+                return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
             }
-            return ['status' => 'error', 'message' => 'Article not found'];
+
+            $article->delete();
+            return ApiResponse::success(message: 'Article deleted successfully');
         } catch (Exception $e) {
-            return ['status' => 'error', 'message' => 'Failed to delete article', 'exception' => $e];
+            return ApiResponse::error(
+                message: 'Failed to delete article',
+                exception: $e,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
     // Helper function to check slug uniqueness
     protected function checkSlugExists($title, $articleId = null)
     {
-        // Generate slug from title
         $slug = Str::slug($title, '-');
 
-        // Check if slug exists and does not belong to the current article (if updating)
         $existingSlug = Article::where('slug', $slug)
-            ->where('id', '!=', $articleId) // Exclude current article during update
+            ->where('id', '!=', $articleId)
             ->exists();
 
         if ($existingSlug) {
