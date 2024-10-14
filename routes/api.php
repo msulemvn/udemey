@@ -5,6 +5,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Manager\ManagerController;
+use App\Http\Controllers\SiteSetting\SiteSettingController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\CourseCategory\CourseCategoryController;
@@ -110,7 +111,6 @@ Route::middleware('auth:api')->group(function () {
     | Authenticated Routes: admin, manager
     |--------------------------------------------------------------------------
     */
-
     Route::middleware('role:admin,manager')->group(function () {
         Route::controller(StudentController::class)->group(function () {
             Route::post('/delete-student/{student}', 'destroy');
@@ -123,4 +123,15 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/managers', 'show');
         });
     });
+
+    
+        Route::controller(SiteSettingController::class)->group(function ()
+        {
+            Route::post('/create-site-setting', 'createSetting');
+            Route::put('/update-site-setting/{id}', 'updateSetting');
+            Route::delete('/delete-site-setting/{id}', 'deleteSetting');
+            Route::post('/restore-site-setting/{id}', 'restoreSoftDeletedSetting');
+            Route::get('/get-site-settings/{id}', 'getSettings');
+
+        });
 });
