@@ -31,7 +31,7 @@ require __DIR__ . '/auth.php';
 */
 Route::controller(CourseController::class)->group(function () {
     Route::get('/courses', 'index');           // List all courses
-    Route::get('/courses/{slug}', 'show');
+    Route::get('/courses/{id}', 'show');
     Route::get('/courses/{id}/articles', 'getArticlewithCourse');
 });
 Route::controller(CategoryController::class)->group(function () {
@@ -84,11 +84,13 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('/delete-course/{id}', 'destroy');
         });
 
+
         Route::controller(CategoryController::class)->group(function () {
             Route::post('create-category', 'store');
             Route::put('/update-category/{id}', 'update');
             Route::delete('/delete-category/{id}', 'destroy');
         });
+
 
         Route::controller(CourseCategoryController::class)->group(function () {
             Route::post('/create-course-category', 'store');
@@ -99,15 +101,18 @@ Route::middleware('auth:api')->group(function () {
         Route::controller(ArticleController::class)->group(function () {
             Route::get('article/{id}', 'show'); // Show article
             Route::get('/articles/slug/{slug}',  'showBySlug');
-            Route::post('/create-article',  'store');  // Create new article
-            Route::get('/articles',  'index');  // Get all articles
+            Route::get('article/{id}', 'show'); // Show article
+            Route::get('/articles/slug/{slug}',  'showBySlug');
+            Route::post('/create-article',   'store');  // Create new article  // Create new article
+            Route::get('/articles',   'index');  // Get all articles
+            Route::put('/update-article/{id}',  'update');  // Update article  // Get all articles
             Route::put('/update-article/{id}',  'update');  // Update article
-            Route::delete('/delete-article/{id}', 'destroy');  // Delete article
+            Route::delete('/delete-article/{id}', 'destroy');  // Delete article  // Delete article
         });
     });
 
     /*
-    |-------------------------------------------------------------------------- 
+    |--------------------------------------------------------------------------  
     | Authenticated Routes: admin, manager
     |--------------------------------------------------------------------------
     */
