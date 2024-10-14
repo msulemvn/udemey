@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\CourseCategory;
 
 use App\Helpers\ApiResponse;
-use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use App\Services\CourseCategory\CourseCategoryService;
-use App\Http\Requests\CourseCategory\CourseCategoryCreateRequest;
-use App\Http\Requests\CourseCategory\CourseCategoryUpdateRequest;
+use App\Http\Requests\Course\CourseCategoryCreateRequest;
+use App\Http\Requests\Course\CourseCategoryUpdateRequest;
+
 
 class CourseCategoryController extends Controller
 {

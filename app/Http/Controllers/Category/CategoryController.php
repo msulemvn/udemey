@@ -7,7 +7,6 @@ use App\Services\Category\CategoryService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\CategoryCreateRequest;
 use App\Http\Requests\Category\CategoryUpdateRequest;
-use Whoops\Run;
 
 class CategoryController extends Controller
 {
@@ -47,7 +46,7 @@ class CategoryController extends Controller
 
     public function update(CategoryUpdateRequest $request, $id)
     {
-        return $this->categoryService->update($request, $id);
+        $category = $this->categoryService->update($request, $id);
         return ApiResponse::success(message: 'Category updated successfully', data: $category->toarray());
     }
 
