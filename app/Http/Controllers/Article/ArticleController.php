@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Article;
 
-use App\Services\Article\ArticleService;
-use App\Http\Requests\Article\StoreArticleRequest;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Exception;
+use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Services\Article\ArticleService;
+use App\Http\Requests\Article\ArticleRequest;
+use App\DTOs\Article\ArticleDTO;
+use Symfony\Component\HttpFoundation\Response;
 
 class ArticleController extends Controller
 {
@@ -17,90 +20,74 @@ class ArticleController extends Controller
         $this->articleService = $articleService;
     }
 
-    // Get all articles (restricted to subscribed students, managers, and admin)
+    // Get all articles
     public function index()
     {
-        try {
-            if (Auth::user()->role === 'admin' || Auth::user()->role === 'manager' || Auth::user()->is_subscribed) {
-                $articles = $this->articleService->getAllArticles();
-                return response()->json(['articles' => $articles], 200);
-            }
-
-            return response()->json(['message' => 'Access denied. You must be subscribed.'], 403);
-        } catch (Exception $e) {
-            return response()->json(['message' => 'Failed to retrieve articles', 'error' => $e->getMessage()], 500);
+        $response = $this->articleService->getAllArticles();
+        if ($response['status'] === 'success') {
+            return ApiResponse::success(data: ['articles' => $response['data']]);
         }
+        return ApiResponse::error(message: $response['message'], exception: $response['exception'], statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    // Create a new article (only for admin and managers)
-    public function store(StoreArticleRequest $request)
+    // Create a new article
+    public function store(ArticleRequest $request)
     {
-        try {
+        $dto = ArticleDTO::fromRequest($request->validated());
+        $response = $this->articleService->createArticle($dto);
 
-            $article = $this->articleService->createArticle($request->validated());
-            return response()->json(['message' => 'Article created successfully', 'article' => $article], 201);
-        } catch (Exception $e) {
-            return response()->json(['message' => 'Failed to create article', 'error' => $e->getMessage()], 500);
+        if ($response['status'] === 'success') {
+            return ApiResponse::success(data: ['article' => $response['data']]);
         }
+        return ApiResponse::error(message: $response['message'], request: $request, exception: $response['exception'], statusCode: Response::HTTP_UNAUTHORIZED);
     }
 
-    // Show a specific article (restricted to subscribed students, managers, and admin)
+    // Show a specific article by ID
     public function show($id)
     {
+        $response = $this->articleService->getArticleById($id);
+        if ($response['status'] === 'success') {
+            return ApiResponse::success(data: ['article' => $response['data']]);
+        }
+        return ApiResponse::error($response['message']);
+    }
+
+    // Show a specific article by Slug
+    public function showBySlug($slug, Request $request)
+    {
         try {
-            if (Auth::user()->role === 'admin' || Auth::user()->role === 'manager' || Auth::user()->is_subscribed) {
-                $article = $this->articleService->getArticleById($id);
+            $article = $this->articleService->getArticleBySlug($slug);
 
-                if (!$article) {
-                    return response()->json(['message' => 'Article not found'], 404);
-                }
-
-                return response()->json(['article' => $article], 200);
+            if ($article['status'] === 'error') {
+                return ApiResponse::error(message: $article['message'], request: $request, statusCode: Response::HTTP_NOT_FOUND);
             }
 
-            return response()->json(['message' => 'Access denied. You must be subscribed.'], 403);
+            return ApiResponse::success(data: ['article' => $article['data']]);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Failed to retrieve article', 'error' => $e->getMessage()], 500);
+            return ApiResponse::error(message: 'Failed to retrieve article', request: $request, exception: $e, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    // Update an article (only for admin and managers)
+    // Update an article
     public function update(ArticleRequest $request, $id)
     {
-        try {
-            if (Auth::user()->role === 'admin' || Auth::user()->role === 'manager') {
-                $article = $this->articleService->updateArticle($request->all(), $id);
+        $dto = new ArticleDTO($request);
 
-                if (!$article) {
-                    return response()->json(['message' => 'Article not found'], 404);
-                }
+        $response = $this->articleService->updateArticle($dto, $id);
 
-                return response()->json(['message' => 'Article updated successfully', 'article' => $article], 200);
-            }
-
-            return response()->json(['message' => 'Only admin or manager can update articles'], 403);
-        } catch (Exception $e) {
-            return response()->json(['message' => 'Failed to update article', 'error' => $e->getMessage()], 500);
+        if ($response['status'] === 'success') {
+            return ApiResponse::success(data: ['article' => $response['data']], message: 'Article updated successfully');
         }
+        return ApiResponse::error(message: $response['message'], request: $request, exception: $response['exception'], statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    // Delete an article (only for admin and managers)
+    // Delete an article
     public function destroy($id)
     {
-        try {
-            if (Auth::user()->role === 'admin' || Auth::user()->role === 'manager') {
-                $success = $this->articleService->deleteArticle($id);
-
-                if (!$success) {
-                    return response()->json(['message' => 'Article not found'], 404);
-                }
-
-                return response()->json(['message' => 'Article deleted successfully'], 200);
-            }
-
-            return response()->json(['message' => 'Only admin or manager can delete articles'], 403);
-        } catch (Exception $e) {
-            return response()->json(['message' => 'Failed to delete article', 'error' => $e->getMessage()], 500);
+        $response = $this->articleService->deleteArticle($id);
+        if ($response['status'] === 'success') {
+            return ApiResponse::success(message: $response['message']);
         }
+        return ApiResponse::error(message: $response['message'], statusCode: Response::HTTP_NOT_FOUND);
     }
 }
