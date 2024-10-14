@@ -31,7 +31,7 @@ require __DIR__ . '/auth.php';
 */
 Route::controller(CourseController::class)->group(function () {
     Route::get('/courses', 'index');           // List all courses
-    Route::get('/courses/{id}', 'show');       
+    Route::get('/courses/{id}', 'show');
     Route::get('/courses/{id}/articles', 'getArticlewithCourse');
 });
 Route::controller(CategoryController::class)->group(function () {
@@ -53,12 +53,6 @@ Route::controller(CourseCategoryController::class)->group(function () {
 Route::middleware('auth:api')->group(function () {
     Route::controller(UserController::class)->group(function () {
         Route::get('/profile', 'showUser');
-    });
-    Route::controller(ArticleController::class)->group(function () {
-        Route::post('/create-article', 'store');
-        Route::get('/articles', 'index');
-        Route::delete('/delete-article/{id}', 'destroy');
-        Route::get('/articles/{id}', 'show');
     });
 
     /*
@@ -89,11 +83,13 @@ Route::middleware('auth:api')->group(function () {
             Route::put('/update-course/{id}', 'update');
             Route::delete('/delete-course/{id}', 'destroy');
         });
+
         Route::controller(CategoryController::class)->group(function () {
             Route::post('/create-category', 'store');
             Route::put('/update-category/{id}', 'update');
             Route::delete('/delete-category/{id}', 'destroy');
         });
+
         Route::controller(CourseCategoryController::class)->group(function () {
             Route::post('/create-course-categories', 'store');
             Route::put('/update+-course-categories/{id}', 'update');
@@ -101,14 +97,17 @@ Route::middleware('auth:api')->group(function () {
         });
 
         Route::controller(ArticleController::class)->group(function () {
-            Route::post('/create-article', 'store');
-            Route::get('/articles', 'index');
-            Route::delete('/delete-article/{id}', 'destroy');
+            Route::get('article/{id}', 'show'); // Show article
+            Route::get('/articles/slug/{slug}',  'showBySlug');
+            Route::post('/create-article',  'store');  // Create new article
+            Route::get('/articles',  'index');  // Get all articles
+            Route::put('/update-article/{id}',  'update');  // Update article
+            Route::delete('/delete-article/{id}', 'destroy');  // Delete article
         });
     });
 
     /*
-    |--------------------------------------------------------------------------
+    |-------------------------------------------------------------------------- 
     | Authenticated Routes: admin, manager
     |--------------------------------------------------------------------------
     */
@@ -147,13 +146,12 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/get-page-by-slug/{slug}', 'getPageBySlug');
     });
 
-    
-        Route::controller(SiteSettingController::class)->group(function ()
-        {
-            Route::post('/create-site-setting', 'createSetting');
-            Route::put('/update-site-setting/{id}', 'updateSetting');
-            Route::delete('/delete-site-setting/{id}', 'deleteSetting');
-            Route::post('/restore-site-setting/{id}', 'restoreSoftDeletedSetting');
-            Route::get('/get-site-settings/{id}', 'getSettings');
-        });
+
+    Route::controller(SiteSettingController::class)->group(function () {
+        Route::post('/create-site-setting', 'createSetting');
+        Route::put('/update-site-setting/{id}', 'updateSetting');
+        Route::delete('/delete-site-setting/{id}', 'deleteSetting');
+        Route::post('/restore-site-setting/{id}', 'restoreSoftDeletedSetting');
+        Route::get('/get-site-settings/{id}', 'getSettings');
+    });
 });
