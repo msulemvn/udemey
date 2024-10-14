@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\CourseCategory;
 
+use App\Helpers\ApiResponse;
+use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
 use App\Services\CourseCategory\CourseCategoryService;
 use App\Http\Requests\CourseCategory\CourseCategoryCreateRequest;
@@ -20,28 +22,33 @@ class CourseCategoryController extends Controller
 
     public function index()
     {
-        return $this->courseCategoryService->index();
+
+        $courseCategories = $this->courseCategoryService->index();
+        return ApiResponse::success(message: 'All course categories retrieved successfully', data: $courseCategories->toarray());
     }
 
     /************************************ Get a specific course category ************************************/
 
     public function show($id)
     {
-        return $this->courseCategoryService->show($id);
+        $courseCategory = $this->courseCategoryService->show($id);
+        return ApiResponse::success(message: 'Course category retrieved successfully', data: $courseCategory->toarray());
     }
 
     /************************************ Create a new course category ************************************/
 
     public function store(CourseCategoryCreateRequest $request)
     {
-        return $this->courseCategoryService->store($request);
+        $courseCategory = $this->courseCategoryService->store($request);
+        return ApiResponse::success(message: 'course categories created successfully', data: $courseCategory->toarray(), statusCode: Response::HTTP_CREATED);
     }
 
     /************************************ Update a course category ************************************/
 
     public function update(CourseCategoryUpdateRequest $request, $id)
     {
-        return $this->courseCategoryService->update($request, $id);
+        $courseCategory = $this->courseCategoryService->update($request, $id);
+        return ApiResponse::success(message: 'Course category updated successfully', data: $courseCategory->toarray());
     }
 
     /************************************ Delete a course category ************************************/
@@ -53,6 +60,7 @@ class CourseCategoryController extends Controller
 
     public function getCoursewithCourseCategories($id)
     {
-        return $this->courseCategoryService->getCoursewithCourseCategories($id);
+        $courseCategory = $this->courseCategoryService->getCoursewithCourseCategories($id);
+        return ApiResponse::success(message: 'Course retrieved successfully', data: $courseCategory->Course->toarray());
     }
 }

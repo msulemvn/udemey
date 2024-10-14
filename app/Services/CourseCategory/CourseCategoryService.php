@@ -2,14 +2,13 @@
 
 namespace App\Services\CourseCategory;
 
-use CourseCategoryDTO;
+use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use App\Models\CourseCategory;
-use Illuminate\Support\Facades\Log;
-use App\Interfaces\CourseCategory\CourseCategoryServiceInterface;
+use PHPUnit\Framework\Constraint\Count;
+use App\DTOs\CourseCategory\CourseCategoryDTO;
 use Symfony\Component\HttpFoundation\Response;
-
-
+use App\Interfaces\CourseCategory\CourseCategoryServiceInterface;
 
 class CourseCategoryService implements CourseCategoryServiceInterface
 {
@@ -19,11 +18,10 @@ class CourseCategoryService implements CourseCategoryServiceInterface
     {
         try {
             $courseCategories = CourseCategory::all();
-
             if ($courseCategories->isEmpty()) {
                 return ApiResponse::error(message: 'No course categories available at the moment', statusCode: Response::HTTP_NOT_FOUND);
             }
-            return ApiResponse::success(message: 'All course categories retrieved successfully', data: $courseCategories->toarray());
+            return $courseCategories;
         } catch (\Throwable $th) {
             return ApiResponse::error(message: 'Failed to get courseCategories', exception: $th);
         }
@@ -35,7 +33,7 @@ class CourseCategoryService implements CourseCategoryServiceInterface
     {
         try {
             $courseCategory = CourseCategory::findOrFail($id);
-            return ApiResponse::success(message: 'Course category retrieved successfully', data: $courseCategory->toarray());
+            return $courseCategory;
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return ApiResponse::error(message: 'No Course category Found', statusCode: Response::HTTP_NOT_FOUND);
         } catch (\Throwable $th) {
@@ -48,10 +46,13 @@ class CourseCategoryService implements CourseCategoryServiceInterface
     public function store($request)
     {
         try {
+            $slug = $this->generateUniqueSlug($request['title']);
 
-            $courseCategoryDTO = new CourseCategoryDTO($request->validated());
+            $request['slug'] = $slug;
+
+            $courseCategoryDTO = new CourseCategoryDTO($request);
             $courseCategory = CourseCategory::create($courseCategoryDTO->toArray());
-            return ApiResponse::success(message: 'All course categories retrieved successfully', data: $courseCategory, statusCode: Response::HTTP_CREATED);
+            return $courseCategory;
         } catch (\Exception $e) {
             return ApiResponse::error(message: 'Failed to create course category', statusCode: Response::HTTP_NOT_FOUND);
         }
@@ -63,11 +64,14 @@ class CourseCategoryService implements CourseCategoryServiceInterface
     {
         try {
             $courseCategory = CourseCategory::findOrFail($id);
-            $courseCategoryDTO = new CourseCategoryDTO($request->validated());
+            $slug = $this->generateUniqueSlug($request['title']);
 
-            // Update course category
+            $request['slug'] = $slug;
+
+            $courseCategoryDTO = new CourseCategoryDTO($request);
+
             $courseCategory->update($courseCategoryDTO->toArray());
-            return ApiResponse::success(message: 'Course category updated successfully', data: $courseCategory, statusCode: Response::HTTP_CREATED);
+            return $courseCategory;
         } catch (\Exception $e) {
             return ApiResponse::error(message: 'Failed to update course category', statusCode: Response::HTTP_NOT_FOUND);
         }
@@ -93,11 +97,29 @@ class CourseCategoryService implements CourseCategoryServiceInterface
             if (!$courseCategory) {
                 return ApiResponse::error(message: 'course not found', statusCode: Response::HTTP_NOT_FOUND);
             }
-
-            // Return the course categories associated with the category
-            return ApiResponse::success(message: 'Course retrieved successfully', data: $courseCategory->Course->toarray());
+            return $courseCategory;
         } catch (\Throwable $th) {
             return ApiResponse::error(message: 'Failed to get course', exception: $th);
         }
+    }
+
+    private function generateUniqueSlug($title)
+    {
+        $slug = Str::slug($title, '-');
+
+        $existingSlug = COurseCategory::where('slug', $slug)->first();
+
+        if ($existingSlug) {
+            // If slug already exists, append a number to make it unique
+            $count = 1;
+            while ($existingSlug) {
+                $newSlug = $slug . '-' . $count;
+                $existingSlug = COurseCategory::where('slug', $newSlug)->first();
+                $count++;
+            }
+            return $newSlug;
+        }
+
+        return $slug;
     }
 }

@@ -7,6 +7,7 @@ use App\Services\Category\CategoryService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\CategoryCreateRequest;
 use App\Http\Requests\Category\CategoryUpdateRequest;
+use Whoops\Run;
 
 class CategoryController extends Controller
 {
@@ -30,14 +31,16 @@ class CategoryController extends Controller
 
     public function store(CategoryCreateRequest $request)
     {
-        return $this->categoryService->store($request);
+        $category = $this->categoryService->store($request);
+        return ApiResponse::success(message: 'Category created successfully', data: $category->toarray());
     }
 
     /************************************ Display the specified category ************************************/
 
     public function show($id)
     {
-        return $this->categoryService->show($id);
+        $category = $this->categoryService->show($id);
+        return ApiResponse::success(message: 'Category retrieved successfully', data: $category->toarray());
     }
 
     /************************************ Update the specified category ************************************/
@@ -45,6 +48,7 @@ class CategoryController extends Controller
     public function update(CategoryUpdateRequest $request, $id)
     {
         return $this->categoryService->update($request, $id);
+        return ApiResponse::success(message: 'Category updated successfully', data: $category->toarray());
     }
 
     /************************************ Remove the specified category ************************************/
@@ -57,6 +61,7 @@ class CategoryController extends Controller
 
     public function getCategoryCourseCategories($id)
     {
-        return $this->categoryService->getCategoryCourseCategories($id);
+        $category = $this->categoryService->getCategoryCourseCategories($id);
+        return ApiResponse::success(message: 'Course categories retrieved successfully', data: $category->courseCategories->toarray());
     }
 }
