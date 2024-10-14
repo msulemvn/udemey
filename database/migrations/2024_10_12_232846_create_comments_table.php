@@ -17,11 +17,10 @@ return new class extends Migration
             $table->id();
             // automatically creates the commentable_id and commentable_type columns.
             $table->morphs('commentable');
-            $table->text('content');
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->text('comment_text');
+            $table->timestamps();
             $table->softDeletes();
             $table->index(['commentable_id', 'commentable_type']);
-            $table->timestamps();
         });
     }
 
