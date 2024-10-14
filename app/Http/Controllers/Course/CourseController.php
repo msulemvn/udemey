@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Course;
 
-use App\Services\Course\CourseService;
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Services\Course\CourseService;
 use App\Http\Requests\Course\CourseCreateRequest;
 use App\Http\Requests\Course\CourseUpdateRequest;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class CourseController extends Controller
 {
@@ -19,25 +22,29 @@ class CourseController extends Controller
     // Display a listing of the courses
     public function index()
     {
-        return $this->courseService->index();
+        $courses = $this->courseService->index();
+        return ApiResponse::success(message: 'All courses', data: $courses->toArray());
     }
 
     // Store a newly created course
     public function store(CourseCreateRequest $request)
     {
-        return $this->courseService->store($request);
+        $course = $this->courseService->store($request);
+        return ApiResponse::success(message: 'You have successfully created the course', data: $course->toArray(), statusCode: Response::HTTP_CREATED);
     }
 
 
-    public function show($id)
+    public function show($slug)
     {
-        return $this->courseService->show($id);
+        return $this->courseService->show($slug);
+        return ApiResponse::success(message: 'Course fetched successfully', data: $course->toArray());
     }
 
     // Update the specified course
     public function update(CourseUpdateRequest $request, $id)
     {
         return $this->courseService->update($request, $id);
+        return ApiResponse::success(message: 'Course updated successfully', data: $course->fresh()->toArray());
     }
     // Remove the specified course
     public function destroy($id)
@@ -46,6 +53,7 @@ class CourseController extends Controller
     }
     public function getArticlewithCourse($id)
     {
-        return $this->courseService->getArticlewithCourse($id);
+        $course = $this->courseService->getArticlewithCourse($id);
+        return ApiResponse::success(message: 'Articles retrieved successfully', data: $course->articles->toArray());
     }
 }
