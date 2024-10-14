@@ -36,14 +36,14 @@ class CourseController extends Controller
 
     public function show($slug)
     {
-        return $this->courseService->show($slug);
+        $course = $this->courseService->show($slug);
         return ApiResponse::success(message: 'Course fetched successfully', data: $course->toArray());
     }
 
     // Update the specified course
     public function update(CourseUpdateRequest $request, $id)
     {
-        return $this->courseService->update($request, $id);
+        $course = $this->courseService->update($request, $id);
         return ApiResponse::success(message: 'Course updated successfully', data: $course->fresh()->toArray());
     }
     // Remove the specified course
