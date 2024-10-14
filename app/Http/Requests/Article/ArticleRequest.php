@@ -4,7 +4,7 @@ namespace App\Http\Requests\Article;
 
 use App\Http\Requests\BaseRequest;
 
-class StoreArticleRequest extends BaseRequest
+class ArticleRequest extends BaseRequest
 {
 
     public function rules()
