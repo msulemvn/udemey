@@ -5,6 +5,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Manager\ManagerController;
+use App\Http\Controllers\Page\PageController;
 use App\Http\Controllers\SiteSetting\SiteSettingController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Category\CategoryController;
@@ -124,6 +125,28 @@ Route::middleware('auth:api')->group(function () {
         });
     });
 
+    /*
+    |--------------------------------------------------------------------------
+    | Authenticated Routes: admin
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('role:admin')->group(function () {
+
+        Route::controller(PageController::class)->group(function () {
+            Route::post('/create-page', 'create');
+            Route::put('/update-page/{pageId}', 'update');
+            Route::delete('/delete-page/{pageId}', 'destroy');
+            Route::post('/restore-page/{pageId}', 'restore');
+        });
+        
+    });
+    Route::controller(PageController::class)->group(function () {
+
+        Route::get('/get-all-pages', 'getPages');
+        Route::get('/get-page-by-id/{pageId}', 'getPageById');
+        Route::get('/get-page-by-slug/{slug}', 'getPageBySlug');
+    });
+
     
         Route::controller(SiteSettingController::class)->group(function ()
         {
@@ -132,6 +155,5 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('/delete-site-setting/{id}', 'deleteSetting');
             Route::post('/restore-site-setting/{id}', 'restoreSoftDeletedSetting');
             Route::get('/get-site-settings/{id}', 'getSettings');
-
         });
 });
