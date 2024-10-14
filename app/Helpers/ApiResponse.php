@@ -57,6 +57,8 @@ class ApiResponse
             Log::info('error_log_dto', $dto->toArray());
         }
 
+        $response['message'] = $message ?? Response::$statusTexts[$statusCode];
+
         if ($errors) {
             $response['errors'] = $errors;
         }

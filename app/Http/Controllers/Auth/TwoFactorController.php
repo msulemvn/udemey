@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use PragmaRX\Google2FA\Google2FA;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class TwoFactorController extends Controller
 {
@@ -61,5 +65,51 @@ class TwoFactorController extends Controller
         return redirect()->route('login')->withErrors([
             'password' => __('The provided credentials are incorrect.'),
         ]);
+    }
+
+    /**
+     * Generate a secret key for Google 2-Factor Authentication.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function generateSecretKey(Request $request)
+    {
+        try {
+            $google2fa = app('pragmarx.google2fa');
+            $secretKey = $google2fa->generateSecretKey();
+            $user = Auth::user();
+            Cache::put('google2fa_secret_' . $user->id, $secretKey, 60);
+            return ApiResponse::success(data: ['google2fa_secret' => $secretKey]);
+        } catch (\Throwable $th) {
+            return ApiResponse::error(message: 'Failed to generate secret key.', request: $request, exception: $th);
+        }
+    }
+
+    /**
+     * Enable Google 2-Factor Authentication for the current user.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function enable2FA(Request $request)
+    {
+        $user = Auth::user();
+        // Check if 2FA already enabled
+        if ($user->google2fa_secret) {
+            return ApiResponse::success(message: '2-Factor Authentication is already enabled.');
+        }
+
+        $secretKey = Cache::get('google2fa_secret_' . $user->id);
+
+        if (!$secretKey || empty($secretKey)) {
+            return ApiResponse::error(message: 'Invalid or expired secret key.', statusCode: Response::HTTP_BAD_REQUEST);
+        }
+
+        $user->google2fa_secret = $secretKey;
+        $user->save();
+        Cache::forget('google2fa_secret_' . $user->id);
+
+        return ApiResponse::success(message: '2 Factor Authentication successfully enabled.');
     }
 }
