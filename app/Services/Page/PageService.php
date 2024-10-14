@@ -2,7 +2,6 @@
 namespace App\Services\Page;
 
 use App\DTOs\Page\PageDTO;
-use App\DTOs\Page\UpdatePageDTO;
 use App\Helpers\ApiResponse;
 use App\Models\Page;
 use Symfony\Component\HttpFoundation\Response;
