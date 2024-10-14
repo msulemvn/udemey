@@ -24,8 +24,7 @@ class CourseService implements CourseServiceInterface
             foreach ($courses as $course) {
                 $course->short_description = json_decode($course->short_description);
             }
-
-            return ApiResponse::success(message: 'All courses', data: $courses->toArray());
+            return $courses;
         } catch (\Throwable $th) {
             return ApiResponse::error(message: 'Failed to show courses', exception: $th);
         }
@@ -49,8 +48,7 @@ class CourseService implements CourseServiceInterface
 
             $courseDTO = new CourseDTO($request);
             $course = Course::create($courseDTO->toArray());
-
-            return ApiResponse::success(message: 'You have successfully created the course', data: $course->toArray(), statusCode: Response::HTTP_CREATED);
+            return $course;
         } catch (\Throwable $th) {
             return ApiResponse::error(message: 'Failed to create course', request: $request, exception: $th);
         }
@@ -68,8 +66,7 @@ class CourseService implements CourseServiceInterface
             }
 
             $course->short_description = json_decode($course->short_description);
-
-            return ApiResponse::success(message: 'Course fetched successfully', data: $course->toArray());
+            return $course;
         } catch (\Throwable $th) {
             return ApiResponse::error(message: 'Failed to show course', exception: $th, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -89,8 +86,7 @@ class CourseService implements CourseServiceInterface
 
             $courseUpdateDTO = new CourseUpdateDTO($request->all(), $slug);
             $course->update($courseUpdateDTO->toArray());
-
-            return ApiResponse::success(message: 'Course updated successfully', data: $course->fresh()->toArray(), statusCode: Response::HTTP_OK);
+            return $course;
         } catch (\Throwable $th) {
             return ApiResponse::error(message: 'Failed to update course', request: $request, exception: $th, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -124,8 +120,7 @@ class CourseService implements CourseServiceInterface
             if ($course->articles->isEmpty()) {
                 return ApiResponse::error(message: 'No articles found for this course', statusCode: Response::HTTP_NOT_FOUND);
             }
-
-            return ApiResponse::success(message: 'Articles retrieved successfully', data: $course->articles->toArray());
+            return $course;
         } catch (\Throwable $th) {
             return ApiResponse::error(message: 'Failed to get articles', exception: $th);
         }

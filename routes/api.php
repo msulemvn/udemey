@@ -31,7 +31,7 @@ require __DIR__ . '/auth.php';
 */
 Route::controller(CourseController::class)->group(function () {
     Route::get('/courses', 'index');           // List all courses
-    Route::get('/courses/{id}', 'show');
+    Route::get('/courses/{slug}', 'show');
     Route::get('/courses/{id}/articles', 'getArticlewithCourse');
 });
 Route::controller(CategoryController::class)->group(function () {
@@ -85,15 +85,15 @@ Route::middleware('auth:api')->group(function () {
         });
 
         Route::controller(CategoryController::class)->group(function () {
-            Route::post('/create-category', 'store');
+            Route::post('create-category', 'store');
             Route::put('/update-category/{id}', 'update');
             Route::delete('/delete-category/{id}', 'destroy');
         });
 
         Route::controller(CourseCategoryController::class)->group(function () {
-            Route::post('/create-course-categories', 'store');
-            Route::put('/update+-course-categories/{id}', 'update');
-            Route::delete('/course-categories/{id}', 'destroy');
+            Route::post('/create-course-category', 'store');
+            Route::put('/update-course-category/{id}', 'update');
+            Route::delete('/course-category/{id}', 'destroy');
         });
 
         Route::controller(ArticleController::class)->group(function () {

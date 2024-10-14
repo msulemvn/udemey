@@ -6,10 +6,10 @@ use App\DTOs\BaseDTO;
 
 class CategoryDTO extends BaseDTO
 {
-    public $title;
-    public $slug;
+    public string $title;
+    public string $slug;
 
-    public function __construct(array $data)
+    public function __construct($data)
     {
         $this->title = $data['title'];
         $this->slug = $data['slug'];

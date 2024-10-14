@@ -24,7 +24,7 @@ class CourseCategoryCreateRequest extends BaseRequest
     public function rules()
     {
         return [
-            'course_id' => 'required|exists:courses,id',
+            'title' => 'required|string|max:255|unique:courses,title',
             'category_id' => 'required|exists:categories,id',
         ];
     }
