@@ -84,16 +84,13 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('/delete-course/{id}', 'destroy');
         });
 
+
         Route::controller(CategoryController::class)->group(function () {
             Route::post('create-category', 'store');
             Route::put('/update-category/{id}', 'update');
             Route::delete('/delete-category/{id}', 'destroy');
         });
 
-        Route::controller(StudentController::class)->group(function () {
-            Route::post('/delete-student/{student}', 'destroy');
-            Route::get('/students', 'show');
-        });
 
         Route::controller(CourseCategoryController::class)->group(function () {
             Route::post('/create-course-category', 'store');
@@ -104,21 +101,32 @@ Route::middleware('auth:api')->group(function () {
         Route::controller(ArticleController::class)->group(function () {
             Route::get('article/{id}', 'show'); // Show article
             Route::get('/articles/slug/{slug}',  'showBySlug');
-            Route::post('/create-article',  'store');  // Create new article
-            Route::get('/articles',  'index');  // Get all articles
+            Route::get('article/{id}', 'show'); // Show article
+            Route::get('/articles/slug/{slug}',  'showBySlug');
+            Route::post('/create-article',   'store');  // Create new article  // Create new article
+            Route::get('/articles',   'index');  // Get all articles
+            Route::put('/update-article/{id}',  'update');  // Update article  // Get all articles
             Route::put('/update-article/{id}',  'update');  // Update article
-            Route::delete('/delete-article/{id}', 'destroy');  // Delete article
+            Route::delete('/delete-article/{id}', 'destroy');  // Delete article  // Delete article
+        });
+    });
+
+    /*
+    |--------------------------------------------------------------------------  
+    | Authenticated Routes: admin, manager
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('role:admin,manager')->group(function () {
+        Route::controller(StudentController::class)->group(function () {
+            Route::post('/delete-student/{student}', 'destroy');
+            Route::get('/students', 'show');
         });
 
-        Route::get('/purchases', [PurchaseController::class, 'index']);
-    });
-    Route::middleware('role:student')->group(function () {
-        Route::controller(CartController::class)->group(function () {
-            Route::post('/addtocart/{courseId}', 'addToCart');
-            Route::delete('/delete-cart/{courseId}', 'removeFromCart');
-            Route::get('/viewcart', 'viewCart');
+        Route::controller(ManagerController::class)->group(function () {
+            Route::post('/add-manager', 'store');
+            Route::post('/delete-manager/{manager}', 'destroy');
+            Route::get('/managers', 'show');
         });
-        Route::post('/purchase', [PurchaseController::class, 'checkout']);
     });
 
     /*
