@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreatePurchasesTable extends Migration
 {
@@ -15,11 +16,11 @@ class CreatePurchasesTable extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('article_id')->constrained('articles')->onDelete('cascade');
+            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->decimal('amount', 10, 2);
-            $table->timestamp('purchase_date')->default(now());
-            $table->enum('status', ['completed', 'refunded', 'disputed'])->default('completed');
+            $table->timestamp('purchase_date')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->enum('status', ['completed']);
             $table->softDeletes();
             $table->timestamps();
         });

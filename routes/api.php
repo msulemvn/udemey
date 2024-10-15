@@ -1,14 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Cart\CartController;
+use App\Http\Controllers\Page\PageController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Manager\ManagerController;
-use App\Http\Controllers\Page\PageController;
-use App\Http\Controllers\SiteSetting\SiteSettingController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\Purchases\PurchaseController;
+use App\Http\Controllers\SiteSetting\SiteSettingController;
 use App\Http\Controllers\CourseCategory\CourseCategoryController;
 // included auth.php
 require __DIR__ . '/auth.php';
@@ -104,6 +106,16 @@ Route::middleware('auth:api')->group(function () {
             Route::put('/update-article/{id}',  'update');  // Update article
             Route::delete('/delete-article/{id}', 'destroy');  // Delete article
         });
+
+        Route::get('/purchases', [PurchaseController::class, 'index']);
+    });
+    Route::middleware('role:student')->group(function () {
+        Route::controller(CartController::class)->group(function () {
+            Route::post('/addtocart/{courseId}', 'addToCart');
+            Route::delete('/delete-cart/{courseId}', 'removeFromCart');
+            Route::get('/viewcart', 'viewCart');
+        });
+        Route::post('/purchase', [PurchaseController::class, 'checkout']);
     });
 
     /*
@@ -137,7 +149,6 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('/delete-page/{pageId}', 'destroy');
             Route::post('/restore-page/{pageId}', 'restore');
         });
-        
     });
     Route::controller(PageController::class)->group(function () {
 

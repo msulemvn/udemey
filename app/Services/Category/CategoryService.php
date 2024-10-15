@@ -6,10 +6,9 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use App\DTOs\Category\CategoryDTO;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
-use App\Http\Requests\Category\CategoryCreateRequest;
 use App\Interfaces\Category\CategoryServiceInterface;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
 
@@ -22,11 +21,20 @@ class CategoryService implements CategoryServiceInterface
         try {
             $categories = Category::all();
             if ($categories->isEmpty()) {
-                return ApiResponse::error(message: 'No categories available', statusCode: Response::HTTP_NOT_FOUND);
+                return ApiResponse::error(
+                    message: 'No categories available',
+                    errors: ['categories' => ['No categories found in the system']],
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
             }
             return $categories;
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to get categories', exception: $th);
+            return ApiResponse::error(
+                message: 'Failed to get categories',
+                errors: ['categories' => ['An error occurred while retrieving the categories. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -46,7 +54,12 @@ class CategoryService implements CategoryServiceInterface
 
             return $categoryDTO;
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to get categories', exception: $th);
+            return ApiResponse::error(
+                message: 'Failed to create category',
+                errors: ['category' => ['An error occurred while creating the category. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -57,11 +70,20 @@ class CategoryService implements CategoryServiceInterface
         try {
             $category = Category::findOrFail($id);
             if (!$category) {
-                return ApiResponse::error(message: 'No Category Found', statusCode: Response::HTTP_NOT_FOUND);
+                return ApiResponse::error(
+                    message: 'Category not found',
+                    errors: ['category' => ['No category found with the given ID']],
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
             }
             return $category;
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to get categorie', exception: $th);
+            return ApiResponse::error(
+                message: 'Failed to retrieve category',
+                errors: ['category' => ['An error occurred while retrieving the category. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -71,6 +93,13 @@ class CategoryService implements CategoryServiceInterface
     {
         try {
             $category = Category::findOrFail($id);
+            if (!$category) {
+                return ApiResponse::error(
+                    message: 'Category not found',
+                    errors: ['category' => ['No category found with the given ID']],
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
+            }
 
             $slug = $this->generateUniqueSlug($request['title']);
 
@@ -81,8 +110,13 @@ class CategoryService implements CategoryServiceInterface
             // Update the category
             $category->update($categoryDTO->toArray());
             return $category;
-        } catch (\Exception $e) {
-            return ApiResponse::error(message: 'Failed to update category', statusCode: Response::HTTP_NOT_FOUND);
+        } catch (\Throwable $th) {
+            return ApiResponse::error(
+                message: 'Failed to update category',
+                errors: ['category' => ['An error occurred while updating the category. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -95,7 +129,12 @@ class CategoryService implements CategoryServiceInterface
             $category->delete();
             return ApiResponse::success(message: 'Category deleted successfully');
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to delete Category', exception: $th);
+            return ApiResponse::error(
+                message: 'Failed to delete category',
+                errors: ['category' => ['An error occurred while deleting the category. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -105,11 +144,20 @@ class CategoryService implements CategoryServiceInterface
             $category = Category::with('courseCategories')->find($id);
 
             if (!$category) {
-                return ApiResponse::error(message: 'Course Categories not found', statusCode: Response::HTTP_NOT_FOUND);
+                return ApiResponse::error(
+                    message: 'Category not found',
+                    errors: ['category' => ['No category found with the given ID']],
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
             }
             return $category;
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to get course Categories', exception: $th);
+            return ApiResponse::error(
+                message: 'Failed to retrieve course categories',
+                errors: ['courseCategories' => ['An error occurred while retrieving course categories. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
