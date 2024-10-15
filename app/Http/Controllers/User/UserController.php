@@ -35,8 +35,9 @@ class UserController extends Controller
                 'id' => $user->$role->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                '2fa' => ($user->google2fa_secret) ? true : false,
             ];
-        }));
+        })->toArray());
     }
 
 

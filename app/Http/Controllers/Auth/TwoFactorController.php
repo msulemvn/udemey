@@ -75,6 +75,12 @@ class TwoFactorController extends Controller
      */
     public function generateSecretKey(Request $request)
     {
+        $user = Auth::user();
+        // Check if 2FA already enabled
+        if ($user->google2fa_secret) {
+            return ApiResponse::success(message: '2-Factor Authentication is already enabled.');
+        }
+
         try {
             $google2fa = app('pragmarx.google2fa');
             $secretKey = $google2fa->generateSecretKey();
@@ -82,7 +88,7 @@ class TwoFactorController extends Controller
             Cache::put('google2fa_secret_' . $user->id, $secretKey, 60);
             return ApiResponse::success(data: ['google2fa_secret' => $secretKey]);
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to generate secret key.', request: $request, exception: $th);
+            return ApiResponse::error(errors: ['google2fa_secret' => ['Failed to generate secret key.']], request: $request, exception: $th);
         }
     }
 
@@ -103,13 +109,21 @@ class TwoFactorController extends Controller
         $secretKey = Cache::get('google2fa_secret_' . $user->id);
 
         if (!$secretKey || empty($secretKey)) {
-            return ApiResponse::error(message: 'Invalid or expired secret key.', statusCode: Response::HTTP_BAD_REQUEST);
+            return ApiResponse::error(errors: ['google2fa_secret' => ['Invalid or expired secret key.']], statusCode: Response::HTTP_BAD_REQUEST);
         }
 
-        $user->google2fa_secret = $secretKey;
-        $user->save();
-        Cache::forget('google2fa_secret_' . $user->id);
+        $otp = $request->input('one_time_password'); // Get OTP from user input
+        $google2fa = app('pragmarx.google2fa');
+        if ($google2fa->verifyGoogle2FA($secretKey, $otp)) {
+            // OTP is valid
+            $user->google2fa_secret = $secretKey;
+            $user->save();
+            Cache::forget('google2fa_secret_' . $user->id);
 
-        return ApiResponse::success(message: '2 Factor Authentication successfully enabled.');
+            return ApiResponse::success(message: '2-Factor Authentication successfully enabled.');
+        }
+
+        // OTP is invalid
+        return ApiResponse::error(errors: ['one_time_password' => ['Invalid OTP.']]);
     }
 }
