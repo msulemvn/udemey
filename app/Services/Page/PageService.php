@@ -5,95 +5,127 @@ use App\DTOs\Page\PageDTO;
 use App\Helpers\ApiResponse;
 use App\Models\Page;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class PageService
 {
     public function createPage($pageData)
     {
-        $page = Page::create(
-          (new PageDTO($pageData))->toArray());
-          return $page;
+        try {
+            $page = Page::create(
+                (new PageDTO($pageData))->toArray()
+            );
+            return $page;
+        } catch (Throwable $th) {
+            $errors = ['error' => ['An error occurred while creating the page. Please try again.']];
+            return ApiResponse::error(message: 'Page creation failed', errors: $errors);
+        }
     }
 
     public function updatePage($pageId, array $pageData)
     {
-        $page = Page::find($pageId);
-    
-        if (!$page) 
-        {
-            return null; 
-        }
-    
-        $pageDTO = new PageDTO($pageData);
-    
-        $updateData = array_filter($pageDTO->toArray(), function ($value) {
-            return !is_null($value);
-        });
-    
-        $page->update($updateData);
-        return $page; 
-    }
+        try {
+            $page = Page::find($pageId);
 
+            if (!$page) {
+                return null;
+            }
+
+            $pageDTO = new PageDTO($pageData);
+
+            $updateData = array_filter($pageDTO->toArray(), function ($value) {
+                return !is_null($value);
+            });
+
+            $page->update($updateData);
+            return $page;
+        } catch (Throwable $th) {
+            $errors = ['error' => ['An error occurred while updating the page. Please try again.']];
+            return ApiResponse::error(message: 'Page update failed', errors: $errors);
+        }
+    }
 
     public function getPageBySlug(string $slug)
     {
-        $page = Page::where('slug', $slug)->first();
+        try {
+            $page = Page::where('slug', $slug)->first();
 
-        if (!$page) {
-            return ApiResponse::error(message:'Page not found!',statusCode: Response::HTTP_NOT_FOUND);
+            if (!$page) {
+                return ApiResponse::error(
+                    message: 'Page not found!',
+                    errors: ['error' => ['The requested page does not exist.']],
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
+            }
+            return $page;
+        } catch (Throwable $th) {
+            $errors = ['error' => ['An error occurred while retrieving the page. Please try again.']];
+            return ApiResponse::error(message: 'Page retrieval failed', errors: $errors);
         }
-        return $page;
     }
 
-    public function getPageById( $pageId)
+    public function getPageById($pageId)
     {
-        $page = Page::where('id', $pageId)->first();
+        try {
+            $page = Page::where('id', $pageId)->first();
 
-        if (!$page) {
-            return ApiResponse::error(message:'Page not found!', statusCode: Response::HTTP_NOT_FOUND);
+            if (!$page) {
+                return ApiResponse::error(
+                    message: 'Page not found!',
+                    errors: ['error' => ['The requested page does not exist.']],
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
+            }
+            return $page;
+        } catch (Throwable $th) {
+            $errors = ['error' => ['An error occurred while retrieving the page. Please try again.']];
+            return ApiResponse::error(message: 'Page retrieval failed', errors: $errors);
         }
-        return $page;
     }
 
-    // public function getPages()
-    // {
-    //     $pages = Page::all();
-
-    //     if(!$pages)
-    //     {
-    //         return ApiResponse::error(message:'Pages not found!', statusCode:Response::HTTP_NOT_FOUND);
-    //     }
-    //     else
-    //     {
-    //         return $pages;
-    //     }
-    // }
     public function getPages()
     {
-        $pages = Page::all();
-        return $pages;
+        try {
+            $pages = Page::all();
+            return $pages;
+        } catch (Throwable $th) {
+            $errors = ['error' => ['An error occurred while retrieving the pages. Please try again.']];
+            return ApiResponse::error(message: 'Pages retrieval failed', errors: $errors);
+        }
     }
+
     public function deletePage(int $pageId)
     {
-        $page = Page::find($pageId);
+        try {
+            $page = Page::find($pageId);
 
-        if (!$page) {
-            return ApiResponse::error(message:'Page not found!', statusCode:Response::HTTP_NOT_FOUND);
+            if (!$page) {
+                return ApiResponse::error(
+                    message: 'Page not found!',
+                    errors: ['error' => ['The page you are trying to delete does not exist.']],
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
+            }
+            return $page->delete();
+        } catch (Throwable $th) {
+            $errors = ['error' => ['An error occurred while deleting the page. Please try again.']];
+            return ApiResponse::error(message: 'Page deletion failed', errors: $errors);
         }
-        return $page->delete();
-
     }
 
     public function restorePage($pageId)
     {
-        $page = Page::withTrashed()->find($pageId);
-        
-        if (!$page) 
-        {
-            return null;
-        }
-        $page->restore();
-        return $page;
-    }
+        try {
+            $page = Page::withTrashed()->find($pageId);
 
+            if (!$page) {
+                return null;
+            }
+            $page->restore();
+            return $page;
+        } catch (Throwable $th) {
+            $errors = ['error' => ['An error occurred while restoring the page. Please try again.']];
+            return ApiResponse::error(message: 'Page restoration failed', errors: $errors);
+        }
+    }
 }
