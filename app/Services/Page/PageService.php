@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services\Page;
 
 use App\DTOs\Page\PageDTO;
@@ -47,40 +48,24 @@ class PageService
 
     public function getPageBySlug(string $slug)
     {
-        try {
-            $page = Page::where('slug', $slug)->first();
-
-            if (!$page) {
-                return ApiResponse::error(
-                    message: 'Page not found!',
-                    errors: ['error' => ['The requested page does not exist.']],
-                    statusCode: Response::HTTP_NOT_FOUND
-                );
-            }
-            return $page;
-        } catch (Throwable $th) {
-            $errors = ['error' => ['An error occurred while retrieving the page. Please try again.']];
-            return ApiResponse::error(message: 'Page retrieval failed', errors: $errors);
-        }
+        $page = Page::where('slug', $slug)->first();
+        return $page  ? ['success' => true, 'message' => '', 'data' => $page] : [
+            'success' => false,
+            'message' => 'Page not found!',
+            'errors' => ['error' => ['The requested page does not exist.']],
+            'statusCode' => Response::HTTP_NOT_FOUND,
+        ];
     }
 
     public function getPageById($pageId)
     {
-        try {
-            $page = Page::where('id', $pageId)->first();
-
-            if (!$page) {
-                return ApiResponse::error(
-                    message: 'Page not found!',
-                    errors: ['error' => ['The requested page does not exist.']],
-                    statusCode: Response::HTTP_NOT_FOUND
-                );
-            }
-            return $page;
-        } catch (Throwable $th) {
-            $errors = ['error' => ['An error occurred while retrieving the page. Please try again.']];
-            return ApiResponse::error(message: 'Page retrieval failed', errors: $errors);
-        }
+        $page = Page::where('id', $pageId)->first();
+        return $page  ? ['success' => true, 'message' => '', 'data' => $page] : [
+            'success' => false,
+            'message' => 'Page not found!',
+            'errors' => ['error' => ['The requested page does not exist.']],
+            'statusCode' => Response::HTTP_NOT_FOUND,
+        ];
     }
 
     public function getPages()
