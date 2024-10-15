@@ -29,6 +29,7 @@ class AuthController extends Controller
                 $permissions = $role->permissions()->pluck('name')->toArray();
                 $data['permissions'] = $permissions;
             }
+            $data['2fa'] = ($user->google2fa_secret) ? true : false;
             $data['access_token'] = $token;
         } catch (\Throwable $th) {
             $errors = ['credentials' => ['Email or password is incorrect. Please try again.']];
