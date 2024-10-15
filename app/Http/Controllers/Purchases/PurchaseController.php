@@ -17,12 +17,18 @@ class PurchaseController extends Controller
     {
         $this->purchaseService = $purchaseService;
     }
+
+    /************************************ Display a listing of the Purchases ************************************/
+
     public function index()
     {
 
         $purchases = $this->purchaseService->index();
         return ApiResponse::success(message: 'Purchased courses retrieved successfully', data: $purchases->toarray());
     }
+
+    /************************************ Checkout Purchase ************************************/
+
     public function checkout()
     {
         $checkoutResponse = $this->purchaseService->checkout();
