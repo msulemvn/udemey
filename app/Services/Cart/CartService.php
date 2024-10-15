@@ -76,6 +76,13 @@ class CartService implements CartServiceInterface
             $cartItems = Cart::with('course')
                 ->where('user_id', auth()->id())
                 ->get();
+            if ($cartItems->isEmpty()) {
+                return ApiResponse::error(
+                    message: 'No items in the cart',
+                    errors: ['cart' => ['Your cart is currently empty.']],
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
+            }
 
             return [
                 'message' => 'cart',
