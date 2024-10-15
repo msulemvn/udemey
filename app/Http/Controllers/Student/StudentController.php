@@ -27,13 +27,6 @@ class StudentController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Student  $student

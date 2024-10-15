@@ -6,17 +6,16 @@ use App\Models\User;
 use App\Helpers\ApiResponse;
 use App\Services\User\UserService;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\User\ChangePasswordUserRequest;
+use App\Services\User\UserService;
 
 class UserController extends Controller
 {
     protected $userService;
+
     public function __construct(UserService $userService)
     {
         $this->userService = $userService;
     }
-
     /**
      * Display the specified resource.
      *
@@ -54,8 +53,9 @@ class UserController extends Controller
     }
 
 
-    public function changePassword(ChangePasswordUserRequest $request)
+    public function changePassword(ChangePasswordRequest $request)
     {
-        return $this->userService->changePassword($request);
+        $validatedData = $request->safe()->only(['current_password', 'new_password', 'new_password_confirmation']);
+        return $this->userService->changePassword($validatedData);
     }
 }

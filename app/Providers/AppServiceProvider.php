@@ -38,24 +38,9 @@ class AppServiceProvider extends ServiceProvider
         );
 <<<<<<< HEAD
 
-        $this->app->bind(
-            \App\Interfaces\Enrollment\EnrollmentServiceInterface::class,
-            \App\Services\Enrollment\EnrollmentService::class
-        );
-
-        $this->app->bind(
-            \App\Interfaces\Cart\CartServiceInterface::class,
-            \App\Services\Cart\CartService::class
-        );
-
-        $this->app->bind(
-            \App\Interfaces\Purchase\PurchaseServiceInterface::class,
-            \App\Services\Purchase\PurchaseService::class
-        );
-
 		$this->app->bind(
-			\App\Interfaces\Auth\TwoFactorServiceInterface::class,
-			\App\Services\Auth\TwoFactorService::class
+			\App\Interfaces\CourseCategory\CourseCategoryServiceInterface::class,
+			\App\Services\CourseCategory\CourseCategoryService::class
 		);
 
 		$this->app->bind(
