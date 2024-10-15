@@ -15,10 +15,6 @@ class Student extends Model
     protected $guarded = ['created_at', 'updated_at'];
     protected $hidden = ['deleted_at', 'created_at', 'updated_at'];
 
-    public function quizInstance()
-    {
-        return $this->hasMany(QuizInstance::class);
-    }
     public function user()
     {
         return $this->belongsTo(User::class, 'account_id');

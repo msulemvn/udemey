@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Student;
 
 use App\Helpers\ApiResponse;
-use App\Http\Requests\Student\UpdateRequest;
 use App\Models\Student;
 use App\Http\Controllers\Controller;
 
@@ -31,32 +30,8 @@ class StudentController extends Controller
                 'id' => $student->id,
                 'name' => $student->user->name,
                 'email' => $student->user->email,
-                'phone' => $student->phone,
             ];
         })->toArray());
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Student $student)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\Student\UpdateRequest  $request
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateStudentRequest $request, Student $student)
-    {
-        //
     }
 
     /**
