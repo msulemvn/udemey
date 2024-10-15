@@ -10,6 +10,7 @@ use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\Purchases\PurchaseController;
+use App\Http\Controllers\Enrollment\EnrollmentController;
 use App\Http\Controllers\SiteSetting\SiteSettingController;
 use App\Http\Controllers\CourseCategory\CourseCategoryController;
 // included auth.php
@@ -115,7 +116,13 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('/delete-cart/{courseId}', 'removeFromCart');
             Route::get('/viewcart', 'viewCart');
         });
+
         Route::post('/purchase', [PurchaseController::class, 'checkout']);
+
+        Route::controller(EnrollmentController::class)->group(function () {
+            Route::get('/enrollments', 'index');
+            Route::get('/enrollments/{courseId}', 'show');
+        });
     });
 
     /*

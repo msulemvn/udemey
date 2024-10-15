@@ -14,14 +14,16 @@ use App\Interfaces\Purchase\PurchaseServiceInterface;
 
 class PurchaseService implements PurchaseServiceInterface
 {
+    /************************************ Get all purchases with related users and courses ************************************/
+
     public function index()
     {
         try {
+
             // Get all purchases with related users and courses
             $purchases = Purchase::with(['user', 'course'])
                 ->orderBy('purchase_date', 'desc')
                 ->get();
-
             if ($purchases->isEmpty()) {
                 return ApiResponse::error(
                     message: 'No purchases found',
@@ -29,7 +31,10 @@ class PurchaseService implements PurchaseServiceInterface
                     statusCode: Response::HTTP_NOT_FOUND
                 );
             }
-            return $purchases;
+            return [
+                'message' => 'Purchased courses retrieved successfully',
+                'body' => $purchases->toArray(),
+            ];
         } catch (\Throwable $th) {
             return ApiResponse::error(
                 message: 'Failed to retrieve purchases',
@@ -39,6 +44,9 @@ class PurchaseService implements PurchaseServiceInterface
             );
         }
     }
+
+    /************************************ Checkout Purchase ************************************/
+
     public function checkout()
     {
         try {

@@ -23,8 +23,11 @@ class PurchaseController extends Controller
     public function index()
     {
 
-        $purchases = $this->purchaseService->index();
-        return ApiResponse::success(message: 'Purchased courses retrieved successfully', data: $purchases->toarray());
+        $Response = $this->purchaseService->index();
+        return ApiResponse::success(
+            message: $Response['message'],
+            data: $Response['body']
+        );
     }
 
     /************************************ Checkout Purchase ************************************/
