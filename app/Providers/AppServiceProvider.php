@@ -56,10 +56,26 @@ class AppServiceProvider extends ServiceProvider
 			\App\Interfaces\Purchase\PurchaseServiceInterface::class,
 			\App\Services\Purchase\PurchaseService::class
 		);
+<<<<<<< HEAD
 
 		$this->app->bind(
 			\App\Interfaces\Enrollment\EnrollmentServiceInterface::class,
 			\App\Services\Enrollment\EnrollmentService::class
+		);
+
+		$this->app->bind(
+			\App\Interfaces\Cart\CartServiceInterface::class,
+			\App\Services\Cart\CartService::class
+		);
+
+		$this->app->bind(
+			\App\Interfaces\PurchaseServiceInterface::class,
+			\App\Services\PurchaseService::class
+		);
+
+		$this->app->bind(
+			\App\Interfaces\Purchase\PurchaseServiceInterface::class,
+			\App\Services\Purchase\PurchaseService::class
 		);
     }
 

@@ -30,10 +30,7 @@ class CartService implements CartServiceInterface
                     'quantity' => 1,
                 ]
             );
-            return [
-                'message' => 'Add course to cart successfully',
-                'body' => $cartItem->toArray(),
-            ];
+            return $cartItem;
         } catch (\Throwable $th) {
             return ApiResponse::error(
                 message: 'Failed to add course to cart',
@@ -54,9 +51,6 @@ class CartService implements CartServiceInterface
 
             $cartItem->delete();
 
-            return [
-                'message' => 'Course removed from cart',
-            ];
 
             return ApiResponse::success(message: 'Course removed from cart');
         } catch (\Throwable $th) {
@@ -76,18 +70,8 @@ class CartService implements CartServiceInterface
             $cartItems = Cart::with('course')
                 ->where('user_id', auth()->id())
                 ->get();
-            if ($cartItems->isEmpty()) {
-                return ApiResponse::error(
-                    message: 'No items in the cart',
-                    errors: ['cart' => ['Your cart is currently empty.']],
-                    statusCode: Response::HTTP_NOT_FOUND
-                );
-            }
 
-            return [
-                'message' => 'cart',
-                'body' => $cartItems->toArray(),
-            ];
+            return $cartItems;
         } catch (\Throwable $th) {
             return ApiResponse::error(
                 message: 'Failed to retrieve cart items',
