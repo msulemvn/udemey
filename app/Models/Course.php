@@ -19,10 +19,24 @@ class Course extends Model
         return $this->belongsTo(CourseCategory::class, 'course_categories_id');
     }
 
-
     // A Course has many Articles
     public function articles()
     {
         return $this->hasMany(Article::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function purchases()
+    {
+        return $this->hasMany(Purchase::class);
+    }
+
+    public function cartItems()
+    {
+        return $this->hasMany(Cart::class);
     }
 }

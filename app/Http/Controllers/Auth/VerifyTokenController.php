@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\VerifyTokenRequest;
-use Illuminate\Support\Facades\Password;
 use App\Models\User;
+use App\Helpers\ApiResponse;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Password;
+use App\Http\Requests\Auth\VerifyTokenRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 class VerifyTokenController extends Controller

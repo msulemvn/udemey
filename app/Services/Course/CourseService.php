@@ -9,6 +9,7 @@ use App\DTOs\Course\CourseDTO;
 use App\DTOs\Course\CourseUpdateDTO;
 use App\Interfaces\CourseServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
 class CourseService implements CourseServiceInterface
@@ -26,7 +27,8 @@ class CourseService implements CourseServiceInterface
             }
             return $courses;
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to show courses', exception: $th);
+            $errors = ['courses' => ['Failed to retrieve the courses. Please try again later.']];
+            return ApiResponse::error(message: 'Failed to show courses', errors: $errors, exception: $th);
         }
     }
 
@@ -50,7 +52,7 @@ class CourseService implements CourseServiceInterface
             $course = Course::create($courseDTO->toArray());
             return $course;
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to create course', request: $request, exception: $th);
+            return ApiResponse::error(message: 'Failed to create course', errors: ['course' => ['Unable to create course at this time.']], exception: $th);
         }
     }
 
@@ -62,13 +64,22 @@ class CourseService implements CourseServiceInterface
             $course = Course::where('slug', $slug)->first();
 
             if (!$course) {
-                return ApiResponse::error(message: 'Course not found', statusCode: Response::HTTP_NOT_FOUND);
+                return ApiResponse::error(
+                    message: 'Course not found',
+                    errors: ['course' => ['The course with the given slug was not found.']],
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
             }
 
             $course->short_description = json_decode($course->short_description);
             return $course;
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to show course', exception: $th, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
+            return ApiResponse::error(
+                message: 'Failed to retrieve course',
+                errors: ['course' => ['An error occurred while retrieving the course. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -87,8 +98,19 @@ class CourseService implements CourseServiceInterface
             $courseUpdateDTO = new CourseUpdateDTO($request->all(), $slug);
             $course->update($courseUpdateDTO->toArray());
             return $course;
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::error(
+                message: 'Course not found',
+                errors: ['course' => ['The course with the provided ID was not found.']],
+                statusCode: Response::HTTP_NOT_FOUND
+            );
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to update course', request: $request, exception: $th, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
+            return ApiResponse::error(
+                message: 'Failed to update course',
+                errors: ['course' => ['An error occurred while updating the course. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -104,8 +126,19 @@ class CourseService implements CourseServiceInterface
             $course->delete(); // This will perform soft delete if the model uses SoftDeletes
 
             return ApiResponse::success(message: 'Deleted the course successfully');
+        } catch (ModelNotFoundException $e) {
+            return ApiResponse::error(
+                message: 'Course not found',
+                errors: ['course' => ['The course with the provided ID was not found.']],
+                statusCode: Response::HTTP_NOT_FOUND
+            );
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to delete course', exception: $th);
+            return ApiResponse::error(
+                message: 'Failed to delete course',
+                errors: ['course' => ['An error occurred while trying to delete the course. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -115,14 +148,29 @@ class CourseService implements CourseServiceInterface
             $course = Course::with('articles')->find($id);
 
             if (!$course) {
-                return ApiResponse::error(message: 'Course not found', statusCode: Response::HTTP_NOT_FOUND);
+                return ApiResponse::error(
+                    message: 'Course not found',
+                    errors: ['course' => ['The course with the provided ID was not found.']],
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
             }
+
+            // Check if the course has articles
             if ($course->articles->isEmpty()) {
-                return ApiResponse::error(message: 'No articles found for this course', statusCode: Response::HTTP_NOT_FOUND);
+                return ApiResponse::error(
+                    message: 'No articles found for this course',
+                    errors: ['articles' => ['This course does not have any articles associated with it.']],
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
             }
             return $course;
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to get articles', exception: $th);
+            return ApiResponse::error(
+                message: 'Failed to retrieve articles for the course',
+                errors: ['articles' => ['An error occurred while fetching the articles. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 

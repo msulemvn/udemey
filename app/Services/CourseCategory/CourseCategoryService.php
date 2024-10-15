@@ -19,11 +19,20 @@ class CourseCategoryService implements CourseCategoryServiceInterface
         try {
             $courseCategories = CourseCategory::all();
             if ($courseCategories->isEmpty()) {
-                return ApiResponse::error(message: 'No course categories available at the moment', statusCode: Response::HTTP_NOT_FOUND);
+                return ApiResponse::error(
+                    message: 'No course categories available at the moment',
+                    errors: ['courseCategories' => ['No categories found']],
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
             }
             return $courseCategories;
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to get courseCategories', exception: $th);
+            return ApiResponse::error(
+                message: 'Failed to get course categories',
+                errors: ['courseCategories' => ['Error retrieving course categories. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -33,11 +42,21 @@ class CourseCategoryService implements CourseCategoryServiceInterface
     {
         try {
             $courseCategory = CourseCategory::findOrFail($id);
+            if (!$courseCategory) {
+                return ApiResponse::error(
+                    message: 'Course category not found',
+                    errors: ['courseCategory' => ['No course category found with the given ID']],
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
+            }
             return $courseCategory;
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return ApiResponse::error(message: 'No Course category Found', statusCode: Response::HTTP_NOT_FOUND);
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to get course Categories', exception: $th);
+            return ApiResponse::error(
+                message: 'Failed to retrieve course category',
+                errors: ['courseCategory' => ['Error retrieving course category. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -53,8 +72,13 @@ class CourseCategoryService implements CourseCategoryServiceInterface
             $courseCategoryDTO = new CourseCategoryDTO($request);
             $courseCategory = CourseCategory::create($courseCategoryDTO->toArray());
             return $courseCategory;
-        } catch (\Exception $e) {
-            return ApiResponse::error(message: 'Failed to create course category', statusCode: Response::HTTP_NOT_FOUND);
+        } catch (\Throwable $th) {
+            return ApiResponse::error(
+                message: 'Failed to create course category',
+                errors: ['courseCategory' => ['Error creating course category. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -64,6 +88,13 @@ class CourseCategoryService implements CourseCategoryServiceInterface
     {
         try {
             $courseCategory = CourseCategory::findOrFail($id);
+            if (!$courseCategory) {
+                return ApiResponse::error(
+                    message: 'Course category not found',
+                    errors: ['courseCategory' => ['No course category found with the given ID']],
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
+            }
             $slug = $this->generateUniqueSlug($request['title']);
 
             $request['slug'] = $slug;
@@ -72,8 +103,13 @@ class CourseCategoryService implements CourseCategoryServiceInterface
 
             $courseCategory->update($courseCategoryDTO->toArray());
             return $courseCategory;
-        } catch (\Exception $e) {
-            return ApiResponse::error(message: 'Failed to update course category', statusCode: Response::HTTP_NOT_FOUND);
+        } catch (\Throwable $th) {
+            return ApiResponse::error(
+                message: 'Failed to update course category',
+                errors: ['courseCategory' => ['Error updating course category. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -85,8 +121,13 @@ class CourseCategoryService implements CourseCategoryServiceInterface
             $courseCategory = CourseCategory::findOrFail($id);
             $courseCategory->delete();
             return ApiResponse::success(message: 'Course category deleted successfully', data: $courseCategory, statusCode: Response::HTTP_CREATED);
-        } catch (\Exception $e) {
-            return ApiResponse::error(message: 'Failed to delete course category');
+        } catch (\Throwable $th) {
+            return ApiResponse::error(
+                message: 'Failed to delete course category',
+                errors: ['courseCategory' => ['Error deleting course category. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -95,11 +136,20 @@ class CourseCategoryService implements CourseCategoryServiceInterface
         try {
             $courseCategory = CourseCategory::with('course')->find($id);
             if (!$courseCategory) {
-                return ApiResponse::error(message: 'course not found', statusCode: Response::HTTP_NOT_FOUND);
+                return ApiResponse::error(
+                    message: 'Course not found',
+                    errors: ['courseCategory' => ['No course category found with the given ID']],
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
             }
             return $courseCategory;
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to get course', exception: $th);
+            return ApiResponse::error(
+                message: 'Failed to retrieve course',
+                errors: ['courseCategory' => ['Error retrieving course. Please try again later.']],
+                exception: $th,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
