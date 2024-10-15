@@ -1,12 +1,13 @@
 <?php
 namespace App\Services\SiteSetting;
 
+use Exception;
+use Throwable;
 use App\Models\SiteSetting;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\DTOs\SiteSettings\SiteSettingDTO;
-use Exception;
-use Illuminate\Support\Facades\Log;
 
 class SiteSettingService {
 
@@ -24,9 +25,14 @@ class SiteSettingService {
                 $logoPath = 'logos/' . $newFileName;
                 Storage::disk('public')->put($logoPath, file_get_contents($logo->getRealPath()));
                 Log::info('Logo file stored at: ' . $logoPath);
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 Log::error('Error uploading logo: ' . $e->getMessage());
-                throw new Exception('Failed to upload logo.');
+                return [
+                    'error' => [
+                        'message' => 'Failed to upload logo.',
+                        'details' => $e->getMessage(),
+                    ]
+                ];
             }
         }
 
@@ -50,9 +56,14 @@ class SiteSettingService {
                 Storage::disk('public')->put($filePath, file_get_contents($logo->getRealPath()));
                 $logoPath = $filePath;
                 Log::info('Logo file stored at: ' . $logoPath);
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 Log::error('Error uploading logo: ' . $e->getMessage());
-                throw new Exception('Failed to upload logo.');
+                return [
+                    'error' => [
+                        'message' => 'Failed to upload logo.',
+                        'details' => $e->getMessage(),
+                    ]
+                ];
             }
         }
         $updates = [
@@ -79,11 +90,20 @@ class SiteSettingService {
 
     public function restoreSetting($id)
     {
-        $deletedSiteSetting = SiteSetting::onlyTrashed()->find($id);
-        if (!$deletedSiteSetting) {
-            throw new Exception("No settings found for the Id " . $id);
+        try {
+            $deletedSiteSetting = SiteSetting::onlyTrashed()->find($id);
+            if (!$deletedSiteSetting) {
+                throw new Exception("No settings found for the Id " . $id);
+            }
+            $deletedSiteSetting->restore();
+            return $deletedSiteSetting;
+        } catch (Throwable $e) {
+            return [
+                'error' => [
+                    'message' => 'Failed to restore settings.',
+                    'details' => $e->getMessage(),
+                ]
+            ];
         }
-        $deletedSiteSetting->restore();
-        return $deletedSiteSetting;
     }
 }
