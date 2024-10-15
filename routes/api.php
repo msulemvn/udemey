@@ -47,7 +47,11 @@ Route::controller(CourseCategoryController::class)->group(function () {
     Route::get('/course-categories/{id}', 'show');
     Route::get('/course-categories/{id}/course', 'getCoursewithCourseCategories');
 });
-
+Route::controller(PageController::class)->group(function () {
+    Route::get('/get-all-pages', 'getPages');
+    Route::get('/get-page-by-id/{pageId}', 'getPageById');
+    Route::get('/get-page-by-slug/{slug}', 'getPageBySlug');
+});
 /*
 |--------------------------------------------------------------------------
 | Authenticated Routes: auth
@@ -149,27 +153,19 @@ Route::middleware('auth:api')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::middleware('role:admin')->group(function () {
-
         Route::controller(PageController::class)->group(function () {
             Route::post('/create-page', 'create');
             Route::put('/update-page/{pageId}', 'update');
             Route::delete('/delete-page/{pageId}', 'destroy');
             Route::post('/restore-page/{pageId}', 'restore');
         });
-    });
-    Route::controller(PageController::class)->group(function () {
 
-        Route::get('/get-all-pages', 'getPages');
-        Route::get('/get-page-by-id/{pageId}', 'getPageById');
-        Route::get('/get-page-by-slug/{slug}', 'getPageBySlug');
-    });
-
-
-    Route::controller(SiteSettingController::class)->group(function () {
-        Route::post('/create-site-setting', 'createSetting');
-        Route::put('/update-site-setting/{id}', 'updateSetting');
-        Route::delete('/delete-site-setting/{id}', 'deleteSetting');
-        Route::post('/restore-site-setting/{id}', 'restoreSoftDeletedSetting');
-        Route::get('/get-site-settings/{id}', 'getSettings');
+        Route::controller(SiteSettingController::class)->group(function () {
+            Route::post('/create-site-setting', 'createSetting');
+            Route::put('/update-site-setting/{id}', 'updateSetting');
+            Route::delete('/delete-site-setting/{id}', 'deleteSetting');
+            Route::post('/restore-site-setting/{id}', 'restoreSoftDeletedSetting');
+            Route::get('/get-site-settings/{id}', 'getSettings');
+        });
     });
 });

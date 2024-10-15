@@ -7,9 +7,16 @@ use Illuminate\Support\Facades\Auth;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Controllers\Controller;
+use App\Services\User\UserService;
 
 class UserController extends Controller
 {
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
     /**
      * Display the specified resource.
      *
@@ -24,13 +31,18 @@ class UserController extends Controller
     public function showUser()
     {
         $userId = Auth::user()->id;
-        $myRole = Auth::user()->getRoleNames()[0];
+        $user = Auth::user();
+        /** @var \App\User|null $user */
+        $myRole = $user->getRoleNames()[0];
         if ($myRole == 'admin') {
-            return ApiResponse::success(data: User::find($userId)->toArray());
+            $userData = User::find($userId)->toArray();
+            $userData['2fa'] =  ($userData['google2fa_secret']) ? true : false;
+            unset($userData['google2fa_secret']);
+            return ApiResponse::success(data: $userData);
         }
 
         return ApiResponse::success(data: User::with($myRole)->whereId($userId)->get()->mapWithKeys(function ($user) {
-            $role = Auth::user()->getRoleNames()[0];
+            $role = $user->getRoleNames()[0];
             return [
                 'id' => $user->$role->id,
                 'name' => $user->name,
@@ -41,9 +53,9 @@ class UserController extends Controller
     }
 
 
-    public function changePassword(ChangePasswordRequest $request, UserService $userService)
+    public function changePassword(ChangePasswordRequest $request)
     {
         $validatedData = $request->safe()->only(['current_password', 'new_password', 'new_password_confirmation']);
-        return $userService->changePassword($validatedData);
+        return $this->userService->changePassword($validatedData);
     }
 }

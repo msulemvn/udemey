@@ -51,6 +51,7 @@ Route::middleware('auth:api')->group(function () {
     Route::controller(TwoFactorController::class)->group(function () {
         Route::get('/generate-secret-key', 'generateSecretKey');
         Route::post('/enable-2fa', 'enable2FA');
-        Route::post('/verify-2fa',  'verify')->name('2fa.verify');
+        Route::post('/disable-2fa', 'disable2FA');
+        Route::post('/verify-2fa',  'verify2FA')->name('2fa.verify');
     });
 });
