@@ -20,9 +20,11 @@ class CartController extends Controller
     /************************************ Add course to cart ************************************/
     public function addToCart(Request $request, $slug)
     {
-        $cartItem = $this->cartService->addToCart($request, $slug);
-
-        return ApiResponse::success(message: 'Course added to cart', data: $cartItem->toArray());
+        $Response = $this->cartService->addToCart($request, $slug);
+        return ApiResponse::success(
+            message: $Response['message'],
+            data: $Response['body']
+        );
     }
 
     /************************************ Remove course from cart ************************************/
@@ -34,8 +36,10 @@ class CartController extends Controller
     /************************************ View all cart items ************************************/
     public function viewCart()
     {
-        $cartItems = $this->cartService->viewCart();
-
-        return ApiResponse::success(message: 'cart', data: $cartItems->toArray());
+        $Response = $this->cartService->viewCart();
+        return ApiResponse::success(
+            message: $Response['message'],
+            data: $Response['body']
+        );
     }
 }
