@@ -51,6 +51,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Interfaces\Purchase\PurchaseServiceInterface::class,
             \App\Services\Purchase\PurchaseService::class
         );
+
+		$this->app->bind(
+			\App\Interfaces\Auth\TwoFactorServiceInterface::class,
+			\App\Services\Auth\TwoFactorService::class
+		);
     }
 
     /**
