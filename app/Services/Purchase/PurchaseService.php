@@ -14,8 +14,6 @@ use App\Interfaces\Purchase\PurchaseServiceInterface;
 
 class PurchaseService implements PurchaseServiceInterface
 {
-    /************************************ Get all purchases with related users and courses ************************************/
-
     public function index()
     {
         try {
@@ -44,8 +42,6 @@ class PurchaseService implements PurchaseServiceInterface
             );
         }
     }
-
-    /************************************ Checkout Purchase ************************************/
 
     public function checkout()
     {
