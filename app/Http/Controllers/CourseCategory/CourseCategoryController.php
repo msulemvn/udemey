@@ -6,8 +6,8 @@ use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use App\Services\CourseCategory\CourseCategoryService;
-use App\Http\Requests\Course\CreateCourseCategoryRequest;
-use App\Http\Requests\Course\UpdateCourseCategoryRequest;
+use App\Http\Requests\CourseCategory\CreateCourseCategoryRequest;
+use App\Http\Requests\CourseCategory\UpdateCourseCategoryRequest;
 
 
 class CourseCategoryController extends Controller
@@ -37,7 +37,6 @@ class CourseCategoryController extends Controller
     }
 
     /************************************ Create a new course category ************************************/
-
     public function store(CreateCourseCategoryRequest $request)
     {
         $courseCategory = $this->courseCategoryService->store($request);
