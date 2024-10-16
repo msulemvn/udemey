@@ -3,21 +3,28 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Helpers\ApiResponse;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\Auth\LoginAuthRequest;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
+use App\Services\Auth\AuthService;
+use App\Http\Requests\Auth\LoginAuthRequest;
 use Spatie\Permission\Traits\HasPermissions;
 
 class AuthController extends Controller
 {
     use HasRoles, HasPermissions;
+    protected $loginAuthService;
+
+    public function __construct(AuthService $loginAuthService)
+    {
+        $this->loginAuthService = $loginAuthService;
+    }
+
     public function login(LoginAuthRequest $request)
     {
         // Retrieve the validated input data...
-        $validated = $request->validated();
-        $token = Auth::attempt($validated);
+        $token = Auth::attempt($request);
         try {
             $user = Auth::user();
             /** @var \App\User|null $user */

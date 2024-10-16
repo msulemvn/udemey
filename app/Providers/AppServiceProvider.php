@@ -56,6 +56,16 @@ class AppServiceProvider extends ServiceProvider
 			\App\Interfaces\Auth\TwoFactorServiceInterface::class,
 			\App\Services\Auth\TwoFactorService::class
 		);
+
+		$this->app->bind(
+			\App\Interfaces\Auth\LoginAuthServiceInterface::class,
+			\App\Services\Auth\LoginAuthService::class
+		);
+
+		$this->app->bind(
+			\App\Interfaces\Auth\AuthServiceInterface::class,
+			\App\Services\Auth\AuthService::class
+		);
     }
 
     /**

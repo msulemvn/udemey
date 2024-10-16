@@ -6,12 +6,8 @@ use App\Models\Course;
 use App\Models\Enrollment;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
-
-
 use Symfony\Component\HttpFoundation\Response;
 use App\Interfaces\Enrollment\EnrollmentServiceInterface;
-
-
 
 class EnrollmentService implements EnrollmentServiceInterface
 {
@@ -38,8 +34,6 @@ class EnrollmentService implements EnrollmentServiceInterface
             );
         }
     }
-
-    /************************************ Retrieve a specific course for the student ************************************/
 
     public function show($courseId)
     {

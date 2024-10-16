@@ -8,14 +8,9 @@ use App\Helpers\ApiResponse;
 use App\DTOs\Category\CategoryDTO;
 use Symfony\Component\HttpFoundation\Response;
 use App\Interfaces\Category\CategoryServiceInterface;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-
 
 class CategoryService implements CategoryServiceInterface
 {
-    /************************************ Display a listing of the categories ************************************/
-
     public function index()
     {
         try {
@@ -38,7 +33,6 @@ class CategoryService implements CategoryServiceInterface
         }
     }
 
-    /************************************ Store a newly created category ************************************/
 
     public function store($request)
     {
@@ -63,8 +57,6 @@ class CategoryService implements CategoryServiceInterface
         }
     }
 
-    /************************************ Show the specified category ************************************/
-
     public function show($id)
     {
         try {
@@ -86,8 +78,6 @@ class CategoryService implements CategoryServiceInterface
             );
         }
     }
-
-    /************************************ Update the specified category ************************************/
 
     public function update($request, $id)
     {
@@ -119,8 +109,6 @@ class CategoryService implements CategoryServiceInterface
             );
         }
     }
-
-    /************************************ Remove the specified category ************************************/
 
     public function destroy($id)
     {
