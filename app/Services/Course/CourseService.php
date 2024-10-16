@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use App\DTOs\Course\CourseDTO;
 use App\DTOs\Course\CourseUpdateDTO;
-use App\Interfaces\CourseServiceInterface;
+use App\Interfaces\Course\CourseServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 

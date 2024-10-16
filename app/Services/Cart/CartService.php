@@ -5,15 +5,12 @@ namespace App\Services\Cart;
 use App\Models\Cart;
 use App\Models\Course;
 use App\Helpers\ApiResponse;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 use App\Interfaces\Cart\CartServiceInterface;
 
 
 class CartService implements CartServiceInterface
 {
-    /************************************ Add course to cart ************************************/
     public function addToCart($request, $slug)
     {
         try {
@@ -44,7 +41,6 @@ class CartService implements CartServiceInterface
         }
     }
 
-    /************************************ Remove course from cart ************************************/
     public function removeFromCart($request, $id)
     {
         try {
@@ -69,7 +65,6 @@ class CartService implements CartServiceInterface
         }
     }
 
-    /************************************ View all cart items ************************************/
     public function viewCart()
     {
         try {
