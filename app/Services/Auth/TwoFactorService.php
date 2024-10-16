@@ -29,7 +29,7 @@ class TwoFactorService implements TwoFactorServiceInterface
 
         try {
             $google2fa = new Google2FA();
-            $secretKey = $google2fa->generateSecretKey();
+            $secretKey = $google2fa->generateSecretKey(32);
             $user = Auth::user();
             Cache::put('google2fa_secret_' . $user->id, $secretKey, 60);
             return ['success' => true, 'message' => 'Secret key generated successfully.', 'data' => ['google2fa_secret' => $secretKey]];
