@@ -14,7 +14,7 @@ class UserController extends Controller
     protected $userService;
     public function __construct(UserService $userService)
     {
-        $this->$userService = $userService;
+        $this->userService = $userService;
     }
 
     /**
@@ -56,7 +56,6 @@ class UserController extends Controller
 
     public function changePassword(ChangePasswordUserRequest $request)
     {
-        $validatedData = $request->safe()->only(['current_password', 'new_password', 'new_password_confirmation']);
-        return $this->this->userService->changePassword($validatedData);
+        return $this->userService->changePassword($request);
     }
 }
