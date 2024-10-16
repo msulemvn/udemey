@@ -15,13 +15,12 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('article_id')->constrained('articles')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->unsignedBigInteger('parent_comment_id')->nullable();
-            $table->foreign('parent_comment_id')->references('id')->on('comments')->onDelete('cascade');
+            // automatically creates the commentable_id and commentable_type columns.
+            $table->morphs('commentable');
             $table->text('content');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->softDeletes();
+            $table->index(['commentable_id', 'commentable_type']);
             $table->timestamps();
         });
     }
