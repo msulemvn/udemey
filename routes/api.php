@@ -6,7 +6,6 @@ use App\Http\Controllers\Page\PageController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Article\ArticleController;
-use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\Purchases\PurchaseController;
@@ -68,14 +67,6 @@ Route::middleware('auth:api')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Authenticated Routes: manager
-    |--------------------------------------------------------------------------
-    */
-
-    Route::middleware('role:manager')->group(function () {});
-
-    /*
-    |--------------------------------------------------------------------------
     | Authenticated Routes: admin
     |--------------------------------------------------------------------------
     */
@@ -91,6 +82,11 @@ Route::middleware('auth:api')->group(function () {
             Route::post('create-category', 'store');
             Route::put('/update-category/{id}', 'update');
             Route::delete('/delete-category/{id}', 'destroy');
+        });
+
+        Route::controller(StudentController::class)->group(function () {
+            Route::post('/delete-student/{student}', 'destroy');
+            Route::get('/students', 'show');
         });
 
         Route::controller(CourseCategoryController::class)->group(function () {
@@ -122,24 +118,6 @@ Route::middleware('auth:api')->group(function () {
         Route::controller(EnrollmentController::class)->group(function () {
             Route::get('/enrollments', 'index');
             Route::get('/enrollments/{courseId}', 'show');
-        });
-    });
-
-    /*
-    |-------------------------------------------------------------------------- 
-    | Authenticated Routes: admin, manager
-    |--------------------------------------------------------------------------
-    */
-    Route::middleware('role:admin,manager')->group(function () {
-        Route::controller(StudentController::class)->group(function () {
-            Route::post('/delete-student/{student}', 'destroy');
-            Route::get('/students', 'show');
-        });
-
-        Route::controller(ManagerController::class)->group(function () {
-            Route::post('/add-manager', 'store');
-            Route::post('/delete-manager/{manager}', 'destroy');
-            Route::get('/managers', 'show');
         });
     });
 

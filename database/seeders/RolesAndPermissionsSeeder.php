@@ -19,7 +19,6 @@ class RolesAndPermissionsSeeder extends Seeder
     public function run()
     {
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $managerRole = Role::firstOrCreate(['name' => 'manager']);
         $studentRole = Role::firstOrCreate(['name' => 'student']);
 
         $permissions = [
