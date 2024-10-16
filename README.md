@@ -31,12 +31,6 @@ In App\config\app.php project timezone is set to
 ```
 'timezone' => 'Asia/Karachi',
 ```
-### PHP Settings
-To accommodate larger file uploads, the following PHP settings have been adjusted:
-```
-post_max_size = 2G
-upload_max_filesize = 2G
-```
 ###  Install JWT Auth Package 
 ```
 composer require php-open-source-saver/jwt-auth
