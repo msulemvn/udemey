@@ -8,7 +8,7 @@ use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use App\Services\SiteSetting\SiteSettingService;
-use App\Http\Requests\SiteSetting\SiteSettingRequest;
+use App\Http\Requests\SiteSetting\CreateSiteSettingRequest;
 use App\Http\Requests\SiteSetting\UpdateSiteSettingRequest;
 
 class SiteSettingController extends Controller
@@ -20,7 +20,7 @@ class SiteSettingController extends Controller
         $this->siteSettingService = $siteSettingService;
     }
 
-    public function createSetting(SiteSettingRequest $request)
+    public function createSetting(CreateSiteSettingRequest $request)
     {
         $siteSetting = $request->validated();
         $logo = $request->file('logo_path');

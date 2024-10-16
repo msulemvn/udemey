@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Requests\SiteSetting;
+
 use App\Http\Requests\BaseRequest;
-class SiteSettingRequest extends BaseRequest
+
+class CreateSiteSettingRequest extends BaseRequest
 {
-   
+
     public function authorize()
     {
         return true;

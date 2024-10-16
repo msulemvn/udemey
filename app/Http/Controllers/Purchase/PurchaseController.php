@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Purchases;
+namespace App\Http\Controllers\Purchase;
 
 use App\Helpers\ApiResponse;
 
@@ -18,8 +18,6 @@ class PurchaseController extends Controller
         $this->purchaseService = $purchaseService;
     }
 
-    /************************************ Display a listing of the Purchases ************************************/
-
     public function index()
     {
 
@@ -29,8 +27,6 @@ class PurchaseController extends Controller
             data: $Response['body']
         );
     }
-
-    /************************************ Checkout Purchase ************************************/
 
     public function checkout()
     {

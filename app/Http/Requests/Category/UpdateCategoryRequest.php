@@ -4,9 +4,7 @@ namespace App\Http\Requests\Category;
 
 use App\Http\Requests\BaseRequest;
 
-
-
-class CategoryCreateRequest extends BaseRequest
+class UpdateCategoryRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,7 +19,7 @@ class CategoryCreateRequest extends BaseRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|unique:categories,title|max:255',
+            'title' => 'required|string|max:255|unique:categories,title,' . $this->route('id'),
         ];
     }
 }

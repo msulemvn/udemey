@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Course;
+namespace App\Http\Requests\CourseCategory;
 
 use App\Http\Requests\BaseRequest;
 
-
-
-class CourseCategoryUpdateRequest extends BaseRequest
+class CreateCourseCategoryRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.

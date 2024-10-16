@@ -8,7 +8,7 @@ use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Category\CategoryController;
-use App\Http\Controllers\Purchases\PurchaseController;
+use App\Http\Controllers\Purchase\PurchaseController;
 use App\Http\Controllers\Enrollment\EnrollmentController;
 use App\Http\Controllers\SiteSetting\SiteSettingController;
 use App\Http\Controllers\CourseCategory\CourseCategoryController;

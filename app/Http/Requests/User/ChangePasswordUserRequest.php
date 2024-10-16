@@ -5,7 +5,7 @@ namespace App\Http\Requests\User;
 use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rules\Password;
 
-class ChangePasswordRequest extends BaseRequest
+class ChangePasswordUserRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.

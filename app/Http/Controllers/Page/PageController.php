@@ -9,7 +9,6 @@ use App\DTOs\Page\PageDTO;
 use App\Helpers\ApiResponse;
 use App\Services\Page\PageService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Page\PageRequest;
 use App\Http\Requests\Page\CreatePageRequest;
 use App\Http\Requests\Page\UpdatePageRequest;
 use Symfony\Component\HttpFoundation\Response;

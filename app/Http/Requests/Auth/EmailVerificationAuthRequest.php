@@ -5,7 +5,7 @@ namespace App\Http\Requests\Auth;
 use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rules\Password;
 
-class EmailVerificationRequest extends BaseRequest
+class EmailVerificationAuthRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.

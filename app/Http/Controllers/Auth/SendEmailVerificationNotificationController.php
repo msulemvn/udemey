@@ -16,13 +16,16 @@ class SendEmailVerificationNotificationController extends Controller
      */
     public function __invoke()
     {
-        if (Auth::user()->hasVerifiedEmail()) {
+        $user = Auth::user();
+        /** @var \App\User|null $user */
+        if ($user->hasVerifiedEmail()) {
 
-            return ApiResponse::message(message: 'Email already verified.');
+            return ApiResponse::success(message: 'Email already verified.');
         }
 
-        Auth::user()->sendEmailVerificationNotification();
+        /** @var \App\User|null $user */
+        $user->sendEmailVerificationNotification();
 
-        return ApiResponse::message(message: 'Email verification link sent successfully.');
+        return ApiResponse::success(message: 'Email verification link sent successfully.');
     }
 }

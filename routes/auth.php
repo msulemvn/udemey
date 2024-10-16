@@ -7,7 +7,6 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SendPasswordResetLinkController;
 use App\Http\Controllers\Auth\SendEmailVerificationNotificationController;
-use App\Http\Controllers\Controller;
 
 /*
 |--------------------------------------------------------------------------
