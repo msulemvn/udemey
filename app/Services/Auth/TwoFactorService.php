@@ -31,7 +31,7 @@ class TwoFactorService implements TwoFactorServiceInterface
             $secretKey = $google2fa->generateSecretKey(32);
             $user = Auth::user();
             Cache::put('google2fa_secret_' . $user->id, $secretKey, 60);
-            return ['success' => true, 'message' => 'Secret key generated successfully.', 'data' => ['type' => 'Time based (TOTP)', 'secret' => $secretKey, 'label' => 'Udemey']];
+            return ['success' => true, 'message' => 'Secret key generated successfully.', 'data' => ['type' => 'Time based (TOTP)', 'google2fa_secret' => $secretKey, 'label' => 'Udemey']];
         } catch (\Throwable $th) {
             return ['success' => false, 'errors' => ['google2fa_secret' => ['Failed to generate secret key.']], 'request' => $request, 'exception' => $th];
         }
