@@ -19,7 +19,6 @@ class VerifyTokenController extends Controller
      */
     public function __invoke(VerifyTokenAuthRequest $request)
     {
-
         $validatedData = $request->safe()->only(['email', 'token']);
         $user = User::where('email', $validatedData['email'])->first();
         if (!$user) {
