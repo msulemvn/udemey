@@ -7,7 +7,7 @@ use PragmaRX\Google2FA\Google2FA;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\LoginAuthRequest;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Traits\HasPermissions;
@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 class AuthController extends Controller
 {
     use HasRoles, HasPermissions;
-    public function login(LoginRequest $request)
+    public function login(LoginAuthRequest $request)
     {
         // Retrieve the validated input data...
         $validated = $request->validated();

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Requests\Auth\EmailVerificationRequest;
+use App\Http\Requests\Auth\EmailVerificationAuthRequest;
 use App\Http\Controllers\Controller;
 use App\Helpers\ApiResponse;
+use Illuminate\Auth\Events\Verified;
 
 
 class VerifyEmailController extends Controller
@@ -16,7 +17,7 @@ class VerifyEmailController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function __invoke(EmailVerificationRequest $request)
+    public function __invoke(EmailVerificationAuthRequest $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
             return ApiResponse::success(message: 'Email already verified.');

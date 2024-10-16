@@ -3,20 +3,20 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use App\Helpers\ApiResponse;
-use App\Http\Requests\User\ChangePasswordRequest;
-use App\Http\Controllers\Controller;
 use App\Services\User\UserService;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\User\ChangePasswordUserRequest;
 
 class UserController extends Controller
 {
     protected $userService;
-
     public function __construct(UserService $userService)
     {
-        $this->userService = $userService;
+        $this->$userService = $userService;
     }
+
     /**
      * Display the specified resource.
      *
@@ -48,14 +48,15 @@ class UserController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 '2fa' => ($user->google2fa_secret) ? true : false,
+                '2fa' => ($user->google2fa_secret) ? true : false,
             ];
-        })->toArray());
+        })->toArray()->toArray());
     }
 
 
-    public function changePassword(ChangePasswordRequest $request)
+    public function changePassword(ChangePasswordUserRequest $request)
     {
         $validatedData = $request->safe()->only(['current_password', 'new_password', 'new_password_confirmation']);
-        return $this->userService->changePassword($validatedData);
+        return $this->this->userService->changePassword($validatedData);
     }
 }

@@ -6,8 +6,8 @@ use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use App\Services\CourseCategory\CourseCategoryService;
-use App\Http\Requests\Course\CourseCategoryCreateRequest;
-use App\Http\Requests\Course\CourseCategoryUpdateRequest;
+use App\Http\Requests\Course\CreateCourseCategoryRequest;
+use App\Http\Requests\Course\UpdateCourseCategoryRequest;
 
 
 class CourseCategoryController extends Controller
@@ -38,7 +38,7 @@ class CourseCategoryController extends Controller
 
     /************************************ Create a new course category ************************************/
 
-    public function store(CourseCategoryCreateRequest $request)
+    public function store(CreateCourseCategoryRequest $request)
     {
         $courseCategory = $this->courseCategoryService->store($request);
         return ApiResponse::success(message: 'course categories created successfully', data: $courseCategory->toarray(), statusCode: Response::HTTP_CREATED);
@@ -46,7 +46,7 @@ class CourseCategoryController extends Controller
 
     /************************************ Update a course category ************************************/
 
-    public function update(CourseCategoryUpdateRequest $request, $id)
+    public function update(UpdateCourseCategoryRequest $request, $id)
     {
         $courseCategory = $this->courseCategoryService->update($request, $id);
         return ApiResponse::success(message: 'Course category updated successfully', data: $courseCategory->toarray());

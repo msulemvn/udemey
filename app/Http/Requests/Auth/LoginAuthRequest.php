@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Course;
+namespace App\Http\Requests\Auth;
 
 use App\Http\Requests\BaseRequest;
 
-class CourseCategoryCreateRequest extends BaseRequest
+class LoginAuthRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,16 @@ class CourseCategoryCreateRequest extends BaseRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|max:255|unique:courses,title',
-            'category_id' => 'required|exists:categories,id',
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'email.email' => 'The email must be a valid email address.',
+            'password.required' => 'The password field is required.',
         ];
     }
 }

@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Category;
 use App\Helpers\ApiResponse;
 use App\Services\Category\CategoryService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Category\CategoryCreateRequest;
-use App\Http\Requests\Category\CategoryUpdateRequest;
+use App\Http\Requests\Category\CreateCategoryRequest;
+use App\Http\Requests\Category\UpdateCategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -28,7 +28,7 @@ class CategoryController extends Controller
 
     /************************************ Store a newly created category ************************************/
 
-    public function store(CategoryCreateRequest $request)
+    public function store(CreateCategoryRequest $request)
     {
         $category = $this->categoryService->store($request);
         return ApiResponse::success(message: 'Category created successfully', data: $category->toarray());
@@ -44,7 +44,7 @@ class CategoryController extends Controller
 
     /************************************ Update the specified category ************************************/
 
-    public function update(CategoryUpdateRequest $request, $id)
+    public function update(UpdateCategoryRequest $request, $id)
     {
         $category = $this->categoryService->update($request, $id);
         return ApiResponse::success(message: 'Category updated successfully', data: $category->toarray());

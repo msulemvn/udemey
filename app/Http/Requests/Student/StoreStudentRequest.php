@@ -4,7 +4,7 @@ namespace App\Http\Requests\Student;
 
 use App\Http\Requests\BaseRequest;
 
-class StoreRequest extends BaseRequest
+class StoreStudentRequest extends BaseRequest
 {
 
     /**

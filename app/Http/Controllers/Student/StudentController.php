@@ -17,14 +17,6 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        // return ApiResponse::success(data: student::with('user')->paginate()->through(function ($student) {
-        //     return [
-        //         'id' => $student->id,
-        //         'name' => $student->user->name,
-        //         'email' => $student->user->email,
-        //         'phone' => $student->phone,
-        //     ];
-        // }));
         return ApiResponse::success(data: student::with('user')->get()->map(function ($student) {
             return [
                 'id' => $student->id,
@@ -33,6 +25,13 @@ class StudentController extends Controller
             ];
         })->toArray());
     }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Student  $student
+     * @return \Illuminate\Http\Response
+     */
 
     /**
      * Remove the specified resource from storage.

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Password;
 use App\Helpers\ApiResponse;
-use App\Http\Requests\Auth\SendPasswordResetLinkRequest;
+use App\Http\Requests\Auth\SendPasswordResetLinkAuthRequest;
 
 class SendPasswordResetLinkController extends Controller
 {
@@ -15,7 +15,7 @@ class SendPasswordResetLinkController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(SendPasswordResetLinkRequest $request)
+    public function __invoke(SendPasswordResetLinkAuthRequest $request)
     {
         $status = Password::sendResetLink($request->only('email'));
         if ($status === Password::RESET_LINK_SENT) {

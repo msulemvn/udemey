@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Purchases;
+namespace App\Http\Controllers\Purchase;
 
 use App\Helpers\ApiResponse;
 
@@ -17,12 +17,14 @@ class PurchaseController extends Controller
     {
         $this->purchaseService = $purchaseService;
     }
+
     public function index()
     {
 
         $purchases = $this->purchaseService->index();
         return ApiResponse::success(message: 'Purchased courses retrieved successfully', data: $purchases->toarray());
     }
+
     public function checkout()
     {
         $checkoutResponse = $this->purchaseService->checkout();

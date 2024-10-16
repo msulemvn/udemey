@@ -4,7 +4,7 @@ namespace App\Http\Requests\Course;
 
 use App\Http\Requests\BaseRequest;
 
-class CourseCreateRequest extends BaseRequest
+class CreateCourseRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.

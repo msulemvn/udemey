@@ -16,7 +16,6 @@ class EnrollmentController extends Controller
     {
         $this->enrollmentService = $enrollmentService;
     }
-    /************************************ Retrieve all courses for a specific student ************************************/
 
     public function index()
     {
@@ -26,8 +25,6 @@ class EnrollmentController extends Controller
             data: $Response['body']
         );
     }
-
-    /************************************ Retrieve a specific course for the student ************************************/
 
     public function show($courseId)
     {
