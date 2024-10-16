@@ -23,60 +23,35 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            \App\Interfaces\RegisterServiceInterface::class,
-            \App\Services\User\RegisterService::class
+            \App\Interfaces\Cart\CartServiceInterface::class,
+            \App\Services\User\Cart\CartService::class
         );
 
         $this->app->bind(
-            \App\Interfaces\CourseServiceInterface::class,
-            \App\Services\Course\CourseService::class
+            \App\Interfaces\PurchaseServiceInterface::class,
+            \App\Services\Purchase\CourseService::class
         );
 
         $this->app->bind(
-            \App\Interfaces\Category\CategoryServiceInterface::class,
-            \App\Services\Category\CategoryService::class
+            \App\Interfaces\Purchase\PurchaseServiceInterface::class,
+            \App\Services\Purchase\PurchaseService::class
         );
-
-		$this->app->bind(
-			\App\Interfaces\CourseCategory\CourseCategoryServiceInterface::class,
-			\App\Services\CourseCategory\CourseCategoryService::class
-		);
-
-		$this->app->bind(
-			\App\Interfaces\Cart\CartServiceInterface::class,
-			\App\Services\Cart\CartService::class
-		);
-
-		$this->app->bind(
-			\App\Interfaces\PurchaseServiceInterface::class,
-			\App\Services\PurchaseService::class
-		);
-
-		$this->app->bind(
-			\App\Interfaces\Purchase\PurchaseServiceInterface::class,
-			\App\Services\Purchase\PurchaseService::class
-		);
 <<<<<<< HEAD
 
-		$this->app->bind(
-			\App\Interfaces\Enrollment\EnrollmentServiceInterface::class,
-			\App\Services\Enrollment\EnrollmentService::class
-		);
+        $this->app->bind(
+            \App\Interfaces\Enrollment\EnrollmentServiceInterface::class,
+            \App\Services\Enrollment\EnrollmentService::class
+        );
 
-		$this->app->bind(
-			\App\Interfaces\Cart\CartServiceInterface::class,
-			\App\Services\Cart\CartService::class
-		);
+        $this->app->bind(
+            \App\Interfaces\Cart\CartServiceInterface::class,
+            \App\Services\Cart\CartService::class
+        );
 
-		$this->app->bind(
-			\App\Interfaces\PurchaseServiceInterface::class,
-			\App\Services\PurchaseService::class
-		);
-
-		$this->app->bind(
-			\App\Interfaces\Purchase\PurchaseServiceInterface::class,
-			\App\Services\Purchase\PurchaseService::class
-		);
+        $this->app->bind(
+            \App\Interfaces\Purchase\PurchaseServiceInterface::class,
+            \App\Services\Purchase\PurchaseService::class
+        );
     }
 
     /**

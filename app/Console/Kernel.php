@@ -20,13 +20,7 @@ class Kernel extends ConsoleKernel
     ];
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
-        // $schedule->call(function () {
-        //     $result = DB::table('quiz_instances')
-        //         ->where('status', 'scheduled')
-        //         ->where('deadline_at', '<=', \Illuminate\Support\Carbon::now()->format('Y-m-d H:i:s'))
-        //         ->update(['status' => 'expired']);
-        // })->everyMinute();
+        //
     }
 
     /**

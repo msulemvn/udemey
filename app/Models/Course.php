@@ -37,6 +37,6 @@ class Course extends Model
 
     public function cartItems()
     {
-        return $this->hasMany(Cart::class);
+        return $this->belongsTo(Cart::class);
     }
 }
