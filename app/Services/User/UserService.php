@@ -23,7 +23,7 @@ class UserService implements UserServiceInterface
         return $user;
     }
 
-    public function changePassword(array $data): JsonResponse
+    public function changePassword($data): JsonResponse
     {
         // Get the authenticated user from the JWT token
         $user = Auth::user();
@@ -39,6 +39,7 @@ class UserService implements UserServiceInterface
 
         // Update the user's password
         $user->password = bcrypt($data['new_password']);
+        /** @var \App\User|null $user */
         $user->save();
 
         // Return a success response
