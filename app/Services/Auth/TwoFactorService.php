@@ -62,13 +62,11 @@ class TwoFactorService implements TwoFactorServiceInterface
 
         $google2fa = new Google2FA();
         /** @var \App\Google2FA|null $google2fa */
-        if ($google2fa->verify2FA($secretKey, $otp)) {
-            // OTP is valid
+        if ($google2fa->verifyKey($secretKey, $otp)) {           // OTP is valid
             $user->google2fa_secret = $secretKey;
             /** @var \App\User|null $user */
             $user->save();
             Cache::forget('google2fa_secret_' . $user->id);
-
             return ['success' => true, 'message' => '2-Factor Authentication successfully enabled.'];
         }
 
