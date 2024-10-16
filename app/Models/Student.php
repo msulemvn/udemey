@@ -10,7 +10,7 @@ class Student extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $dates = ['deleted_at'];
+    //protected $dates = ['deleted_at'];
 
     protected $guarded = ['created_at', 'updated_at'];
     protected $hidden = ['deleted_at', 'created_at', 'updated_at'];
