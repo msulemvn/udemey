@@ -24,7 +24,7 @@ class TwoFactorService implements TwoFactorServiceInterface
         $user = Auth::user();
         // Check if 2FA already enabled
         if ($user->google2fa_secret) {
-            return ['message' => '2-Factor Authentication is already enabled.'];
+            return ['success' => true, 'message' => '2-Factor Authentication is already enabled.'];
         }
 
         try {
@@ -59,9 +59,10 @@ class TwoFactorService implements TwoFactorServiceInterface
         }
 
         $otp = $data->input('one_time_password'); // Get OTP from user input
+
         $google2fa = new Google2FA();
         /** @var \App\Google2FA|null $google2fa */
-        if ($google2fa->verifyGoogle2FA($secretKey, $otp)) {
+        if ($google2fa->verify2FA($secretKey, $otp)) {
             // OTP is valid
             $user->google2fa_secret = $secretKey;
             /** @var \App\User|null $user */
@@ -92,7 +93,6 @@ class TwoFactorService implements TwoFactorServiceInterface
         $password = $data->input('password');
         // Verify password
         if (Hash::check($password, $user->password)) {
-            dd($password);
             try {
                 // OTP is valid
                 $user->google2fa_secret = null;

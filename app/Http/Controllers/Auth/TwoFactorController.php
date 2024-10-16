@@ -32,7 +32,7 @@ class TwoFactorController extends Controller
     public function generateSecretKey(Request $request)
     {
         $response = $this->TwoFactorService->generateSecretKey($request);
-        return $response ? ApiResponse::success(message: $response['message'], data: $response['data'] ?? []) : ApiResponse::error(message: $response['message'], errors: $response['errors'], request: $response['request'], exception: $response['exception'], statusCode: $response['statusCode']);
+        return $response['success'] ? ApiResponse::success(message: $response['message'], data: $response['data'] ?? []) : ApiResponse::error(message: $response['message'], errors: $response['errors'], request: $response['request'] ?? null, exception: $response['exception'] ?? null, statusCode: $response['statusCode'] ?? null);
     }
 
     /**
@@ -44,7 +44,7 @@ class TwoFactorController extends Controller
     public function enable2FA(Request $request)
     {
         $response = $this->TwoFactorService->enable2FA($request);
-        return $response ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::error(message: $response['message'] ?? null, errors: $response['errors'], request: $response['request'], exception: $response['exception'], statusCode: $response['statusCode']);
+        return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::error(message: $response['message'] ?? null, errors: $response['errors'], request: $response['request'] ?? null, exception: $response['exception'] ?? null, statusCode: $response['statusCode'] ?? null);
     }
 
     /**
