@@ -69,6 +69,10 @@ In App/config/auth.php
     ],
 
 ```
+### Google 2-FA
+Follow instructions to integrate Google 2-FA in your laravel application.
+<a>https://github.com/antonioribeiro/google2fa-laravel</a>
+
 ### Spatie
 This package allows you to manage user permissions and roles in a database.
 Refer to official documentation for setup.
