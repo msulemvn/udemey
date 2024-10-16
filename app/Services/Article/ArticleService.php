@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Exception;
 use App\Helpers\ApiResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Storage;
 
 class ArticleService
 {
@@ -30,13 +31,22 @@ class ArticleService
     public function createArticle($request)
     {
         try {
+            // Get validated data and create a DTO
             $dto = new ArticleDTO($request->validated());
 
+            // If slug is not provided, create a unique slug based on title
             if (!$dto->slug) {
                 $dto->slug = $this->checkSlugExists($dto->title);
             }
 
+            // Ensure image path is received from the frontend and assigned to the DTO
+            if (isset($request['image_path'])) {
+                $dto->image_path = $request['image_path'];  // Assign the provided path from the frontend
+            }
+
+            // Create the article with the provided data
             $article = Article::create($dto->toArray());
+
             return ApiResponse::success(data: ['article' => $article]);
         } catch (Exception $e) {
             return ApiResponse::error(
@@ -100,6 +110,18 @@ class ArticleService
                 $dto->slug = $this->checkSlugExists($dto->title, $id);
             }
 
+            // Handle image update
+            if ($request->hasFile('image')) {
+                // Delete old image if exists
+                if ($article->image_path) {
+                    Storage::disk('public')->delete($article->image_path);
+                }
+
+                // Store new image
+                $path = $request->file('image')->store('articles', 'public');
+                $dto->image_path = $path;
+            }
+
             $article->update($dto->toArray());
 
             return ApiResponse::success(
@@ -122,6 +144,11 @@ class ArticleService
             $article = Article::find($id);
             if (!$article) {
                 return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
+            }
+
+            // Delete associated image if exists
+            if ($article->image_path) {
+                Storage::disk('public')->delete($article->image_path);
             }
 
             $article->delete();

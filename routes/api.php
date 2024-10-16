@@ -12,6 +12,9 @@ use App\Http\Controllers\Purchase\PurchaseController;
 use App\Http\Controllers\Enrollment\EnrollmentController;
 use App\Http\Controllers\SiteSetting\SiteSettingController;
 use App\Http\Controllers\CourseCategory\CourseCategoryController;
+
+use App\Http\Controllers\SubscriptionController;
+
 // included auth.php
 require __DIR__ . '/auth.php';
 
@@ -56,6 +59,7 @@ Route::middleware('auth:api')->group(function () {
     Route::controller(UserController::class)->group(function () {
         Route::get('/profile', 'showUser');
     });
+
 
     /*
     |--------------------------------------------------------------------------
@@ -149,5 +153,23 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/delete-site-setting/{id}', 'deleteSetting');
         Route::post('/restore-site-setting/{id}', 'restoreSoftDeletedSetting');
         Route::get('/get-site-settings/{id}', 'getSettings');
+    });
+});
+
+Route::middleware('auth:api')->group(function () {
+    //Route::controller(SubscriptionController::class)->group(function () {
+    //Route::post('/subscribe', 'subscribe');
+    //Route::get('/check-my-subscription', 'checkMySubscription');
+});
+//});
+
+Route::middleware('auth:api')->group(function () {
+    Route::controller(SubscriptionController::class)->group(function () {
+        Route::post('/subscribe', 'subscribe');
+        Route::get('/check-my-subscription', 'checkMySubscription');
+    });
+
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/active-subscriptions', [SubscriptionController::class, 'getAllActiveSubscriptions']);
     });
 });
