@@ -71,6 +71,7 @@ In App/config/auth.php
 ```
 ### Google 2-FA
 Follow instructions to integrate Google 2-FA in your laravel application.
+</br>
 <a>https://github.com/antonioribeiro/google2fa-laravel</a>
 
 ### Spatie
