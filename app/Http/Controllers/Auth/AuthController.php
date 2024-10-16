@@ -24,7 +24,7 @@ class AuthController extends Controller
     public function login(LoginAuthRequest $request)
     {
         // Retrieve the validated input data...
-        $token = Auth::attempt($request);
+        $token = Auth::attempt($request->validated());
         try {
             $user = Auth::user();
             /** @var \App\User|null $user */
