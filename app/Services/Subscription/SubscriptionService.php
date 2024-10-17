@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Subscription;
+namespace App\Services\Subscription\Subscription;
 
 use Exception;
 use Carbon\Carbon;
@@ -11,6 +11,7 @@ use App\Jobs\ExpireSubscriptionJob;
 use Illuminate\Support\Facades\Log;
 use App\DTOsSubscription\SubscriptionDTO;
 use Symfony\Component\HttpFoundation\Response;
+use Exception;
 
 class SubscriptionService
 {
