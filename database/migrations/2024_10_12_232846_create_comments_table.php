@@ -18,6 +18,8 @@ return new class extends Migration
             // automatically creates the commentable_id and commentable_type columns.
             $table->morphs('commentable');
             $table->text('comment_text');
+            $table->unsignedBigInteger('parent_comment_id')->nullable();
+            $table->foreign('parent_comment_id')->references('id')->on('comments');
             $table->timestamps();
             $table->softDeletes();
             $table->index(['commentable_id', 'commentable_type']);
