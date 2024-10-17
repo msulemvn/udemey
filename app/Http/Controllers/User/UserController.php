@@ -28,20 +28,19 @@ class UserController extends Controller
         return $id ? ApiResponse::success(data: User::find($id)) : ApiResponse::success(data: User::paginate());
     }
 
-    public function showUser()
+    public function profile()
     {
         $userId = Auth::user()->id;
         $user = Auth::user();
         /** @var \App\User|null $user */
         $myRole = $user->getRoleNames()[0];
         if ($myRole == 'admin') {
-            $userData = User::find($userId)->toArray();
-            $userData['2fa'] =  ($userData['google2fa_secret']) ? true : false;
-            unset($userData['google2fa_secret']);
-            return ApiResponse::success(data: $userData);
+            $adminData = User::find($userId)->toArray();
+            $adminData['2fa'] =  ($adminData['google2fa_secret']) ? true : false;
+            unset($adminData['google2fa_secret']);
         }
 
-        return ApiResponse::success(data: User::with($myRole)->whereId($userId)->get()->mapWithKeys(function ($user) {
+        return ApiResponse::success(data: $adminData ?? User::with($myRole)->whereId($userId)->get()->mapWithKeys(function ($user) {
             $role = $user->getRoleNames()[0];
             return [
                 'id' => $user->$role->id,
