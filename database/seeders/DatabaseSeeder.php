@@ -22,6 +22,5 @@ class DatabaseSeeder extends Seeder
             CourseSeeder::class,
             CommentSeeder::class
         ]);
-        $this->call(ArticleSeeder::class);
     }
 }
