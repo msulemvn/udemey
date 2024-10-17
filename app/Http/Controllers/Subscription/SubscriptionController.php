@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Subscription;
 
-use App\Services\SubscriptionService;
+use App\Services\Subscription\SubscriptionService;
 use App\Helpers\ApiResponse;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Controllers\Controller;
 
 class SubscriptionController extends Controller
 {
