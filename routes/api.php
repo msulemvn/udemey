@@ -12,7 +12,7 @@ use App\Http\Controllers\Purchase\PurchaseController;
 use App\Http\Controllers\Enrollment\EnrollmentController;
 use App\Http\Controllers\SiteSetting\SiteSettingController;
 use App\Http\Controllers\CourseCategory\CourseCategoryController;
-use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\Subscription\SubscriptionController;
 
 
 // included auth.php
