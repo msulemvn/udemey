@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             CategoriesSeeder::class,
             CourseCategoriesSeeder::class,
             CourseSeeder::class,
+            CommentSeeder::class
         ]);
         $this->call(ArticleSeeder::class);
     }
