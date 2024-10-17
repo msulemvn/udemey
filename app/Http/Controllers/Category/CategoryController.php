@@ -18,15 +18,11 @@ class CategoryController extends Controller
         $this->categoryService = $categoryService;
     }
 
-    /************************************ Display a listing of the categories ************************************/
-
     public function index()
     {
         $categories = $this->categoryService->index();
         return ApiResponse::success(message: 'All categories retrieved successfully', data: $categories->toArray());
     }
-
-    /************************************ Store a newly created category ************************************/
 
     public function store(CreateCategoryRequest $request)
     {
@@ -34,15 +30,11 @@ class CategoryController extends Controller
         return ApiResponse::success(message: 'Category created successfully', data: $category->toarray());
     }
 
-    /************************************ Display the specified category ************************************/
-
     public function show($id)
     {
         $category = $this->categoryService->show($id);
         return ApiResponse::success(message: 'Category retrieved successfully', data: $category->toarray());
     }
-
-    /************************************ Update the specified category ************************************/
 
     public function update(UpdateCategoryRequest $request, $id)
     {
@@ -50,13 +42,10 @@ class CategoryController extends Controller
         return ApiResponse::success(message: 'Category updated successfully', data: $category->toarray());
     }
 
-    /************************************ Remove the specified category ************************************/
-
     public function destroy($id)
     {
         return $this->categoryService->destroy($id);
     }
-    /************************************ get Course_Categories ************************************/
 
     public function getCategoryCourseCategories($id)
     {
