@@ -31,7 +31,7 @@ class SiteSettingController extends Controller
         ) :
         ApiResponse::error(
             message: 'Unable to create setting!',
-            errors: ['error' => ['Unable to create setting!']],
+            errors: ['setting' => ['Unable to create setting!']],
             statusCode: Response::HTTP_BAD_REQUEST,
         );
     }
@@ -49,7 +49,7 @@ class SiteSettingController extends Controller
         ) :
         ApiResponse::error(
             message: 'No setting found with the given id!',
-            errors: ['error' => ['No setting found with id: ' . $id]],
+            errors: ['id' => ['No setting found with id: ' . $id]],
             statusCode: Response::HTTP_NOT_FOUND,
         );
         
@@ -65,7 +65,7 @@ class SiteSettingController extends Controller
         ) :
         ApiResponse::error(
             message: 'No setting found with the given id!',
-            errors: ['error' => ['No setting found with id: ' . $id]],
+            errors: ['id' => ['No setting found with id: ' . $id]],
             statusCode: Response::HTTP_NOT_FOUND,
         );
     }
@@ -82,7 +82,7 @@ class SiteSettingController extends Controller
         ) :
         ApiResponse::error(
         message: 'No setting found with the given id!',
-        errors: ['error' => ['No setting found with id: ' . $id]],
+        errors: ['id' => ['No setting found with id: ' . $id]],
         statusCode: Response::HTTP_NOT_FOUND,
         );
     
@@ -100,7 +100,7 @@ class SiteSettingController extends Controller
         ) :
         ApiResponse::error(
             message: 'No setting found with the given id!',
-            errors: ['error' => ['No setting found with id: ' . $id]],
+            errors: ['id' => ['No setting found with id: ' . $id]],
             statusCode: Response::HTTP_NOT_FOUND,
         );
     }
