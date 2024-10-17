@@ -27,6 +27,7 @@ class AuthService implements AuthServiceInterface
                 $role = Role::findByName($roleName);
                 $permissions = $role->permissions()->pluck('name')->toArray();
                 $data['permissions'] = $permissions;
+                $data['2fa'] =  ($user->google2fa_secret) ? true : false;
             }
             $data['access_token'] = $token;
         } catch (\Throwable $th) {
