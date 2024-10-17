@@ -12,8 +12,8 @@ use App\Http\Controllers\Purchase\PurchaseController;
 use App\Http\Controllers\Enrollment\EnrollmentController;
 use App\Http\Controllers\SiteSetting\SiteSettingController;
 use App\Http\Controllers\CourseCategory\CourseCategoryController;
+use App\Http\Controllers\SubscriptionController;
 
-use function Ramsey\Uuid\v1;
 
 // included auth.php
 require __DIR__ . '/auth.php';
@@ -114,7 +114,7 @@ Route::middleware('auth:api')->group(function () {
         });
         Route::controller(SiteSettingController::class)->group(function () {
             Route::post('/create-site-setting', 'createSetting');
-            Route::put('/update-site-setting/{id}', 'updateSetting');
+            Route::post('/update-site-setting/{id}', 'updateSetting');
             Route::delete('/delete-site-setting/{id}', 'deleteSetting');
             Route::post('/restore-site-setting/{id}', 'restoreSoftDeletedSetting');
             Route::get('/get-site-settings/{id}', 'getSettings');
@@ -140,5 +140,23 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/enrollments', 'index');
             Route::get('/enrollments/{courseId}', 'show');
         });
+    });
+});
+
+Route::middleware('auth:api')->group(function () {
+    //Route::controller(SubscriptionController::class)->group(function () {
+    //Route::post('/subscribe', 'subscribe');
+    //Route::get('/check-my-subscription', 'checkMySubscription');
+});
+//});
+
+Route::middleware('auth:api')->group(function () {
+    Route::controller(SubscriptionController::class)->group(function () {
+        Route::post('/subscribe', 'subscribe');
+        Route::get('/check-my-subscription', 'checkMySubscription');
+    });
+
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/active-subscriptions', [SubscriptionController::class, 'getAllActiveSubscriptions']);
     });
 });

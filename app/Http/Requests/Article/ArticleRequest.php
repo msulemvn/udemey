@@ -13,7 +13,7 @@ class ArticleRequest extends BaseRequest
             'title' => 'required|string|max:255',
             'body' => 'nullable',
             'slug' => 'nullable|unique:articles,slug',
-            'image_url' => 'nullable|url',
+            'image_path' => 'nullable|string|max:255',  // Validate image path as a string
             'user_id' => 'nullable|exists:users,id',
             'course_id' => 'required|exists:courses,id',
             'status' => 'in:draft,published',
@@ -29,7 +29,8 @@ class ArticleRequest extends BaseRequest
             'slug.required' => 'Slug is required',
             'slug.unique' => 'Slug already exists',
 
-            'image_url.url' => 'Image URL must be a valid URL',
+            'image.string' => 'Path must be string', // Image validation message
+
 
             'user_id.required' => 'User ID is required',
             'user_id.exists' => 'User ID does not exist',
