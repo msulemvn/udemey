@@ -57,7 +57,7 @@ Route::middleware('auth:api')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::controller(UserController::class)->group(function () {
-        Route::get('/profile', 'showUser');
+        Route::get('/profile', 'profile');
     });
 
     Route::middleware('role:admin')->group(function () {
