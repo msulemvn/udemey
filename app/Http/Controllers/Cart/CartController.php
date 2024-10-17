@@ -17,7 +17,7 @@ class CartController extends Controller
     {
         $this->cartService = $cartService;
     }
-    /************************************ Add course to cart ************************************/
+
     public function addToCart(Request $request, $slug)
     {
         $Response = $this->cartService->addToCart($request, $slug);
@@ -27,13 +27,11 @@ class CartController extends Controller
         );
     }
 
-    /************************************ Remove course from cart ************************************/
     public function removeFromCart(Request $request, $id)
     {
         return $this->cartService->removeFromCart($request, $id);
     }
 
-    /************************************ View all cart items ************************************/
     public function viewCart()
     {
         $Response = $this->cartService->viewCart();
