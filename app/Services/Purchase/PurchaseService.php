@@ -2,11 +2,12 @@
 
 namespace App\Services\Purchase;
 
-use App\Models\Cart;
+use App\Models\Course;
 use App\Models\Purchase;
 use App\Models\Enrollment;
 use App\Helpers\ApiResponse;
 use Illuminate\Support\Facades\DB;
+
 use Symfony\Component\HttpFoundation\Response;
 use App\Interfaces\Purchase\PurchaseServiceInterface;
 
@@ -43,57 +44,61 @@ class PurchaseService implements PurchaseServiceInterface
 
     public function checkout()
     {
+        // Receive course data from the frontend
+        $courses = $request->input('courses'); // Expected to be an array of course objects
+
+
+        if (empty($courses) || !is_array($courses)) {
+            return ApiResponse::error(
+                message: 'No courses provided',
+                errors: ['courses' => ['No courses selected for purchase.']],
+                statusCode: Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        DB::beginTransaction();
+
         try {
-            $cartItems = Cart::with('course')->where('user_id', auth()->id())->get();
+            foreach ($courses as $courseData) {
+                $courseId = $courseData['id']; // Extract course ID from the data
+                $course = Course::find($courseId); // Fetch the course details
 
-            if ($cartItems->isEmpty()) {
-                return ApiResponse::error(
-                    message: 'No items in the cart',
-                    errors: ['cart' => ['Your cart is empty. Please add items before checkout.']],
-                    statusCode: Response::HTTP_BAD_REQUEST
-                );
-            }
-
-            DB::beginTransaction();
-
-            try {
-                foreach ($cartItems as $item) {
-
-                    Purchase::create([
-                        'course_id' => $item->course_id,
-                        'user_id' => auth()->id(),
-                        'amount' => $item->course->discounted_price ?? $item->course->price,
-                    ]);
-
-                    Enrollment::create([
-                        'course_id' => $item->course_id,
-                        'user_id' => auth()->id(),
-                        'purchase_date' => now(),
-                    ]);
-
-                    $item->delete();
+                if (!$course) {
+                    // If the course does not exist, skip or handle the error
+                    return ApiResponse::error(
+                        message: 'Course not found',
+                        errors: ['course' => ['Course ID ' . $courseId . ' not found.']],
+                        statusCode: Response::HTTP_NOT_FOUND
+                    );
                 }
 
-                DB::commit();
+                // Create purchase record
+                Purchase::create([
+                    'course_id' => $course->id,
+                    'user_id' => auth()->id(),
+                    'amount' => $course->discounted_price ?? $course->price,
+                ]);
 
-                return [
-                    'message' => 'Purchase and enrollment completed successfully',
-                    'statusCode' => Response::HTTP_CREATED,
-                ];
-            } catch (\Throwable $th) {
-                DB::rollBack(); // Rollback the transaction in case of any errors
-
-                return ApiResponse::error(
-                    message: 'Purchase failed',
-                    errors: ['checkout' => ['Failed to complete the purchase. Please try again.']],
-                    exception: $th,
-                    statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-                );
+                // Create enrollment record
+                Enrollment::create([
+                    'course_id' => $course->id,
+                    'user_id' => auth()->id(),
+                    'purchase_date' => now(),
+                ]);
             }
+
+            DB::commit();
+
+            return [
+                'message' => 'Purchase and enrollment completed successfully',
+                'statusCode' => Response::HTTP_CREATED,
+            ];
         } catch (\Throwable $th) {
+            DB::rollBack(); // Rollback the transaction in case of any errors
+
             return ApiResponse::error(
-                message: 'Failed to retrieve cart items',
-                errors: ['cart' => ['Unable to retrieve cart items. Please try again.']],
+                message: 'Purchase failed',
+                errors: ['checkout' => ['Failed to complete the purchase. Please try again.']],
                 exception: $th,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
