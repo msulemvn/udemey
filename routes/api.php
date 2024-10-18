@@ -50,6 +50,7 @@ Route::controller(CourseCategoryController::class)->group(function () {
 });
 
 Route::controller(PageController::class)->group(function () {
+
     Route::get('/get-all-pages', 'getPages');
     Route::get('/get-page-by-id/{pageId}', 'getPageById');
     Route::get('/get-page-by-slug/{slug}', 'getPageBySlug');
@@ -81,6 +82,32 @@ Route::middleware('auth:api')->group(function () {
             Route::post('create-category', 'store');
             Route::put('/update-category/{id}', 'update');
             Route::delete('/delete-category/{id}', 'destroy');
+        });
+
+        Route::controller(CourseCategoryController::class)->group(function () {
+            Route::post('/create-course-categories', 'store');
+            Route::put('/update-course-categories/{id}', 'update');
+            Route::delete('/course-categories/{id}', 'destroy');
+        });
+
+        Route::controller(ArticleController::class)->group(function () {
+            Route::get('article/{id}', 'show');
+            Route::get('/articles/slug/{slug}',  'showBySlug');
+            Route::post('/create-article',  'store');
+            Route::get('/articles',  'index');
+            Route::put('/update-article/{id}',  'update');
+            Route::delete('/delete-article/{id}', 'destroy');
+        });
+
+        Route::controller(SubscriptionController::class)->group(function () {
+            Route::post('/subscribe', 'subscribe');
+            Route::get('/check-my-subscription', 'checkMySubscription');
+            Route::get('/active-subscriptions', 'getAllActiveSubscriptions');
+        });
+
+        Route::controller(StudentController::class)->group(function () {
+            Route::post('/delete-student/{student}', 'destroy');
+            Route::get('/students', 'show');
         });
 
         Route::controller(CourseCategoryController::class)->group(function () {
@@ -134,11 +161,6 @@ Route::middleware('auth:api')->group(function () {
         Route::controller(EnrollmentController::class)->group(function () {
             Route::get('/enrollments', 'index');
             Route::get('/enrollments/{slug}', 'show');
-        });
-
-        Route::controller(SubscriptionController::class)->group(function () {
-            Route::post('/subscribe', 'subscribe');
-            Route::get('/check-my-subscription', 'checkMySubscription');
         });
     });
 });
