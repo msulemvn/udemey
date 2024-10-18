@@ -26,9 +26,9 @@ class EnrollmentController extends Controller
         );
     }
 
-    public function show($courseId)
+    public function show($slug)
     {
-        $Response = $this->enrollmentService->show($courseId);
+        $Response = $this->enrollmentService->show($slug);
         return ApiResponse::success(
             message: $Response['message'],
             data: $Response['body']

@@ -43,7 +43,9 @@ class EnrollmentService implements EnrollmentServiceInterface
             // Find the specific enrollment
             $enrollment = Enrollment::with('course')
                 ->where('user_id', $studentId)
-                ->where('course_id', $courseId)
+                ->whereHas('course', function ($query) use ($slug) {
+                    $query->where('slug', $slug);
+                })
                 ->first();
 
             if (!$enrollment) {

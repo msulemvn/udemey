@@ -9,7 +9,6 @@ use App\DTOs\Course\CourseDTO;
 use App\DTOs\Course\CourseUpdateDTO;
 use App\Interfaces\Course\CourseServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -41,13 +40,23 @@ class CourseService implements CourseServiceInterface
             $imagePath = null;
 
             if ($request->hasFile('thumbnail')) {
-                $imagePath = $request->file('thumbnail')->store('course_image', 'public');
-            }
+                // Store the image in the public disk and get the storage path
+                $file = $request->file('thumbnail');
+                $timestamp = now()->timestamp;
+                $originalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $extension = $file->getClientOriginalExtension();
+                $newFileName = Str::slug($originalFileName) . '_' . $timestamp . '.' . $extension;
 
+                $imagePath = 'course_image/' . $newFileName;
+                Storage::disk('public')->put($imagePath, file_get_contents($file->getRealPath()));
+
+                // Generate the public URL for the uploaded image using Storage::url or asset
+                $imagePath = Storage::url($imagePath);
+            }
 
             $slug = $this->generateUniqueSlug($request->get('title'));
 
-
+            // Prepare the validated data and add additional fields
             $dtoData = $request->validated();
             $dtoData['slug'] = $slug;
             $dtoData['user_id'] = auth()->id();
@@ -75,6 +84,10 @@ class CourseService implements CourseServiceInterface
             );
         }
     }
+
+
+
+    /************************************ specified course  ************************************/
 
     public function show($slug)
     {
@@ -109,39 +122,57 @@ class CourseService implements CourseServiceInterface
         try {
             $course = Course::findOrFail($id);
 
+            // Handle the thumbnail upload and deletion of the old one
             if ($request->hasFile('thumbnail')) {
 
+                // Delete the old thumbnail if it exists
                 if ($course->thumbnail && Storage::disk('public')->exists($course->thumbnail)) {
                     Storage::disk('public')->delete($course->thumbnail);
                 }
 
-                $imagePath = $request->file('thumbnail')->store('course_image', 'public');
-                $course->thumbnail = $imagePath;
+                // Store the new thumbnail and generate a public URL
+                $file = $request->file('thumbnail');
+                $timestamp = now()->timestamp;
+                $originalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $extension = $file->getClientOriginalExtension();
+                $newFileName = Str::slug($originalFileName) . '_' . $timestamp . '.' . $extension;
+
+                $imagePath = 'course_image/' . $newFileName;
+                Storage::disk('public')->put($imagePath, file_get_contents($file->getRealPath()));
+
+                // Update the course thumbnail to the public URL
+                $course->thumbnail = Storage::url($imagePath);
             }
 
+            // Generate a unique slug based on the title
             $slug = $this->generateUniqueSlug($request->get('title'));
 
-
+            // Prepare the validated data and add additional fields
             $dtoData = $request->validated();
             $dtoData['slug'] = $slug;
             $dtoData['user_id'] = auth()->id();
 
+            // Preserve the existing thumbnail if no new file is uploaded
             if (!$request->hasFile('thumbnail')) {
                 $dtoData['thumbnail'] = $course->thumbnail;
             }
+
+            // Encode the short description to JSON format if it exists
             if (isset($dtoData['short_description'])) {
                 $dtoData['short_description'] = json_encode($dtoData['short_description']);
             }
 
-            // Update course using DTO
+            // Use a Data Transfer Object (DTO) to handle the course update
             $courseUpdateDTO = new CourseDTO($dtoData);
             $course->update($courseUpdateDTO->toArray());
 
+            // Return success message with the updated course details
             return [
                 'message' => 'Course updated successfully',
                 'body' => $course->toArray(),
             ];
         } catch (\Throwable $th) {
+            // Return error response if something goes wrong
             return ApiResponse::error(
                 message: 'Failed to update course',
                 errors: ['course' => ['An error occurred while updating the course. Please try again later.']],
@@ -151,6 +182,10 @@ class CourseService implements CourseServiceInterface
         }
     }
 
+
+
+    /************************************ Remove the specified course ************************************/
+
     public function destroy($id)
     {
         try {
@@ -159,9 +194,7 @@ class CourseService implements CourseServiceInterface
             if ($course->thumbnail && Storage::disk('public')->exists($course->thumbnail)) {
                 Storage::disk('public')->delete($course->thumbnail);
             }
-
             $course->delete();
-
             return ApiResponse::success(
                 message: 'Deleted the course successfully'
             );
@@ -177,10 +210,12 @@ class CourseService implements CourseServiceInterface
 
 
 
-    public function getArticlewithCourse($id)
+    public function getArticlewithCourse($slug)
     {
         try {
-            $course = Course::with('articles')->find($id);
+            $course = Course::with('articles')
+                ->where('slug', $slug)
+                ->first();
 
             if (!$course) {
                 return ApiResponse::error(

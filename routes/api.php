@@ -36,7 +36,7 @@ require __DIR__ . '/auth.php';
 Route::controller(CourseController::class)->group(function () {
     Route::get('/courses', 'index');           // List all courses
     Route::get('/courses/{slug}', 'show');
-    Route::get('/courses/{id}/articles', 'getArticlewithCourse');
+    Route::get('/courses/{slug}/articles', 'getArticlewithCourse');
 });
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories', 'index');
@@ -133,7 +133,7 @@ Route::middleware('auth:api')->group(function () {
 
         Route::controller(EnrollmentController::class)->group(function () {
             Route::get('/enrollments', 'index');
-            Route::get('/enrollments/{courseId}', 'show');
+            Route::get('/enrollments/{slug}', 'show');
         });
     });
 });
