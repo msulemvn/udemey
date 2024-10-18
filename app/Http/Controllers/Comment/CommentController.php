@@ -26,7 +26,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        ApiResponse::success(data: Comment::get());
+        return ApiResponse::success(data: Comment::get()->toArray());
     }
 
     /**
