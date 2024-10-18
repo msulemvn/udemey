@@ -110,21 +110,6 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/students', 'show');
         });
 
-        Route::controller(CourseCategoryController::class)->group(function () {
-            Route::post('/create-course-category', 'store');
-            Route::put('/update-course-category/{id}', 'update');
-            Route::delete('/course-category/{id}', 'destroy');
-        });
-
-        Route::controller(ArticleController::class)->group(function () {
-            Route::get('article/{id}', 'show');
-            Route::get('/articles/slug/{slug}',  'showBySlug');
-            Route::post('/create-article',  'store');
-            Route::get('/articles',  'index');
-            Route::put('/update-article/{id}',  'update');
-            Route::delete('/delete-article/{id}', 'destroy');
-        });
-
         Route::get('/purchases', [PurchaseController::class, 'index']);
 
         Route::controller(PageController::class)->group(function () {
