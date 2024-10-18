@@ -32,39 +32,45 @@ class SiteSettingService {
     public function updateSetting($data, $id)
     {
         try {
-            $file = $data['logo_path'];
-            $siteSetting = SiteSetting::findOrFail($id);
-            if ($file) {
 
-                $timestamp = now()->timestamp;
+            $siteSetting = SiteSetting::findOrFail($id);
+
+            if (!empty($data['logo_path']) && $data['logo_path'] instanceof \Illuminate\Http\UploadedFile) {
+                $file = $data['logo_path'];
+
+                $timestamp = Carbon::now()->format('YmdHs');
                 $originalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $extension = $file->getClientOriginalExtension();
                 $newFileName = Str::slug($originalFileName) . '_' . $timestamp . '.' . $extension;
+
                 $file->storeAs('uploads', $newFileName, 'public');
-                // Storage::disk('public')->put($filePath, file_get_contents($file->getRealPath()));
+
                 $data['logo_path'] = $newFileName;
                 Log::info('Logo file stored at: ' . $newFileName);
-                $updates = [
-                    'site_title' => $data['site_title'] ?? $siteSetting->site_title,
-                    'copyright' => $data['copyright'] ?? $siteSetting->copyright,
-                    'logo_path' => $data['logo_path'] ?? $siteSetting->logo_path,
-                ];
-                $siteSettingDTO = new SiteSettingDTO($updates);
-                $siteSetting->update($siteSettingDTO->toArray());
             }
-        }
-         catch (Throwable $th) {
-            Log::error('Error uploading logo: ' . $th->getMessage());
+
+            $updates = [
+                'site_title' => $data['site_title'] ?? $siteSetting->site_title,
+                'copyright' => $data['copyright'] ?? $siteSetting->copyright,
+                'logo_path' => $data['logo_path'] ?? $siteSetting->logo_path,
+            ];
+
+            $siteSettingDTO = new SiteSettingDTO($updates);
+            $siteSetting->update($siteSettingDTO->toArray());
+
+            return ['success' => true, 'data' => $siteSetting];
+        } catch (Throwable $th) {
+            Log::error('Error updating site setting: ' . $th->getMessage());
             return [
                 'success' => false,
                 'errors' => [
-                    'message' => ['Failed to upload logo.']
+                    'setting' => ['Failed to update site setting.']
                 ],
                 'exception' => $th
             ];
         }
-        return ['success' => true, 'data' => $siteSetting];
     }
+
 
     public function deleteSetting($id)
     {
@@ -132,6 +138,4 @@ class SiteSettingService {
         }
         return ['success' => true, 'data' => $responseData];
     }
-
-   
 }
