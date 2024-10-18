@@ -25,7 +25,10 @@ class CourseService implements CourseServiceInterface
             }
             return [
                 'message' => 'All courses',
+                'body' => [
+                'message' => 'All courses',
                 'body' => $courses->toArray(),
+            ]->toArray(),
             ];
         } catch (\Throwable $th) {
             $errors = ['courses' => ['Failed to retrieve the courses. Please try again later.']];
@@ -70,17 +73,27 @@ class CourseService implements CourseServiceInterface
             $courseDTO = new CourseDTO($dtoData);
             $course = Course::create($courseDTO->toArray());
 
+
             return [
                 'message' => 'Course created successfully',
                 'statusCode' => Response::HTTP_CREATED,
+                'body' => [
+                'message' => 'Course created successfully',
+                'statusCode' => Response::HTTP_CREATED,
                 'body' => $course->toArray(),
+            ]->toArray(),
             ];
         } catch (\Throwable $th) {
             // Return error response if something goes wrong
+            // Return error response if something goes wrong
             return ApiResponse::error(
+                
                 message: 'Failed to create course',
+               
                 errors: ['course' => ['Unable to create course at this time.']],
+               
                 exception: $th
+            
             );
         }
     }
@@ -105,7 +118,10 @@ class CourseService implements CourseServiceInterface
             $course->short_description = json_decode($course->short_description);
             return [
                 'message' => 'Course fetched successfully',
+                'body' => [
+                'message' => 'Course fetched successfully',
                 'body' => $course->toArray(),
+            ]->toArray(),
             ];
         } catch (\Throwable $th) {
             return ApiResponse::error(
@@ -235,7 +251,10 @@ class CourseService implements CourseServiceInterface
             }
             return [
                 'message' => 'Articles retrieved successfully',
+                'body' => [
+                'message' => 'Articles retrieved successfully',
                 'body' => $course->articles->toArray(),
+            ]->articles->toArray(),
             ];
         } catch (\Throwable $th) {
             return ApiResponse::error(

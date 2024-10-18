@@ -111,17 +111,19 @@ Route::middleware('auth:api')->group(function () {
 
         Route::controller(PageController::class)->group(function () {
             Route::post('/create-page', 'create');
-            Route::post('/update-page/{pageId}', 'update');
+
+            Route::post('/update-page/{id}', 'update');
+
             Route::delete('/delete-page/{pageId}', 'destroy');
             Route::post('/restore-page/{pageId}', 'restore');
         });
 
         Route::controller(SiteSettingController::class)->group(function () {
             Route::post('/create-site-setting', 'createSetting');
-            Route::post('/update-site-setting/{id}', 'updateSetting');
             Route::delete('/delete-site-setting/{id}', 'deleteSetting');
             Route::post('/restore-site-setting/{id}', 'restoreSoftDeletedSetting');
-            Route::get('/get-site-settings/{id}', 'getSettings');
+            Route::get('/get-site-settings', 'getSettings');
+            Route::post('/update-site-setting', 'updateSetting');
         });
     });
 

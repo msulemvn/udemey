@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Subscription;
+namespace App\Services\Subscription\Subscription;
 
 use Exception;
 use Carbon\Carbon;

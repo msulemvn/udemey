@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Services\SiteSetting\SiteSettingService;
 use App\Http\Requests\SiteSetting\CreateSiteSettingRequest;
 use App\Http\Requests\SiteSetting\UpdateSiteSettingRequest;
+use App\Models\SiteSetting;
 
 class SiteSettingController extends Controller
 {
@@ -31,15 +32,15 @@ class SiteSettingController extends Controller
         ) :
         ApiResponse::error(
             message: 'Unable to create setting!',
-            errors: ['error' => ['Unable to create setting!']],
+            errors: ['setting' => ['Unable to create setting!']],
             statusCode: Response::HTTP_BAD_REQUEST,
         );
     }
 
-    public function updateSetting(UpdateSiteSettingRequest $request, $id)
+    public function updateSetting(UpdateSiteSettingRequest $request)
     {
         $validatedData = $request->all();
-        $response = $this->siteSettingService->updateSetting($validatedData, $id);
+        $response = $this->siteSettingService->updateSetting($validatedData);
 
         return $response['success'] ?
         ApiResponse::success(
@@ -49,10 +50,9 @@ class SiteSettingController extends Controller
         ) :
         ApiResponse::error(
             message: 'No setting found with the given id!',
-            errors: ['error' => ['No setting found with id: ' . $id]],
+            errors: ['id' => ['No setting found with id: ']],
             statusCode: Response::HTTP_NOT_FOUND,
         );
-        
     }
 
     public function deleteSetting($id)
@@ -65,7 +65,7 @@ class SiteSettingController extends Controller
         ) :
         ApiResponse::error(
             message: 'No setting found with the given id!',
-            errors: ['error' => ['No setting found with id: ' . $id]],
+            errors: ['id' => ['No setting found with id: ' . $id]],
             statusCode: Response::HTTP_NOT_FOUND,
         );
     }
@@ -82,15 +82,15 @@ class SiteSettingController extends Controller
         ) :
         ApiResponse::error(
         message: 'No setting found with the given id!',
-        errors: ['error' => ['No setting found with id: ' . $id]],
+        errors: ['id' => ['No setting found with id: ' . $id]],
         statusCode: Response::HTTP_NOT_FOUND,
         );
     
     }
 
-    public function getSettings($id)
+    public function getSettings()
     {
-        $response = $this->siteSettingService->getSettings($id);
+        $response = $this->siteSettingService->getSettings();
 
         return $response['success'] ?
         ApiResponse::success(
@@ -100,7 +100,7 @@ class SiteSettingController extends Controller
         ) :
         ApiResponse::error(
             message: 'No setting found with the given id!',
-            errors: ['error' => ['No setting found with id: ' . $id]],
+            errors: ['id' => ['No setting found with id: ']],
             statusCode: Response::HTTP_NOT_FOUND,
         );
     }
