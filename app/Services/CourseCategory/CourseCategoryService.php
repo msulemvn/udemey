@@ -5,15 +5,12 @@ namespace App\Services\CourseCategory;
 use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use App\Models\CourseCategory;
-use PHPUnit\Framework\Constraint\Count;
 use App\DTOs\CourseCategory\CourseCategoryDTO;
 use Symfony\Component\HttpFoundation\Response;
 use App\Interfaces\CourseCategory\CourseCategoryServiceInterface;
 
 class CourseCategoryService implements CourseCategoryServiceInterface
 {
-    /************************************ Get all course categories ************************************/
-
     public function index()
     {
         try {
@@ -35,8 +32,6 @@ class CourseCategoryService implements CourseCategoryServiceInterface
             );
         }
     }
-
-    /************************************ Get a specific course category ************************************/
 
     public function show($id)
     {
@@ -60,8 +55,6 @@ class CourseCategoryService implements CourseCategoryServiceInterface
         }
     }
 
-    /************************************ Create a new course category ************************************/
-
     public function store($request)
     {
         try {
@@ -81,8 +74,6 @@ class CourseCategoryService implements CourseCategoryServiceInterface
             );
         }
     }
-
-    /************************************ Update a course category ************************************/
 
     public function update($request, $id)
     {
@@ -112,8 +103,6 @@ class CourseCategoryService implements CourseCategoryServiceInterface
             );
         }
     }
-
-    /************************************ Delete a course category ************************************/
 
     public function destroy($id)
     {

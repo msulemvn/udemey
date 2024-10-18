@@ -8,14 +8,10 @@ use App\Models\Enrollment;
 use App\Helpers\ApiResponse;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
-
 use App\Interfaces\Purchase\PurchaseServiceInterface;
-
 
 class PurchaseService implements PurchaseServiceInterface
 {
-    /************************************ Get all purchases with related users and courses ************************************/
-
     public function index()
     {
         try {
@@ -44,8 +40,6 @@ class PurchaseService implements PurchaseServiceInterface
             );
         }
     }
-
-    /************************************ Checkout Purchase ************************************/
 
     public function checkout()
     {

@@ -5,7 +5,6 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\ResetPassword;
 
-
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -18,17 +17,17 @@ class AppServiceProvider extends ServiceProvider
         //
 
         $this->app->bind(
-            \App\Interfaces\UserServiceInterface::class,
+            \App\Interfaces\User\UserServiceInterface::class,
             \App\Services\User\UserService::class
         );
 
         $this->app->bind(
-            \App\Interfaces\RegisterServiceInterface::class,
+            \App\Interfaces\User\RegisterServiceInterface::class,
             \App\Services\User\RegisterService::class
         );
 
         $this->app->bind(
-            \App\Interfaces\CourseServiceInterface::class,
+            \App\Interfaces\Course\CourseServiceInterface::class,
             \App\Services\Course\CourseService::class
         );
 
@@ -52,10 +51,15 @@ class AppServiceProvider extends ServiceProvider
             \App\Services\Purchase\PurchaseService::class
         );
 
-		$this->app->bind(
-			\App\Interfaces\Auth\TwoFactorServiceInterface::class,
-			\App\Services\Auth\TwoFactorService::class
-		);
+        $this->app->bind(
+            \App\Interfaces\Auth\TwoFactorServiceInterface::class,
+            \App\Services\Auth\TwoFactorService::class
+        );
+
+        $this->app->bind(
+            \App\Interfaces\Auth\AuthServiceInterface::class,
+            \App\Services\Auth\AuthService::class
+        );
     }
 
     /**

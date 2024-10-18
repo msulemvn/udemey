@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('body')->nullable();
             $table->string('slug')->unique();
-            $table->string('image_url')->nullable();
+            $table->string('image_path')->nullable();  // This will store the image path
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('course_id')->constrained('courses');
             $table->enum('status', ['draft', 'published'])->default('draft');

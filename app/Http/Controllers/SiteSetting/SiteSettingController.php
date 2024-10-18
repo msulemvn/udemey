@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\SiteSetting;
 
-use Exception;
-use App\Models\SiteSetting;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,50 +20,88 @@ class SiteSettingController extends Controller
 
     public function createSetting(CreateSiteSettingRequest $request)
     {
-        $siteSetting = $request->validated();
-        $logo = $request->file('logo_path');
-        $siteSetting = $this->siteSettingService->createSetting($siteSetting, $logo);
+        $validatedData = $request->all();
+        $response = $this->siteSettingService->createSetting($validatedData);
 
-        return ApiResponse::success(
-            data: $siteSetting->toArray(),
+        return $response['success'] ?
+        ApiResponse::success(
+            data: $response['data']->toArray() ?? null,
             message: 'Settings created successfully!',
-            statusCode: Response::HTTP_CREATED
+            statusCode: Response::HTTP_OK
+        ) :
+        ApiResponse::error(
+            message: 'Unable to create setting!',
+            errors: ['error' => ['Unable to create setting!']],
+            statusCode: Response::HTTP_BAD_REQUEST,
         );
     }
 
     public function updateSetting(UpdateSiteSettingRequest $request, $id)
     {
-        $logo = $request->hasFile('logo_path') ? $request->file('logo_path') : null;
-        $updatedSetting = $this->siteSettingService->updateSetting($request->all(), $logo, $id);
+        $validatedData = $request->all();
+        $response = $this->siteSettingService->updateSetting($validatedData, $id);
 
-        return ApiResponse::success(
-            data: $updatedSetting->toArray(),
-            message: "Site settings updated successfully!",
-            statusCode: Response::HTTP_ACCEPTED
+        return $response['success'] ?
+        ApiResponse::success(
+            data: $response['data']->toArray() ?? null,
+            message: 'Site setting updated successfully!',
+            statusCode: Response::HTTP_OK
+        ) :
+        ApiResponse::error(
+            message: 'No setting found with the given id!',
+            errors: ['error' => ['No setting found with id: ' . $id]],
+            statusCode: Response::HTTP_NOT_FOUND,
         );
+        
     }
 
     public function deleteSetting($id)
     {
-        $this->siteSettingService->deleteSetting($id);
-        return ApiResponse::success(message: "Setting deleted successfully!");
+        $response = $this->siteSettingService->deleteSetting($id);
+        return $response['success'] ?
+        ApiResponse::success(
+            message: 'Site setting deleted successfully!',
+            statusCode: Response::HTTP_OK
+        ) :
+        ApiResponse::error(
+            message: 'No setting found with the given id!',
+            errors: ['error' => ['No setting found with id: ' . $id]],
+            statusCode: Response::HTTP_NOT_FOUND,
+        );
     }
 
     public function restoreSoftDeletedSetting($id)
     {
-        $restoredSetting = $this->siteSettingService->restoreSetting($id);
-        return ApiResponse::success(
-            data: $restoredSetting->toArray(),
-            message: "Site setting restored successfully!"
+        $response = $this->siteSettingService->restoreSetting($id);
+        
+        return $response['success'] ?
+        ApiResponse::success(
+            data: $response['data']->toArray() ?? null,
+            message: 'Site setting restored successfully!',
+            statusCode: Response::HTTP_OK
+        ) :
+        ApiResponse::error(
+        message: 'No setting found with the given id!',
+        errors: ['error' => ['No setting found with id: ' . $id]],
+        statusCode: Response::HTTP_NOT_FOUND,
         );
+    
     }
 
     public function getSettings($id)
     {
-        $siteSetting = SiteSetting::findOrFail($id);
-        return ApiResponse::success(
-            data: $siteSetting->toArray(),
-            message: "Site setting fetched successfully!"
+        $response = $this->siteSettingService->getSettings($id);
+
+        return $response['success'] ?
+        ApiResponse::success(
+            data: $response['data'] ?? null,
+            message: 'Setting retrieved successfully!',
+            statusCode: Response::HTTP_OK
+        ) :
+        ApiResponse::error(
+            message: 'No setting found with the given id!',
+            errors: ['error' => ['No setting found with id: ' . $id]],
+            statusCode: Response::HTTP_NOT_FOUND,
         );
     }
 }

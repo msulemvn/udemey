@@ -7,15 +7,13 @@ use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use App\DTOs\Course\CourseDTO;
 use App\DTOs\Course\CourseUpdateDTO;
-use App\Interfaces\CourseServiceInterface;
+use App\Interfaces\Course\CourseServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
 class CourseService implements CourseServiceInterface
 {
-    /************************************ Display a listing of the courses ************************************/
-
     public function index()
     {
         try {
@@ -31,8 +29,6 @@ class CourseService implements CourseServiceInterface
             return ApiResponse::error(message: 'Failed to show courses', errors: $errors, exception: $th);
         }
     }
-
-    /************************************ Store a newly created course ************************************/
 
     public function store($request)
     {
@@ -55,8 +51,6 @@ class CourseService implements CourseServiceInterface
             return ApiResponse::error(message: 'Failed to create course', errors: ['course' => ['Unable to create course at this time.']], exception: $th);
         }
     }
-
-    /************************************ specified course  ************************************/
 
     public function show($slug)
     {
@@ -83,11 +77,6 @@ class CourseService implements CourseServiceInterface
         }
     }
 
-
-
-
-    /************************************ Update the specified course ************************************/
-
     public function update($request, $id)
     {
         try {
@@ -113,10 +102,6 @@ class CourseService implements CourseServiceInterface
             );
         }
     }
-
-
-
-    /************************************ Remove the specified course ************************************/
 
     public function destroy($id)
     {
