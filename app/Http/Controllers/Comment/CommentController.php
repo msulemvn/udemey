@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Comment;
 
 use App\Models\Comment;
 use App\Helpers\ApiResponse;
 use App\Services\Comment\CommentService;
 use App\Http\Requests\Comment\StoreCommentRequest;
 use App\Http\Requests\Comment\UpdateCommentRequest;
+use App\Http\Controllers\Controller;
+
 
 class CommentController extends Controller
 {
@@ -24,7 +26,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        ApiResponse::success(data: Comment::get());
     }
 
     /**

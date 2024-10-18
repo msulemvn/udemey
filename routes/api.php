@@ -5,14 +5,14 @@ use App\Http\Controllers\Page\PageController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Article\ArticleController;
+use App\Http\Controllers\Comment\CommentController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Category\CategoryController;
-use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Purchase\PurchaseController;
 use App\Http\Controllers\Enrollment\EnrollmentController;
 use App\Http\Controllers\SiteSetting\SiteSettingController;
-use App\Http\Controllers\CourseCategory\CourseCategoryController;
 use App\Http\Controllers\Subscription\SubscriptionController;
+use App\Http\Controllers\CourseCategory\CourseCategoryController;
 
 
 // included auth.php
