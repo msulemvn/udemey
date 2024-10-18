@@ -60,6 +60,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Interfaces\Auth\AuthServiceInterface::class,
             \App\Services\Auth\AuthService::class
         );
+
+		$this->app->bind(
+			\App\Interfaces\Comment\CommentServiceInterface::class,
+			\App\Services\Comment\CommentService::class
+		);
     }
 
     /**
