@@ -10,6 +10,7 @@ use App\DTOs\Course\CourseUpdateDTO;
 use App\Interfaces\Course\CourseServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Storage;
 
 
 class CourseService implements CourseServiceInterface
@@ -23,7 +24,10 @@ class CourseService implements CourseServiceInterface
             foreach ($courses as $course) {
                 $course->short_description = json_decode($course->short_description);
             }
-            return $courses;
+            return [
+                'message' => 'All courses',
+                'body' => $courses->toArray(),
+            ];
         } catch (\Throwable $th) {
             $errors = ['courses' => ['Failed to retrieve the courses. Please try again later.']];
             return ApiResponse::error(message: 'Failed to show courses', errors: $errors, exception: $th);
@@ -33,22 +37,42 @@ class CourseService implements CourseServiceInterface
     public function store($request)
     {
         try {
-            // Generate a unique slug from title
-            $slug = $this->generateUniqueSlug($request['title']);
+            // Handle the thumbnail upload
+            $imagePath = null;
 
-            $request['slug'] = $slug;
-            $request['user_id'] = auth()->id();
-
-            if (isset($request['short_description'])) {
-                $request['short_description'] = json_encode($request['short_description']);
+            if ($request->hasFile('thumbnail')) {
+                $imagePath = $request->file('thumbnail')->store('course_image', 'public');
             }
 
 
-            $courseDTO = new CourseDTO($request);
+            $slug = $this->generateUniqueSlug($request->get('title'));
+
+
+            $dtoData = $request->validated();
+            $dtoData['slug'] = $slug;
+            $dtoData['user_id'] = auth()->id();
+            $dtoData['thumbnail'] = $imagePath;
+
+            if (isset($dtoData['short_description'])) {
+                $dtoData['short_description'] = json_encode($dtoData['short_description']);
+            }
+
+            // Use a Data Transfer Object (DTO) to handle the course creation
+            $courseDTO = new CourseDTO($dtoData);
             $course = Course::create($courseDTO->toArray());
-            return $course;
+
+            return [
+                'message' => 'Course created successfully',
+                'statusCode' => Response::HTTP_CREATED,
+                'body' => $course->toArray(),
+            ];
         } catch (\Throwable $th) {
-            return ApiResponse::error(message: 'Failed to create course', errors: ['course' => ['Unable to create course at this time.']], exception: $th);
+            // Return error response if something goes wrong
+            return ApiResponse::error(
+                message: 'Failed to create course',
+                errors: ['course' => ['Unable to create course at this time.']],
+                exception: $th
+            );
         }
     }
 
@@ -66,7 +90,10 @@ class CourseService implements CourseServiceInterface
             }
 
             $course->short_description = json_decode($course->short_description);
-            return $course;
+            return [
+                'message' => 'Course fetched successfully',
+                'body' => $course->toArray(),
+            ];
         } catch (\Throwable $th) {
             return ApiResponse::error(
                 message: 'Failed to retrieve course',
@@ -82,17 +109,38 @@ class CourseService implements CourseServiceInterface
         try {
             $course = Course::findOrFail($id);
 
-            $slug = $this->generateUniqueSlug($request['title']);
+            if ($request->hasFile('thumbnail')) {
 
-            $courseUpdateDTO = new CourseUpdateDTO($request->all(), $slug);
+                if ($course->thumbnail && Storage::disk('public')->exists($course->thumbnail)) {
+                    Storage::disk('public')->delete($course->thumbnail);
+                }
+
+                $imagePath = $request->file('thumbnail')->store('course_image', 'public');
+                $course->thumbnail = $imagePath;
+            }
+
+            $slug = $this->generateUniqueSlug($request->get('title'));
+
+
+            $dtoData = $request->validated();
+            $dtoData['slug'] = $slug;
+            $dtoData['user_id'] = auth()->id();
+
+            if (!$request->hasFile('thumbnail')) {
+                $dtoData['thumbnail'] = $course->thumbnail;
+            }
+            if (isset($dtoData['short_description'])) {
+                $dtoData['short_description'] = json_encode($dtoData['short_description']);
+            }
+
+            // Update course using DTO
+            $courseUpdateDTO = new CourseDTO($dtoData);
             $course->update($courseUpdateDTO->toArray());
-            return $course;
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::error(
-                message: 'Course not found',
-                errors: ['course' => ['The course with the provided ID was not found.']],
-                statusCode: Response::HTTP_NOT_FOUND
-            );
+
+            return [
+                'message' => 'Course updated successfully',
+                'body' => $course->toArray(),
+            ];
         } catch (\Throwable $th) {
             return ApiResponse::error(
                 message: 'Failed to update course',
@@ -108,14 +156,14 @@ class CourseService implements CourseServiceInterface
         try {
 
             $course = Course::findOrFail($id);
-            $course->delete(); // This will perform soft delete if the model uses SoftDeletes
+            if ($course->thumbnail && Storage::disk('public')->exists($course->thumbnail)) {
+                Storage::disk('public')->delete($course->thumbnail);
+            }
 
-            return ApiResponse::success(message: 'Deleted the course successfully');
-        } catch (ModelNotFoundException $e) {
-            return ApiResponse::error(
-                message: 'Course not found',
-                errors: ['course' => ['The course with the provided ID was not found.']],
-                statusCode: Response::HTTP_NOT_FOUND
+            $course->delete();
+
+            return ApiResponse::success(
+                message: 'Deleted the course successfully'
             );
         } catch (\Throwable $th) {
             return ApiResponse::error(
@@ -126,6 +174,8 @@ class CourseService implements CourseServiceInterface
             );
         }
     }
+
+
 
     public function getArticlewithCourse($id)
     {
@@ -148,7 +198,10 @@ class CourseService implements CourseServiceInterface
                     statusCode: Response::HTTP_NOT_FOUND
                 );
             }
-            return $course;
+            return [
+                'message' => 'Articles retrieved successfully',
+                'body' => $course->articles->toArray(),
+            ];
         } catch (\Throwable $th) {
             return ApiResponse::error(
                 message: 'Failed to retrieve articles for the course',

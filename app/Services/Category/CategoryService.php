@@ -22,7 +22,10 @@ class CategoryService implements CategoryServiceInterface
                     statusCode: Response::HTTP_NOT_FOUND
                 );
             }
-            return $categories;
+            return [
+                'message' => 'All categories retrieved successfully',
+                'body' => $categories->toArray(),
+            ];
         } catch (\Throwable $th) {
             return ApiResponse::error(
                 message: 'Failed to get categories',
@@ -45,8 +48,10 @@ class CategoryService implements CategoryServiceInterface
             $categoryDTO = new CategoryDTO($request);
 
             $categoryDTO = Category::create($categoryDTO->toArray());
-
-            return $categoryDTO;
+            return [
+                'message' => 'Category created successfully',
+                'body' => $categoryDTO->toArray(),
+            ];
         } catch (\Throwable $th) {
             return ApiResponse::error(
                 message: 'Failed to create category',
@@ -68,7 +73,10 @@ class CategoryService implements CategoryServiceInterface
                     statusCode: Response::HTTP_NOT_FOUND
                 );
             }
-            return $category;
+            return [
+                'message' => 'Category retrieved successfully',
+                'body' => $category->toArray(),
+            ];
         } catch (\Throwable $th) {
             return ApiResponse::error(
                 message: 'Failed to retrieve category',
@@ -99,7 +107,10 @@ class CategoryService implements CategoryServiceInterface
 
             // Update the category
             $category->update($categoryDTO->toArray());
-            return $category;
+            return [
+                'message' => 'Category updated successfully',
+                'body' => $category->toArray(),
+            ];
         } catch (\Throwable $th) {
             return ApiResponse::error(
                 message: 'Failed to update category',
@@ -115,7 +126,10 @@ class CategoryService implements CategoryServiceInterface
         try {
             $category = Category::findOrFail($id);
             $category->delete();
-            return ApiResponse::success(message: 'Category deleted successfully');
+            return [
+                'message' => 'Category deleted successfully',
+            ];
+            return ApiResponse::success(message: '');
         } catch (\Throwable $th) {
             return ApiResponse::error(
                 message: 'Failed to delete category',
@@ -138,7 +152,10 @@ class CategoryService implements CategoryServiceInterface
                     statusCode: Response::HTTP_NOT_FOUND
                 );
             }
-            return $category;
+            return [
+                'message' => 'Course categories retrieved successfully',
+                'body' => $category->toArray(),
+            ];
         } catch (\Throwable $th) {
             return ApiResponse::error(
                 message: 'Failed to retrieve course categories',

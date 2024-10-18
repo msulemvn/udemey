@@ -16,11 +16,11 @@ class UpdateCourseRequest extends BaseRequest
         return [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'short_description' => 'required|array', // Validate as array
-            'short_description.*' => 'string', // Each element of array should be a string
+            'short_description' => 'nullable|array',
+            'short_description.*' => 'string',
             'price' => 'required|numeric',
             'discounted_price' => 'nullable|numeric',
-            'thumbnail_url' => 'nullable|string',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'course_categories_id' => 'required|exists:course_categories,id',
             'duration' => 'required|numeric',
         ];

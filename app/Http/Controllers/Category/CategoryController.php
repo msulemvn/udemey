@@ -20,36 +20,37 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = $this->categoryService->index();
-        return ApiResponse::success(message: 'All categories retrieved successfully', data: $categories->toArray());
+        $Response = $this->categoryService->index();
+        return ApiResponse::success(message: $Response['message'], data: $Response['body']);
     }
 
     public function store(CreateCategoryRequest $request)
     {
-        $category = $this->categoryService->store($request);
-        return ApiResponse::success(message: 'Category created successfully', data: $category->toarray());
+        $Response = $this->categoryService->store($request);
+        return ApiResponse::success(message: $Response['message'], data: $Response['body']);
     }
 
     public function show($id)
     {
-        $category = $this->categoryService->show($id);
-        return ApiResponse::success(message: 'Category retrieved successfully', data: $category->toarray());
+        $Response = $this->categoryService->show($id);
+        return ApiResponse::success(message: $Response['message'], data: $Response['body']);
     }
 
     public function update(UpdateCategoryRequest $request, $id)
     {
-        $category = $this->categoryService->update($request, $id);
-        return ApiResponse::success(message: 'Category updated successfully', data: $category->toarray());
+        $Response = $this->categoryService->update($request, $id);
+        return ApiResponse::success(message: $Response['message'], data: $Response['body']);
     }
 
     public function destroy($id)
     {
-        return $this->categoryService->destroy($id);
+        $Response = $this->categoryService->destroy($id);
+        return ApiResponse::success(message: $Response['message'], data: $Response['body']);
     }
 
     public function getCategoryCourseCategories($id)
     {
-        $category = $this->categoryService->getCategoryCourseCategories($id);
-        return ApiResponse::success(message: 'Course categories retrieved successfully', data: $category->courseCategories->toarray());
+        $Response = $this->categoryService->getCategoryCourseCategories($id);
+        return ApiResponse::success(message: $Response['message'], data: $Response['body']);
     }
 }

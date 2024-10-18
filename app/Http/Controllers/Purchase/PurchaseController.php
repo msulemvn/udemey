@@ -6,8 +6,7 @@ use App\Helpers\ApiResponse;
 
 use App\Http\Controllers\Controller;
 use App\Services\Purchase\PurchaseService;
-
-
+use Illuminate\Http\Request;
 
 class PurchaseController extends Controller
 {
@@ -28,9 +27,9 @@ class PurchaseController extends Controller
         );
     }
 
-    public function checkout()
+    public function checkout(Request $request)
     {
-        $checkoutResponse = $this->purchaseService->checkout();
+        $checkoutResponse = $this->purchaseService->checkout($request);
         return ApiResponse::success(
             message: $checkoutResponse['message'],
             statusCode: $checkoutResponse['statusCode']
