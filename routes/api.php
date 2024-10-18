@@ -127,7 +127,7 @@ Route::middleware('auth:api')->group(function () {
 
         Route::controller(CommentController::class)->group(function () {
             Route::post('/create-comment', 'store');
-            Route::post('/create-comment/{id}', 'reply'); //parent id
+            Route::post('/create-comment/{id}', 'store'); //parent id
             Route::post('/edit-comment/{id}', 'update');
             Route::delete('/delete-comment/{id}', 'destroy');
             Route::post('/approve-comment/{id}', 'approve');
