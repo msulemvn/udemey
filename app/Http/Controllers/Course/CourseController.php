@@ -58,15 +58,15 @@ class CourseController extends Controller
 
     public function destroy($id)
     {
-
         $Response = $this->courseService->destroy($id);
         return ApiResponse::success(
-            message: $Response['message']
+            message: $Response['message'],
+            data: $Response['body']
         );
     }
     public function getArticlewithCourse($slug)
     {
-        $Response = $this->courseService->getArticlewithCourse($slug);
+        $Response = $this->courseService->getArticlewithCourse($id);
         return ApiResponse::success(
             message: $Response['message'],
             data: $Response['body']

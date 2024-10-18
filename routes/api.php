@@ -130,11 +130,6 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::middleware('role:student')->group(function () {
-        /*
-        |--------------------------------------------------------------------------
-        | Authenticated Routes: student
-        |--------------------------------------------------------------------------
-        */
 
         Route::post('/purchase', [PurchaseController::class, 'checkout']);
 
