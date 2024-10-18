@@ -21,36 +21,55 @@ class CourseController extends Controller
 
     public function index()
     {
-        $courses = $this->courseService->index();
-        return ApiResponse::success(message: 'All courses', data: $courses->toArray());
+        $Response = $this->courseService->index();
+        return ApiResponse::success(
+            message: $Response['message'],
+            data: $Response['body']
+        );
     }
 
     public function store(CreateCourseRequest $request)
     {
-        $course = $this->courseService->store($request);
-        return ApiResponse::success(message: 'You have successfully created the course', data: $course->toArray(), statusCode: Response::HTTP_CREATED);
+        $Response = $this->courseService->store($request);
+        return ApiResponse::success(
+            message: $Response['message'],
+            data: $Response['body']
+        );
     }
 
 
     public function show($slug)
     {
-        $course = $this->courseService->show($slug);
-        return ApiResponse::success(message: 'Course fetched successfully', data: $course->toArray());
+        $Response = $this->courseService->show($slug);
+        return ApiResponse::success(
+            message: $Response['message'],
+            data: $Response['body']
+        );
     }
 
     public function update(UpdateCourseRequest $request, $id)
     {
-        $course = $this->courseService->update($request, $id);
-        return ApiResponse::success(message: 'Course updated successfully', data: $course->fresh()->toArray());
+        $Response = $this->courseService->update($request, $id);
+        return ApiResponse::success(
+            message: $Response['message'],
+            data: $Response['body']
+        );
     }
 
     public function destroy($id)
     {
-        return $this->courseService->destroy($id);
+        $Response = $this->courseService->destroy($id);
+        return ApiResponse::success(
+            message: $Response['message'],
+            data: $Response['body']
+        );
     }
     public function getArticlewithCourse($id)
     {
-        $course = $this->courseService->getArticlewithCourse($id);
-        return ApiResponse::success(message: 'Articles retrieved successfully', data: $course->articles->toArray());
+        $Response = $this->courseService->getArticlewithCourse($id);
+        return ApiResponse::success(
+            message: $Response['message'],
+            data: $Response['body']
+        );
     }
 }
