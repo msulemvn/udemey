@@ -50,7 +50,6 @@ Route::controller(CourseCategoryController::class)->group(function () {
 });
 
 Route::controller(PageController::class)->group(function () {
-
     Route::get('/get-all-pages', 'getPages');
     Route::get('/get-page-by-id/{pageId}', 'getPageById');
     Route::get('/get-page-by-slug/{slug}', 'getPageBySlug');
