@@ -35,7 +35,7 @@ class EnrollmentService implements EnrollmentServiceInterface
         }
     }
 
-    public function show($courseId)
+    public function show($slug)
     {
         try {
             $studentId = auth()->id();
