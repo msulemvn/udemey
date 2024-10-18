@@ -7,6 +7,7 @@ use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Purchase\PurchaseController;
 use App\Http\Controllers\Enrollment\EnrollmentController;
 use App\Http\Controllers\SiteSetting\SiteSettingController;
@@ -122,6 +123,17 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('/delete-site-setting/{id}', 'deleteSetting');
             Route::post('/restore-site-setting/{id}', 'restoreSoftDeletedSetting');
             Route::get('/get-site-settings/{id}', 'getSettings');
+        });
+
+        Route::controller(CommentController::class)->group(function () {
+            Route::post('/create-comment', 'store');
+            Route::post('/create-comment/{id}', 'reply'); //parent id
+            Route::post('/edit-comment/{id}', 'update');
+            Route::delete('/delete-comment/{id}', 'destroy');
+            Route::post('/approve-comment/{id}', 'approve');
+            Route::post('/disaprove-comment/{id}', 'disaprove');
+            Route::get('/comments', 'index');
+            Route::get('/comments/{id}', 'index'); //article id
         });
     });
 
