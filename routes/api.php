@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\Page\PageController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Course\CourseController;
@@ -134,12 +133,6 @@ Route::middleware('auth:api')->group(function () {
         | Authenticated Routes: student
         |--------------------------------------------------------------------------
         */
-
-        Route::controller(CartController::class)->group(function () {
-            Route::post('/addtocart/{courseId}', 'addToCart');
-            Route::delete('/delete-cart/{courseId}', 'removeFromCart');
-            Route::get('/viewcart', 'viewCart');
-        });
 
         Route::post('/purchase', [PurchaseController::class, 'checkout']);
 
