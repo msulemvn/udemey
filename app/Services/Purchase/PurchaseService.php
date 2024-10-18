@@ -42,7 +42,7 @@ class PurchaseService implements PurchaseServiceInterface
         }
     }
 
-    public function checkout()
+    public function checkout($request)
     {
         // Receive course data from the frontend
         $courses = $request->input('courses'); // Expected to be an array of course objects
