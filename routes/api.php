@@ -99,8 +99,6 @@ Route::middleware('auth:api')->group(function () {
         });
 
         Route::controller(SubscriptionController::class)->group(function () {
-            Route::post('/subscribe', 'subscribe');
-            Route::get('/check-my-subscription', 'checkMySubscription');
             Route::get('/active-subscriptions', 'getAllActiveSubscriptions');
         });
 
@@ -136,6 +134,11 @@ Route::middleware('auth:api')->group(function () {
         Route::controller(EnrollmentController::class)->group(function () {
             Route::get('/enrollments', 'index');
             Route::get('/enrollments/{slug}', 'show');
+        });
+
+        Route::controller(SubscriptionController::class)->group(function () {
+            Route::post('/subscribe', 'subscribe');
+            Route::get('/check-my-subscription', 'checkMySubscription');
         });
     });
 });
