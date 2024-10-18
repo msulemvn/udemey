@@ -29,11 +29,13 @@ class SiteSettingService {
         return ['success' => true, 'data' => $response];
     }
 
-    public function updateSetting($data, $id)
+    // public function updateSetting($data, $id)
+    // {
+        public function updateSetting($data)
     {
         try {
 
-            $siteSetting = SiteSetting::findOrFail($id);
+            $siteSetting = SiteSetting::first();
 
             if (!empty($data['logo_path']) && $data['logo_path'] instanceof \Illuminate\Http\UploadedFile) {
                 $file = $data['logo_path'];
@@ -114,10 +116,13 @@ class SiteSettingService {
         }
     }
 
-    public function getSettings($id)
+    public function getSettings()
+
     { 
         try{
-            $siteSetting = SiteSetting::findOrFail($id);
+            
+            $siteSetting = SiteSetting::first();
+
             if($siteSetting){
                 $logoPath = $siteSetting->logo_path ? asset('storage/uploads/' . $siteSetting->logo_path): null;
 
