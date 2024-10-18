@@ -19,13 +19,14 @@ class SubscriptionController extends Controller
     // Subscribe a student by ID
     public function subscribe()
     {
+        // Call the service, no data from Postman
         return $this->subscriptionService->subscribe();
     }
 
     // Check subscription status for a student by ID
     public function checkMySubscription()
     {
-        $studentId = auth()->id();  // Get the authenticated user's ID
+        $studentId = auth()->id(); // Get the authenticated user's ID
 
         if (!$studentId) {
             return ApiResponse::error('User not authenticated', statusCode: Response::HTTP_UNAUTHORIZED);
