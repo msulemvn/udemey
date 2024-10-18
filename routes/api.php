@@ -113,7 +113,9 @@ Route::middleware('auth:api')->group(function () {
 
         Route::controller(PageController::class)->group(function () {
             Route::post('/create-page', 'create');
+
             Route::post('/update-page/{id}', 'update');
+
             Route::delete('/delete-page/{pageId}', 'destroy');
             Route::post('/restore-page/{pageId}', 'restore');
         });
