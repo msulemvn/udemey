@@ -3,6 +3,7 @@
 namespace App\Services\Comment;
 
 use App\Models\Comment;
+use App\DTOs\Comment\CommentDTO;
 use Illuminate\Support\Facades\Auth;
 use App\Interfaces\Comment\CommentServiceInterface;
 
@@ -40,25 +41,15 @@ class CommentService implements CommentServiceInterface
      */
     public function store($request)
     {
-        // Check if the commentable model exists
-        if (!class_exists($request->commentableType)) {
-            return ['success' => false, 'errors' =>  ['commentableType' => ['The model does not exist.']]];
-        }
-
         $user = Auth::user(); // Get the authenticated user
-
+        $commentDTO = new CommentDTO($request);
         /** @var \App\User|null $user */
-        $status = $user->comments()->create([
-            'parent_comment_id' => $request->parentCommentId,
-            'commentable_id' => $request->commentableId,
-            'commentable_type' => $request->commentableType,
-            'body' => 'This is a comment'
-        ]);
+        $result = $user->comments()->create($commentDTO->toArray());
 
-        if ($status) {
-            return ['success' => true, 'data' => $status->toArray()];
+        if ($result) {
+            return ['success' => true, 'data' => $result->toArray()];
         } else {
-            return ['success' => false, 'errors' => $status->errors()->all()];
+            return ['success' => false, 'errors' => $result->errors()->all()];
         }
     }
 

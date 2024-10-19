@@ -2,14 +2,22 @@
 
 namespace App\DTOs\Comment;
 
-class CommentDTO
+use App\DTOs\BaseDTO;
+
+class CommentDTO extends BaseDTO
 {
-    // Define your properties here
+    public ?int $parent_comment_id;
+    public int $commentable_id;
+    public string $commentable_type;
+    public ?string $body;
+    public ?int $status;
 
-    public function __construct(array $data)
+    public function __construct(mixed $data)
     {
-        // Initialize properties from the provided data array
+        $this->parent_comment_id = $data['parentCommentId'];
+        $this->commentable_id = $data['commentableId'];
+        $this->commentable_type = $data['commentableType'];
+        $this->body =  $data['body'];
+        $this->status =  $data['status'];
     }
-
-    // Add any methods to manipulate the DTO if necessary
 }

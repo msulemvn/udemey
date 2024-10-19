@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Comment;
 
 use App\Http\Requests\BaseRequest;
+use App\Rules\ClassExists;
 use Illuminate\Support\Str;
 
 class IndexCommentRequest extends BaseRequest
@@ -16,7 +17,7 @@ class IndexCommentRequest extends BaseRequest
     {
         return [
             'commentableId' => 'nullable|integer',
-            'commentableType' => 'nullable|string',
+            'commentableType' => ['nullable', 'string', new ClassExists],
         ];
     }
 

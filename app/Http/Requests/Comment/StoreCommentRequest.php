@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Comment;
 
+use App\Rules\ClassExists;
 use Illuminate\Support\Str;
 use App\Http\Requests\BaseRequest;
 
@@ -16,7 +17,7 @@ class StoreCommentRequest extends BaseRequest
     {
         return [
             'commentableId' => 'required|integer',
-            'commentableType' => 'required|string',
+            'commentableType' => ['nullable', 'string', new ClassExists],
             'parentCommentId' => 'nullable|integer',
             'body' => 'required|string|min:5',
         ];
