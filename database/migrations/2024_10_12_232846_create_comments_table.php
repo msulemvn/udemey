@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
             // automatically creates the commentable_id and commentable_type columns.
             $table->morphs('commentable');
-            $table->text('comment_text');
+            $table->text('body');
             $table->unsignedBigInteger('parent_comment_id')->nullable();
             $table->foreign('parent_comment_id')->references('id')->on('comments');
             $table->enum('status', ['approved', 'disapproved', 'pending'])->default('pending');

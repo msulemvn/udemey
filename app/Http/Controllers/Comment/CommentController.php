@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Services\Comment\CommentService;
+use App\Http\Requests\Comment\IndexCommentRequest;
 use App\Http\Requests\Comment\StoreCommentRequest;
 use App\Http\Requests\Comment\UpdateCommentRequest;
 
@@ -25,21 +26,10 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($commentableType = null, $commentableId = null)
+    public function index(IndexCommentRequest $request)
     {
-        if ($commentableType) {
-            $commentableType = 'App\\Models\\' . Str::studly(Str::singular($commentableType));
-            if (!class_exists($commentableType)) {
-                return ApiResponse::error(errors: ['commentableType' => ['The model does not exist.']]);
-            } else {
-                if ($commentableId) {
-                    return ApiResponse::success(data: Comment::where('commentable_type', $commentableType)->find($commentableId)->toArray());
-                } else {
-                    return ApiResponse::success(data: Comment::where('commentable_type', $commentableType)->get()->toArray());
-                }
-            }
-        }
-        return ApiResponse::success(data: Comment::get()->toArray());
+        $response = $this->commentService->index($request);
+        return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::error(message: $response['message'] ?? null, errors: $response['errors'], request: $response['request'] ?? null, exception: $response['exception'] ?? null, statusCode: $response['statusCode'] ?? null);
     }
 
     /**

@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
+    protected $guarded = [];
 
     public function commentable(): MorphTo
     {
@@ -24,5 +24,10 @@ class Comment extends Model
     public function childComments()
     {
         return $this->hasMany(Comment::class, 'parent_comment_id');
+    }
+
+    public function student()
+    {
+        return $this->belongsTo(User::class);
     }
 }

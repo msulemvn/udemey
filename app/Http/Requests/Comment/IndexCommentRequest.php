@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\Comment;
 
-use Illuminate\Support\Str;
 use App\Http\Requests\BaseRequest;
+use Illuminate\Support\Str;
 
-class StoreCommentRequest extends BaseRequest
+class IndexCommentRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,10 +15,8 @@ class StoreCommentRequest extends BaseRequest
     public function rules()
     {
         return [
-            'commentableId' => 'required|integer',
-            'commentableType' => 'required|string',
-            'parentCommentId' => 'nullable|integer',
-            'body' => 'required|string|min:5',
+            'commentableId' => 'nullable|integer',
+            'commentableType' => 'nullable|string',
         ];
     }
 
@@ -31,10 +29,7 @@ class StoreCommentRequest extends BaseRequest
     public function messages()
     {
         return [
-            'commentableId.required' => 'Commentable id is required',
-            'commentableType.required' => 'Commentable type is required',
-            'body.required' => 'Comment body is required',
-            'body.min' => 'Comment body must be at least 5 characters',
+            'commentableType.in' => 'Invalid commentable type',
         ];
     }
 
@@ -48,7 +43,7 @@ class StoreCommentRequest extends BaseRequest
         $this->merge([
             'commentableType' => $this->route('commentableType') ?
                 'App\\Models\\' . Str::studly(Str::singular($this->route('commentableType'))) : null,
-            'parentCommentId' => $this->route('parentCommentId'),
+            'commentableId' => $this->route('commentableId'),
         ]);
     }
 }

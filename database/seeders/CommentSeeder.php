@@ -31,7 +31,8 @@ class CommentSeeder extends Seeder
         $comments = [];
         for ($i = 0; $i < 5; $i++) {
             $comments[] = Comment::create([
-                'comment_text' => "Comment $i",
+                'user_id' => 1, // Assuming user ID 1 exists
+                'body' => "Comment $i",
                 'commentable_id' => $article->id,
                 'commentable_type' => get_class($article),
             ]);
@@ -41,7 +42,8 @@ class CommentSeeder extends Seeder
         foreach ($comments as $comment) {
             for ($i = 0; $i < 3; $i++) {
                 Comment::create([
-                    'comment_text' => "Reply to Comment {$comment->id}",
+                    'user_id' => 1, // Assuming user ID 1 exists
+                    'body' => "Reply to Comment {$comment->id}",
                     'commentable_id' => $article->id, // or $comment->id for deeper nesting
                     'commentable_type' => get_class($article), // or get_class($comment)
                     'parent_comment_id' => $comment->id,

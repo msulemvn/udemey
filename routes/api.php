@@ -126,15 +126,13 @@ Route::middleware('auth:api')->group(function () {
         });
 
         Route::controller(CommentController::class)->group(function () {
-            Route::post('/create-comment', 'store');
-            Route::post('/create-comment/{id}', 'store'); //parent id
             Route::post('/edit-comment/{id}', 'update');
             Route::delete('/delete-comment/{id}', 'destroy');
             Route::post('/approve-comment/{id}', 'approve');
             Route::post('/disaprove-comment/{id}', 'disaprove');
-            Route::get('/comments', 'index');
-            Route::get('/{commentableType}/comments', 'index');
-            Route::get('/{commentableType}/comments/{commentableId}', 'index'); //article id
+            Route::get('/comments/{commentableId?}', 'index');
+            Route::get('/{commentableType}/comments/{commentableId?}', 'index'); //article id
+            Route::post('/{commentableType}/create-comment/{parentCommentId?}', 'store'); //optional parent id
         });
     });
 
