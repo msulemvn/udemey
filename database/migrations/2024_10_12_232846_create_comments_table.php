@@ -15,13 +15,17 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
             // automatically creates the commentable_id and commentable_type columns.
             $table->morphs('commentable');
-            $table->text('content');
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->text('body');
+            $table->unsignedBigInteger('parent_comment_id')->nullable();
+            $table->foreign('parent_comment_id')->references('id')->on('comments');
+            $table->enum('status', ['approved', 'rejected', 'pending'])->default('pending');
+            $table->timestamps();
             $table->softDeletes();
             $table->index(['commentable_id', 'commentable_type']);
-            $table->timestamps();
         });
     }
 
