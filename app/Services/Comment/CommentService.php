@@ -16,21 +16,12 @@ class CommentService implements CommentServiceInterface
      */
     public function index($request)
     {
-        if ($request->commentableType) {
-            if (!class_exists($request->commentableType)) {
-                return ['success' => false, 'errors' =>  ['commentableType' => ['The model does not exist.']]];
-            } else {
-                if ($request->commentableId) {
-                    return ['success' => true, 'data' =>  Comment::where('commentable_type', $request->commentableType)->find($request->commentableId)->toArray()];
-                } else {
-                    return ['success' => true, 'data' =>  Comment::where('commentable_type', $request->commentableType)->get()->toArray()];
-                }
-            }
-        } else if ($request->commentableId) {
-            return ['success' => true, 'data' =>  Comment::find($request->commentableId)->toArray()];
-        } else {
-            return ['success' => true, 'data' =>  Comment::get()->toArray()];
-        }
+        return ['success' => true, 'data' =>  Comment::where('commentable_type', $request->commentableType)
+            ->when($request->commentableId, function ($query) use ($request) {
+                $query->where('id', $request->commentableId);
+            })
+            ->get()
+            ->toArray()];
     }
 
     /**
