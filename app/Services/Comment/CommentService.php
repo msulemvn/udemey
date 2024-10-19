@@ -3,6 +3,7 @@
 namespace App\Services\Comment;
 
 use App\Models\Comment;
+use App\Helpers\ApiResponse;
 use App\DTOs\Comment\CommentDTO;
 use Illuminate\Support\Facades\Auth;
 use App\Interfaces\Comment\CommentServiceInterface;
@@ -32,15 +33,14 @@ class CommentService implements CommentServiceInterface
      */
     public function store($request)
     {
-        $user = Auth::user(); // Get the authenticated user
-        $commentDTO = new CommentDTO($request);
-        /** @var \App\User|null $user */
-        $result = $user->comments()->create($commentDTO->toArray());
-
-        if ($result) {
-            return ['success' => true, 'data' => $result->toArray()];
-        } else {
-            return ['success' => false, 'errors' => $result->errors()->all()];
+        try {
+            $user = Auth::user(); // Get the authenticated user
+            $commentDTO = new CommentDTO($request);
+            /** @var \App\User|null $user */
+            $data = $user->comments()->create($commentDTO->toArray())->toArray();
+            return ['success' => true, 'data' => $data];
+        } catch (\Exception $e) {
+            return ApiResponse::error(errors: ['create' => $e->getMessage()], request: $request, exception: $e);
         }
     }
 
@@ -51,9 +51,17 @@ class CommentService implements CommentServiceInterface
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update($request, Comment $comment)
+    public function update($request)
     {
-        //
+        try {
+            $comment = Comment::find($request->commentId);
+            dd($comment);
+            $comment->status = $request->status;
+            $res = $comment->save();
+            return ['success' => true, 'message' => $res ? 'successfully deleted' : 'failed to delete'];
+        } catch (\Exception $e) {
+            return ApiResponse::error(errors: ['destroy' => $e->getMessage()], request: $request, exception: $e);
+        }
     }
 
     /**
@@ -62,30 +70,14 @@ class CommentService implements CommentServiceInterface
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment)
+    public function destroy($request)
     {
-        //
-    }
-
-    /**
-     * Approve the specified comment.
-     *
-     * @param  \App\Models\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function approve(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Approve the specified comment.
-     *
-     * @param  \App\Models\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function disapprove(Comment $comment)
-    {
-        //
+        try {
+            $comment = Comment::find($request->commentId);
+            $res = $comment->delete();
+            return ['success' => true, 'message' => $res ? 'successfully deleted' : 'failed to delete'];
+        } catch (\Exception $e) {
+            return ApiResponse::error(errors: ['destroy' => $e->getMessage()], request: $request, exception: $e);
+        }
     }
 }

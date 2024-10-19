@@ -6,7 +6,7 @@ use App\Rules\ClassExists;
 use Illuminate\Support\Str;
 use App\Http\Requests\BaseRequest;
 
-class UpdateCommentRequest extends BaseRequest
+class DestroyCommentRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,7 +18,6 @@ class UpdateCommentRequest extends BaseRequest
         return [
             'commentId' => 'required|integer',
             'commentableType' => ['nullable', 'string', new ClassExists],
-            'status' => 'required|in:pending,approved,rejected',
         ];
     }
 
@@ -31,6 +30,7 @@ class UpdateCommentRequest extends BaseRequest
     public function messages()
     {
         return [
+            'commentId.required' => 'Comment id is required',
             'commentableType.required' => 'Commentable type is required',
         ];
     }

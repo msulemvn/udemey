@@ -41,7 +41,7 @@ class ApiResponse
      * @param int $statusCode The HTTP status code for the response.
      * @return JsonResponse
      */
-    public static function error(string $message = null, array $errors = [], Request $request = null, Throwable $exception = null,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR)
+    public static function error(string $message = null, array $errors = [], mixed $request = null, Throwable $exception = null,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR)
     {
         $response['message'] = $message ?? Response::$statusTexts[$statusCode];
         if ($request && $exception) {

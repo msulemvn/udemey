@@ -10,7 +10,7 @@ class CommentDTO extends BaseDTO
     public int $commentable_id;
     public string $commentable_type;
     public ?string $body;
-    public ?int $status;
+    public string $status;
 
     public function __construct(mixed $data)
     {
@@ -18,6 +18,6 @@ class CommentDTO extends BaseDTO
         $this->commentable_id = $data['commentableId'];
         $this->commentable_type = $data['commentableType'];
         $this->body =  $data['body'];
-        $this->status =  $data['status'];
+        // $this->status = $data['status'] ?? 'pending';
     }
 }

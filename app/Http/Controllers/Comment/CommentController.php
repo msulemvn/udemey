@@ -11,6 +11,7 @@ use App\Services\Comment\CommentService;
 use App\Http\Requests\Comment\IndexCommentRequest;
 use App\Http\Requests\Comment\StoreCommentRequest;
 use App\Http\Requests\Comment\UpdateCommentRequest;
+use App\Http\Requests\Comment\DestroyCommentRequest;
 
 class CommentController extends Controller
 {
@@ -63,9 +64,9 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment)
+    public function destroy(DestroyCommentRequest $request)
     {
-        $response = $this->commentService->destroy($comment);
+        $response = $this->commentService->destroy($request);
         return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::error(message: $response['message'] ?? null, errors: $response['errors'], request: $response['request'] ?? null, exception: $response['exception'] ?? null, statusCode: $response['statusCode'] ?? null);
     }
 }
