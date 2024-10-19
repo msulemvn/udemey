@@ -54,13 +54,12 @@ class CommentService implements CommentServiceInterface
     public function update($request)
     {
         try {
-            $comment = Comment::find($request->commentId);
-            dd($comment);
+            $data = $comment = Comment::find($request->commentId);
             $comment->status = $request->status;
-            $res = $comment->save();
-            return ['success' => true, 'message' => $res ? 'successfully deleted' : 'failed to delete'];
+            $result = $comment->save();
+            return ['success' => true, 'message' => $result ? 'successfully updated' : 'failed to update', 'data' => $data->toArray()];
         } catch (\Exception $e) {
-            return ApiResponse::error(errors: ['destroy' => $e->getMessage()], request: $request, exception: $e);
+            return ['success' => false, 'errors' => ['status' => $e->getMessage()], 'request' => $request, 'exception' => $e, 'statusCode' => 500];
         }
     }
 
@@ -74,8 +73,8 @@ class CommentService implements CommentServiceInterface
     {
         try {
             $comment = Comment::find($request->commentId);
-            $res = $comment->delete();
-            return ['success' => true, 'message' => $res ? 'successfully deleted' : 'failed to delete'];
+            $result = $comment->delete();
+            return ['success' => true, 'message' => $result ? 'Commented deleted successfully.' : 'Failed to delete comment.'];
         } catch (\Exception $e) {
             return ApiResponse::error(errors: ['destroy' => $e->getMessage()], request: $request, exception: $e);
         }

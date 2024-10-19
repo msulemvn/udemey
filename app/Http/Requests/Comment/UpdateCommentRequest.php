@@ -18,7 +18,7 @@ class UpdateCommentRequest extends BaseRequest
         return [
             'commentId' => 'required|integer',
             'commentableType' => ['nullable', 'string', new ClassExists],
-            'status' => 'required|in:pending,approved,rejected',
+            'status' => 'required|in:pending,approved,rejected,suleman',
         ];
     }
 
