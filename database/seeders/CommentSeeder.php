@@ -21,7 +21,7 @@ class CommentSeeder extends Seeder
             'title' => 'Example Article',
             'body' => 'This is an example article.',
             'slug' => 'example-article',
-            'image_url' => 'https://example.com/image.jpg',
+            'image_path' => 'https://example.com/image.jpg',
             'user_id' => 1, // Assuming user ID 1 exists
             'course_id' => 1, // Assuming course ID 1 exists
             'status' => 'published',

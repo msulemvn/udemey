@@ -7,16 +7,6 @@ use App\Interfaces\Comment\CommentServiceInterface;
 
 class CommentService implements CommentServiceInterface
 {
-/**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -25,7 +15,7 @@ class CommentService implements CommentServiceInterface
      */
     public function store($request)
     {
-        //
+        dd('in service store');
     }
 
     /**

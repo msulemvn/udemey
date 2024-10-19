@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Comment;
 
+use App\Models\Article;
 use App\Models\Comment;
+use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
+use App\Http\Controllers\Controller;
 use App\Services\Comment\CommentService;
 use App\Http\Requests\Comment\StoreCommentRequest;
 use App\Http\Requests\Comment\UpdateCommentRequest;
-use App\Http\Controllers\Controller;
-
 
 class CommentController extends Controller
 {
@@ -24,8 +25,20 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($commentableType = null, $commentableId = null)
     {
+        if ($commentableType) {
+            $commentableType = 'App\\Models\\' . Str::studly(Str::singular($commentableType));
+            if (!class_exists($commentableType)) {
+                return ApiResponse::error(errors: ['commentableType' => ['The model does not exist.']]);
+            } else {
+                if ($commentableId) {
+                    return ApiResponse::success(data: Comment::where('commentable_type', $commentableType)->find($commentableId)->toArray());
+                } else {
+                    return ApiResponse::success(data: Comment::where('commentable_type', $commentableType)->get()->toArray());
+                }
+            }
+        }
         return ApiResponse::success(data: Comment::get()->toArray());
     }
 

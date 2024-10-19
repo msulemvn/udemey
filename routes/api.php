@@ -133,7 +133,8 @@ Route::middleware('auth:api')->group(function () {
             Route::post('/approve-comment/{id}', 'approve');
             Route::post('/disaprove-comment/{id}', 'disaprove');
             Route::get('/comments', 'index');
-            Route::get('/comments/{id}', 'index'); //article id
+            Route::get('/{commentableType}/comments', 'index');
+            Route::get('/{commentableType}/comments/{commentableId}', 'index'); //article id
         });
     });
 
