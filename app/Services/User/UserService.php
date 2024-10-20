@@ -2,7 +2,6 @@
 
 namespace App\Services\User;
 
-use App\Interfaces\User\UserServiceInterface;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +9,7 @@ use App\Helpers\ApiResponse;
 use \Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserService implements UserServiceInterface
+class UserService
 {
     public function store(array $data): User
     {

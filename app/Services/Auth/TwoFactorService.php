@@ -2,7 +2,6 @@
 
 namespace App\Services\Auth;
 
-use App\Interfaces\Auth\TwoFactorServiceInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use PragmaRX\Google2FA\Google2FA;
@@ -10,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class TwoFactorService implements TwoFactorServiceInterface
+class TwoFactorService
 {
     /**
      * Generate two-factor authentication

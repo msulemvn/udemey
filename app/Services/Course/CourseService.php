@@ -6,13 +6,11 @@ use App\Models\Course;
 use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use App\DTOs\Course\CourseDTO;
-use App\DTOs\Course\CourseUpdateDTO;
-use App\Interfaces\Course\CourseServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Storage;
 
 
-class CourseService implements CourseServiceInterface
+class CourseService
 {
     public function index()
     {

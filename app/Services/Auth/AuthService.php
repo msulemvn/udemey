@@ -4,9 +4,8 @@ namespace App\Services\Auth;
 
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
-use App\Interfaces\Auth\AuthServiceInterface;
 
-class AuthService implements AuthServiceInterface
+class AuthService
 {
     /**
      * Generate two-factor authentication

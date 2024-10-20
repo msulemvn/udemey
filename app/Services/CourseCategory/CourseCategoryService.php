@@ -7,9 +7,8 @@ use App\Helpers\ApiResponse;
 use App\Models\CourseCategory;
 use App\DTOs\CourseCategory\CourseCategoryDTO;
 use Symfony\Component\HttpFoundation\Response;
-use App\Interfaces\CourseCategory\CourseCategoryServiceInterface;
 
-class CourseCategoryService implements CourseCategoryServiceInterface
+class CourseCategoryService
 {
     public function index()
     {
