@@ -30,7 +30,7 @@ class CommentController extends Controller
     public function index(IndexCommentRequest $request)
     {
         $response = $this->commentService->index($request);
-        return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::error(message: $response['message'] ?? null, errors: $response['errors'], request: $response['request'] ?? null, exception: $response['exception'] ?? null, statusCode: $response['statusCode'] ?? null);
+        return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::failure(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
     }
 
     /**
@@ -42,7 +42,7 @@ class CommentController extends Controller
     public function store(StoreCommentRequest $request)
     {
         $response = $this->commentService->store($request);
-        return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::error(message: $response['message'] ?? null, errors: $response['errors'], request: $response['request'] ?? null, exception: $response['exception'] ?? null, statusCode: $response['statusCode'] ?? null);
+        return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::failure(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
     }
 
     /**
@@ -55,7 +55,7 @@ class CommentController extends Controller
     public function update(UpdateCommentRequest $request)
     {
         $response = $this->commentService->update($request);
-        return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::error(message: $response['message'] ?? null, errors: $response['errors'], request: $response['request'] ?? null, exception: $response['exception'] ?? null, statusCode: $response['statusCode'] ?? null);
+        return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::failure(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
     }
 
     /**
@@ -67,6 +67,6 @@ class CommentController extends Controller
     public function destroy(DestroyCommentRequest $request)
     {
         $response = $this->commentService->destroy($request);
-        return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::error(message: $response['message'] ?? null, errors: $response['errors'], request: $response['request'] ?? null, exception: $response['exception'] ?? null, statusCode: $response['statusCode'] ?? null);
+        return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::failure(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
     }
 }

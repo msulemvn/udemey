@@ -24,16 +24,15 @@ class SiteSettingController extends Controller
         $response = $this->siteSettingService->createSetting($validatedData);
 
         return $response['success'] ?
-        ApiResponse::success(
-            data: $response['data']->toArray() ?? null,
-            message: 'Settings created successfully!',
-            statusCode: Response::HTTP_OK
-        ) :
-        ApiResponse::error(
-            message: 'Unable to create setting!',
-            errors: ['error' => ['Unable to create setting!']],
-            statusCode: Response::HTTP_BAD_REQUEST,
-        );
+            ApiResponse::success(
+                data: $response['data']->toArray() ?? null,
+                message: 'Settings created successfully!',
+
+            ) :
+            ApiResponse::failure(
+                message: 'Unable to create setting!',
+                errors: ['error' => ['Unable to create setting!']],
+            );
     }
 
     public function updateSetting(UpdateSiteSettingRequest $request, $id)
@@ -42,50 +41,45 @@ class SiteSettingController extends Controller
         $response = $this->siteSettingService->updateSetting($validatedData, $id);
 
         return $response['success'] ?
-        ApiResponse::success(
-            data: $response['data']->toArray() ?? null,
-            message: 'Site setting updated successfully!',
-            statusCode: Response::HTTP_OK
-        ) :
-        ApiResponse::error(
-            message: 'No setting found with the given id!',
-            errors: ['error' => ['No setting found with id: ' . $id]],
-            statusCode: Response::HTTP_NOT_FOUND,
-        );
-        
+            ApiResponse::success(
+                data: $response['data']->toArray() ?? null,
+                message: 'Site setting updated successfully!',
+
+            ) :
+            ApiResponse::failure(
+                message: 'No setting found with the given id!',
+                errors: ['error' => ['No setting found with id: ' . $id]],
+            );
     }
 
     public function deleteSetting($id)
     {
         $response = $this->siteSettingService->deleteSetting($id);
         return $response['success'] ?
-        ApiResponse::success(
-            message: 'Site setting deleted successfully!',
-            statusCode: Response::HTTP_OK
-        ) :
-        ApiResponse::error(
-            message: 'No setting found with the given id!',
-            errors: ['error' => ['No setting found with id: ' . $id]],
-            statusCode: Response::HTTP_NOT_FOUND,
-        );
+            ApiResponse::success(
+                message: 'Site setting deleted successfully!',
+
+            ) :
+            ApiResponse::failure(
+                message: 'No setting found with the given id!',
+                errors: ['error' => ['No setting found with id: ' . $id]],
+            );
     }
 
     public function restoreSoftDeletedSetting($id)
     {
         $response = $this->siteSettingService->restoreSetting($id);
-        
+
         return $response['success'] ?
-        ApiResponse::success(
-            data: $response['data']->toArray() ?? null,
-            message: 'Site setting restored successfully!',
-            statusCode: Response::HTTP_OK
-        ) :
-        ApiResponse::error(
-        message: 'No setting found with the given id!',
-        errors: ['error' => ['No setting found with id: ' . $id]],
-        statusCode: Response::HTTP_NOT_FOUND,
-        );
-    
+            ApiResponse::success(
+                data: $response['data']->toArray() ?? null,
+                message: 'Site setting restored successfully!',
+
+            ) :
+            ApiResponse::failure(
+                message: 'No setting found with the given id!',
+                errors: ['error' => ['No setting found with id: ' . $id]],
+            );
     }
 
     public function getSettings($id)
@@ -93,15 +87,13 @@ class SiteSettingController extends Controller
         $response = $this->siteSettingService->getSettings($id);
 
         return $response['success'] ?
-        ApiResponse::success(
-            data: $response['data'] ?? null,
-            message: 'Setting retrieved successfully!',
-            statusCode: Response::HTTP_OK
-        ) :
-        ApiResponse::error(
-            message: 'No setting found with the given id!',
-            errors: ['error' => ['No setting found with id: ' . $id]],
-            statusCode: Response::HTTP_NOT_FOUND,
-        );
+            ApiResponse::success(
+                data: $response['data'] ?? null,
+                message: 'Setting retrieved successfully!'
+            ) :
+            ApiResponse::failure(
+                message: 'No setting found with the given id!',
+                errors: ['error' => ['No setting found with id: ' . $id]],
+            );
     }
 }

@@ -6,9 +6,8 @@ use App\Models\Comment;
 use App\Helpers\ApiResponse;
 use App\DTOs\Comment\CommentDTO;
 use Illuminate\Support\Facades\Auth;
-use App\Interfaces\Comment\CommentServiceInterface;
 
-class CommentService implements CommentServiceInterface
+class CommentService
 {
     /**
      * Display a listing of the resource.
@@ -40,7 +39,7 @@ class CommentService implements CommentServiceInterface
             $data = $user->comments()->create($commentDTO->toArray())->toArray();
             return ['success' => true, 'data' => $data];
         } catch (\Exception $e) {
-            return ApiResponse::error(errors: ['create' => $e->getMessage()], request: $request, exception: $e);
+            return ApiResponse::error(request: $request, exception: $e);
         }
     }
 
@@ -76,7 +75,7 @@ class CommentService implements CommentServiceInterface
             $result = $comment->delete();
             return ['success' => true, 'message' => $result ? 'Commented deleted successfully.' : 'Failed to delete comment.'];
         } catch (\Exception $e) {
-            return ApiResponse::error(errors: ['destroy' => $e->getMessage()], request: $request, exception: $e);
+            return ApiResponse::error(request: $request, exception: $e);
         }
     }
 }

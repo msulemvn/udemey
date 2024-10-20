@@ -2,11 +2,8 @@
 
 namespace App\Exceptions;
 
-use App\Models\ErrorLog;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Support\Facades\Log;
 use Throwable;
-use App\DTOs\ErrorLogs\ErrorLogsDTO;
 use App\Helpers\ApiResponse;
 
 class Handler extends ExceptionHandler
@@ -43,7 +40,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $th)
     {
-        return ApiResponse::error(errors: ['render' => $th->getMessage()], request: $request, exception: $th);
+        return ApiResponse::error(request: $request, exception: $th);
     }
 
     /**

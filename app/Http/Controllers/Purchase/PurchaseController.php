@@ -20,10 +20,10 @@ class PurchaseController extends Controller
     public function index()
     {
 
-        $Response = $this->purchaseService->index();
+        $response = $this->purchaseService->index();
         return ApiResponse::success(
-            message: $Response['message'],
-            data: $Response['body']
+            message: $response['message'],
+            data: $response['body']
         );
     }
 
@@ -32,7 +32,6 @@ class PurchaseController extends Controller
         $checkoutResponse = $this->purchaseService->checkout($request);
         return ApiResponse::success(
             message: $checkoutResponse['message'],
-            statusCode: $checkoutResponse['statusCode']
         );
     }
 }

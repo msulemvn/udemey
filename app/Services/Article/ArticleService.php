@@ -19,9 +19,7 @@ class ArticleService
             return ApiResponse::success(data: ['articles' => $articles]);
         } catch (\Exception $e) {
             return ApiResponse::error(
-                message: 'Failed to retrieve articles',
                 exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
@@ -49,9 +47,7 @@ class ArticleService
             return ApiResponse::success(data: ['article' => $article]);
         } catch (\Exception $e) {
             return ApiResponse::error(
-                message: 'Failed to create article',
                 exception: $e,
-                statusCode: Response::HTTP_UNAUTHORIZED
             );
         }
     }
@@ -67,9 +63,7 @@ class ArticleService
             return ApiResponse::success(data: ['article' => $article]);
         } catch (\Exception $e) {
             return ApiResponse::error(
-                message: 'Failed to retrieve article',
                 exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
@@ -86,9 +80,7 @@ class ArticleService
             return ApiResponse::success(data: ['article' => $article]);
         } catch (\Exception $e) {
             return ApiResponse::error(
-                message: 'Failed to retrieve article',
                 exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
@@ -129,9 +121,7 @@ class ArticleService
             );
         } catch (\Exception $e) {
             return ApiResponse::error(
-                message: 'Failed to update article',
                 exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
@@ -154,9 +144,7 @@ class ArticleService
             return ApiResponse::success(message: 'Article deleted successfully');
         } catch (\Exception $e) {
             return ApiResponse::error(
-                message: 'Failed to delete article',
                 exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }

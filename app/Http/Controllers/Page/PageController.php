@@ -31,12 +31,11 @@ class PageController extends Controller
   {
     $updatedPage = $this->pageService->updatePage($pageId, $request->all());
     if (!$updatedPage) {
-      return ApiResponse::error(message: 'Page not found!', statusCode: Response::HTTP_NOT_FOUND);
+      return ApiResponse::failure(message: 'Page not found!');
     }
     return ApiResponse::success(
       data: $updatedPage->toArray(),
       message: 'Page updated successfully!',
-      statusCode: Response::HTTP_OK
     );
   }
 
@@ -47,12 +46,10 @@ class PageController extends Controller
       ApiResponse::success(
         data: $response['data']->toArray() ?? null,
         message: 'Page retrieved successfully!',
-        statusCode: Response::HTTP_OK
       ) :
-      ApiResponse::error(
+      ApiResponse::failure(
         message: 'No page found with the given slug!',
         errors: ['error' => ['No page found with slug: ' . $slug]],
-        statusCode: Response::HTTP_NOT_FOUND,
       );
   }
 
@@ -63,50 +60,46 @@ class PageController extends Controller
       ApiResponse::success(
         data: $response['data']->toArray() ?? null,
         message: 'Page retrieved successfully!',
-        statusCode: Response::HTTP_OK
       ) :
-      ApiResponse::error(
+      ApiResponse::failure(
         message: 'No page found with the given id!',
         errors: ['error' => ['No page found with id: ' . $pageId]],
-        statusCode: Response::HTTP_NOT_FOUND,
       );
   }
 
-  public function getPages()
+  public function getPages($request)
   {
 
     try {
       $finalResponse = $this->pageService->getPages();
 
       if ($finalResponse->isEmpty()) {
-        return ApiResponse::error(message: 'Pages not found!', statusCode: Response::HTTP_NOT_FOUND);
+        return ApiResponse::failure(message: 'Pages not found!');
       }
 
       return ApiResponse::success(data: $finalResponse->toArray(), message: 'Pages retrieved successfully!', statusCode: Response::HTTP_OK);
     } catch (\Exception $e) {
       return ApiResponse::error(
-        message: 'Unable to fetch pages',
         exception: $e,
-        statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+        request: $request
       );
     }
   }
 
-  public function destroy($pageId)
+  public function destroy($request)
   {
     try {
-      $page = Page::find($pageId);
+      $page = Page::find($request);
 
       if (!$page) {
-        return ApiResponse::error(message: 'No page found with the provided ID', statusCode: Response::HTTP_NOT_FOUND);
+        return ApiResponse::failure(message: 'No page found with the provided ID');
       }
-      $this->pageService->deletePage($pageId);
-      return ApiResponse::success(message: 'Page deleted successfully!', statusCode: Response::HTTP_OK);
+      $this->pageService->deletePage($request);
+      return ApiResponse::success(message: 'Page deleted successfully!');
     } catch (\Exception $e) {
       return ApiResponse::error(
-        message: 'Failed to delete the page',
         exception: $e,
-        statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+        request: $request,
       );
     }
   }
@@ -115,14 +108,10 @@ class PageController extends Controller
     $restoredPage = $this->pageService->restorePage($pageId);
 
     if (!$restoredPage) {
-      return ApiResponse::error(
-        message: 'Page not found!',
-        statusCode: Response::HTTP_NOT_FOUND
-      );
+      return ApiResponse::failure();
     }
     return ApiResponse::success(
       message: 'Page restored successfully!',
-      statusCode: Response::HTTP_OK
     );
   }
 }
