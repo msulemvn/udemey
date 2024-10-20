@@ -15,10 +15,9 @@ class CategoryService
         try {
             $categories = Category::all();
             if ($categories->isEmpty()) {
-                return ApiResponse::error(
+                return ApiResponse::failure(
                     message: 'No categories available',
                     errors: ['categories' => ['No categories found in the system']],
-                    statusCode: Response::HTTP_NOT_FOUND
                 );
             }
             return [
@@ -26,12 +25,10 @@ class CategoryService
                 'body' => $categories->toArray(),
             ];
         } catch (\Exception $e) {
-            return ApiResponse::error(
-                message: 'Failed to get categories',
-                errors: ['categories' => ['An error occurred while retrieving the categories. Please try again later.']],
-                exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+            // return ApiResponse::error(
+            //     exception: $e,
+            // );
+            dd();
         }
     }
 
@@ -52,12 +49,10 @@ class CategoryService
                 'body' => $categoryDTO->toArray(),
             ];
         } catch (\Exception $e) {
-            return ApiResponse::error(
-                message: 'Failed to create category',
-                errors: ['category' => ['An error occurred while creating the category. Please try again later.']],
-                exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+            // return ApiResponse::error(
+            //     exception: $e,
+            // );
+            dd();
         }
     }
 
@@ -66,7 +61,7 @@ class CategoryService
         try {
             $category = Category::findOrFail($id);
             if (!$category) {
-                return ApiResponse::error(
+                return ApiResponse::failure(
                     message: 'Category not found',
                     errors: ['category' => ['No category found with the given ID']],
                     statusCode: Response::HTTP_NOT_FOUND
@@ -77,12 +72,10 @@ class CategoryService
                 'body' => $category->toArray(),
             ];
         } catch (\Exception $e) {
-            return ApiResponse::error(
-                message: 'Failed to retrieve category',
-                errors: ['category' => ['An error occurred while retrieving the category. Please try again later.']],
-                exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+            // return ApiResponse::error(
+            //     exception: $e,
+            // );
+            dd();
         }
     }
 
@@ -91,10 +84,9 @@ class CategoryService
         try {
             $category = Category::findOrFail($id);
             if (!$category) {
-                return ApiResponse::error(
+                return ApiResponse::failure(
                     message: 'Category not found',
                     errors: ['category' => ['No category found with the given ID']],
-                    statusCode: Response::HTTP_NOT_FOUND
                 );
             }
 
@@ -111,12 +103,10 @@ class CategoryService
                 'body' => $category->toArray(),
             ];
         } catch (\Exception $e) {
-            return ApiResponse::error(
-                message: 'Failed to update category',
-                errors: ['category' => ['An error occurred while updating the category. Please try again later.']],
-                exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+            // return ApiResponse::error(
+            //     exception: $e,
+            // );
+            dd();
         }
     }
 
@@ -130,12 +120,10 @@ class CategoryService
             ];
             return ApiResponse::success(message: '');
         } catch (\Exception $e) {
-            return ApiResponse::error(
-                message: 'Failed to delete category',
-                errors: ['category' => ['An error occurred while deleting the category. Please try again later.']],
-                exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+            // return ApiResponse::error(
+            //     exception: $e,
+            // );
+            dd();
         }
     }
 
@@ -145,10 +133,9 @@ class CategoryService
             $category = Category::with('courseCategories')->find($id);
 
             if (!$category) {
-                return ApiResponse::error(
+                return ApiResponse::failure(
                     message: 'Category not found',
                     errors: ['category' => ['No category found with the given ID']],
-                    statusCode: Response::HTTP_NOT_FOUND
                 );
             }
             return [
@@ -156,12 +143,10 @@ class CategoryService
                 'body' => $category->toArray(),
             ];
         } catch (\Exception $e) {
-            return ApiResponse::error(
-                message: 'Failed to retrieve course categories',
-                errors: ['courseCategories' => ['An error occurred while retrieving course categories. Please try again later.']],
-                exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+            // return ApiResponse::error(
+            //     exception: $e,
+            // );
+            dd();
         }
     }
 

@@ -29,9 +29,9 @@ class AuthService
                 $data['2fa'] =  ($user->google2fa_secret) ? true : false;
             }
             $data['access_token'] = $token;
+            return ['success' => true, 'data' => $data];
         } catch (\Exception $e) {
             return ['success' => false, 'message' => 'Invalid credentials', 'errors' =>  ['credentials' => ['Email or password is incorrect. Please try again.']], 'loginData' => $loginData, 'exception' => $e];
         }
-        return ['success' => true, 'data' => $data];
     }
 }

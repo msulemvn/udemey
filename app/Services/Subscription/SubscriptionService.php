@@ -20,7 +20,7 @@ class SubscriptionService
         $student = Student::where('account_id', auth()->id())->first();
 
         if (!$student) {
-            return ApiResponse::error('User not authenticated', statusCode: Response::HTTP_UNAUTHORIZED);
+            return ApiResponse::failure('User not authenticated', statusCode: Response::HTTP_UNAUTHORIZED);
         }
 
         Log::info('Authenticated student ID: ' . $student->id);
@@ -52,7 +52,7 @@ class SubscriptionService
         $student = Student::where('account_id', auth()->id())->first();
 
         if (!$student) {
-            return ApiResponse::error('Student not found', statusCode: Response::HTTP_NOT_FOUND);
+            return ApiResponse::failure('Student not found', statusCode: Response::HTTP_NOT_FOUND);
         }
 
         $subscription = Subscription::where('student_id', $student->id)
@@ -60,13 +60,13 @@ class SubscriptionService
             ->first();
 
         if (!$subscription) {
-            return ApiResponse::error('No subscription found', statusCode: Response::HTTP_NOT_FOUND);
+            return ApiResponse::failure('No subscription found', statusCode: Response::HTTP_NOT_FOUND);
         }
 
         $now = Carbon::now();
 
         if ($now->greaterThan($subscription->trial_end_at) || $subscription->status === 'expired') {
-            return ApiResponse::error('Trial has expired', statusCode: Response::HTTP_UNAUTHORIZED);
+            return ApiResponse::failure('Trial has expired', statusCode: Response::HTTP_UNAUTHORIZED);
         }
 
         return ApiResponse::success(message: 'Trial is still active', data: ['subscription' => $subscription]);
@@ -90,7 +90,10 @@ class SubscriptionService
 
             return ApiResponse::success(data: ['activeSubscriptions' => $activeSubscriptions]);
         } catch (\Exception $e) {
-            return ApiResponse::error('An error occurred while fetching active subscriptions', statusCode: 500);
+            // return ApiResponse::error(
+            //     exception: $e,
+            // );
+            dd();
         }
     }
 }

@@ -46,11 +46,10 @@ class StudentController extends Controller
         try {
             $student->user->delete();
             $student->delete();
+            return ApiResponse::success(message: 'Successfully deleted student.');
         } catch (\Exception $e) {
             dd();
             // return ApiResponse::error($request,);
         }
-
-        return ApiResponse::success(message: 'Successfully deleted student.');
     }
 }

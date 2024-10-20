@@ -33,11 +33,11 @@ class UserService
 
         // Check if the current password is correct
         if (!Hash::check($data['current_password'], $user->password)) {
-            return ApiResponse::error(message: 'Current password is incorrect', statusCode: Response::HTTP_UNAUTHORIZED);
+            return ApiResponse::failure(message: 'Current password is incorrect', statusCode: Response::HTTP_UNAUTHORIZED);
         }
 
         if (Hash::check($data['new_password'], $user->password)) {
-            return ApiResponse::error(message: 'New password cannot be same as old', statusCode: Response::HTTP_UNAUTHORIZED);
+            return ApiResponse::failure(message: 'New password cannot be same as old', statusCode: Response::HTTP_UNAUTHORIZED);
         }
 
         // Update the user's password

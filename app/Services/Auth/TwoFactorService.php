@@ -94,14 +94,13 @@ class TwoFactorService
                 $user->google2fa_secret = null;
                 /** @var \App\User|null $user */
                 $user->save();
+                return ['success' => true, 'message' => '2-Factor Authentication successfully disabled.'];
             } catch (\Exception $e) {
                 return ['success' => false, 'errors' => ['google2fa_secret' => ['Failed to disable 2-Factor Authentication']], 'request' => $data, 'exception' => $e];
             }
         } else {
             return ['success' => false, 'errors' => ['password' => ['Password is invalid']]];
         }
-
-        return ['success' => true, 'message' => '2-Factor Authentication successfully disabled.'];
     }
 
     /**
