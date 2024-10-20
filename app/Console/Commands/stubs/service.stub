@@ -2,9 +2,7 @@
 
 namespace {{ namespace }};
 
-use App\Interfaces\{{ class }}Interface;
-
-class {{ class }} implements {{ class }}Interface
+class {{ class }}
 {
 
 }

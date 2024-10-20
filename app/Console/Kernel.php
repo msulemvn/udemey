@@ -16,7 +16,8 @@ class Kernel extends ConsoleKernel
      * @return void
      */
     protected $commands = [
-        \App\Console\Commands\CreateDtoCommand::class,
+        \App\Console\Commands\ServiceMakeCommand::class,
+        \App\Console\Commands\DTOMakeCommand::class,
     ];
     protected function schedule(Schedule $schedule)
     {
