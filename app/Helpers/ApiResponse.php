@@ -2,14 +2,11 @@
 
 namespace App\Helpers;
 
-use Throwable;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use App\Models\ErrorLog;
 use App\DTOs\ErrorLogs\ErrorLogsDTO;
-
 
 class ApiResponse
 {
@@ -41,7 +38,7 @@ class ApiResponse
      * @param int $statusCode The HTTP status code for the response.
      * @return JsonResponse
      */
-    public static function error(string $message = null, array $errors = [], mixed $request = null, Throwable $exception = null,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
+    public static function error(string $message = null, array $errors = [], mixed $request = null, \Exception $exception = null,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
     {
         $response['message'] = $message ?? Response::$statusTexts[$statusCode];
         if ($request && $exception) {

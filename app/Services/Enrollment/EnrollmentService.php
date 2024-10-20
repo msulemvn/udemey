@@ -22,11 +22,11 @@ class EnrollmentService
                 'message' => 'Enrolled courses retrieved successfully',
                 'body' => $courses->toArray(),
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to retrieve enrolled courses',
                 errors: ['enrollment' => ['Unable to retrieve courses. Please try again.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -57,11 +57,11 @@ class EnrollmentService
                 'message' => 'Course retrieved successfully',
                 'body' => $course->toArray(),
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to retrieve course',
                 errors: ['course' => ['Unable to retrieve the course. Please try again.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }

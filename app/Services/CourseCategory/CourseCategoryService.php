@@ -22,11 +22,11 @@ class CourseCategoryService
                 );
             }
             return $courseCategories;
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to get course categories',
                 errors: ['courseCategories' => ['Error retrieving course categories. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -44,11 +44,11 @@ class CourseCategoryService
                 );
             }
             return $courseCategory;
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to retrieve course category',
                 errors: ['courseCategory' => ['Error retrieving course category. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -64,11 +64,11 @@ class CourseCategoryService
             $courseCategoryDTO = new CourseCategoryDTO($request);
             $courseCategory = CourseCategory::create($courseCategoryDTO->toArray());
             return $courseCategory;
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to create course category',
                 errors: ['courseCategory' => ['Error creating course category. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -93,11 +93,11 @@ class CourseCategoryService
 
             $courseCategory->update($courseCategoryDTO->toArray());
             return $courseCategory;
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to update course category',
                 errors: ['courseCategory' => ['Error updating course category. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -109,11 +109,11 @@ class CourseCategoryService
             $courseCategory = CourseCategory::findOrFail($id);
             $courseCategory->delete();
             return ApiResponse::success(message: 'Course category deleted successfully', data: $courseCategory, statusCode: Response::HTTP_CREATED);
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to delete course category',
                 errors: ['courseCategory' => ['Error deleting course category. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -131,11 +131,11 @@ class CourseCategoryService
                 );
             }
             return $courseCategory;
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to retrieve course',
                 errors: ['courseCategory' => ['Error retrieving course. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }

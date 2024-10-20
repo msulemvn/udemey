@@ -46,7 +46,7 @@ class StudentController extends Controller
         try {
             $student->user->delete();
             $student->delete();
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(message: 'An error occured while deleting student.');
         }
 

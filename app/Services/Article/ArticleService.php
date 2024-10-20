@@ -5,7 +5,6 @@ namespace App\Services\Article;
 use App\Models\Article;
 use App\DTOs\Article\ArticleDTO;
 use Illuminate\Support\Str;
-use Exception;
 use App\Helpers\ApiResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +17,7 @@ class ArticleService
         try {
             $articles = Article::all();
             return ApiResponse::success(data: ['articles' => $articles]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to retrieve articles',
                 exception: $e,
@@ -48,7 +47,7 @@ class ArticleService
             $article = Article::create($dto->toArray());
 
             return ApiResponse::success(data: ['article' => $article]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to create article',
                 exception: $e,
@@ -66,7 +65,7 @@ class ArticleService
                 return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
             }
             return ApiResponse::success(data: ['article' => $article]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to retrieve article',
                 exception: $e,
@@ -85,7 +84,7 @@ class ArticleService
             }
 
             return ApiResponse::success(data: ['article' => $article]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to retrieve article',
                 exception: $e,
@@ -128,7 +127,7 @@ class ArticleService
                 data: ['article' => $article],
                 message: 'Article updated successfully'
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to update article',
                 exception: $e,
@@ -153,7 +152,7 @@ class ArticleService
 
             $article->delete();
             return ApiResponse::success(message: 'Article deleted successfully');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to delete article',
                 exception: $e,
@@ -172,7 +171,7 @@ class ArticleService
             ->exists();
 
         if ($existingSlug) {
-            throw new Exception('Slug already exists for another article.');
+            throw new \Exception('Slug already exists for another article.');
         }
 
         return $slug;

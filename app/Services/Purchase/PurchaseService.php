@@ -30,11 +30,11 @@ class PurchaseService
                 'message' => 'Purchased courses retrieved successfully',
                 'body' => $purchases->toArray(),
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to retrieve purchases',
                 errors: ['purchases' => ['Unable to retrieve purchases. Please try again.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -91,13 +91,13 @@ class PurchaseService
                 'message' => 'Purchase and enrollment completed successfully',
                 'statusCode' => Response::HTTP_CREATED,
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             DB::rollBack(); // Rollback the transaction in case of any errors
 
             return ApiResponse::error(
                 message: 'Purchase failed',
                 errors: ['checkout' => ['Failed to complete the purchase. Please try again.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }

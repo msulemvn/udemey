@@ -25,9 +25,9 @@ class CourseService
                 'message' => 'All courses',
                 'body' => $courses->toArray(),
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             $errors = ['courses' => ['Failed to retrieve the courses. Please try again later.']];
-            return ApiResponse::error(message: 'Failed to show courses', errors: $errors, exception: $th);
+            return ApiResponse::error(message: 'Failed to show courses', errors: $errors, exception: $e);
         }
     }
 
@@ -73,12 +73,12 @@ class CourseService
                 'statusCode' => Response::HTTP_CREATED,
                 'body' => $course->toArray(),
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             // Return error response if something goes wrong
             return ApiResponse::error(
                 message: 'Failed to create course',
                 errors: ['course' => ['Unable to create course at this time.']],
-                exception: $th
+                exception: $e
             );
         }
     }
@@ -105,11 +105,11 @@ class CourseService
                 'message' => 'Course fetched successfully',
                 'body' => $course->toArray(),
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to retrieve course',
                 errors: ['course' => ['An error occurred while retrieving the course. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -169,12 +169,12 @@ class CourseService
                 'message' => 'Course updated successfully',
                 'body' => $course->toArray(),
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             // Return error response if something goes wrong
             return ApiResponse::error(
                 message: 'Failed to update course',
                 errors: ['course' => ['An error occurred while updating the course. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -196,11 +196,11 @@ class CourseService
             return ApiResponse::success(
                 message: 'Deleted the course successfully'
             );
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to delete course',
                 errors: ['course' => ['An error occurred while trying to delete the course. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -235,11 +235,11 @@ class CourseService
                 'message' => 'Articles retrieved successfully',
                 'body' => $course->articles->toArray(),
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to retrieve articles for the course',
                 errors: ['articles' => ['An error occurred while fetching the articles. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }

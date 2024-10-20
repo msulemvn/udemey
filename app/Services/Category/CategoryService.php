@@ -25,11 +25,11 @@ class CategoryService
                 'message' => 'All categories retrieved successfully',
                 'body' => $categories->toArray(),
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to get categories',
                 errors: ['categories' => ['An error occurred while retrieving the categories. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -51,11 +51,11 @@ class CategoryService
                 'message' => 'Category created successfully',
                 'body' => $categoryDTO->toArray(),
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to create category',
                 errors: ['category' => ['An error occurred while creating the category. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -76,11 +76,11 @@ class CategoryService
                 'message' => 'Category retrieved successfully',
                 'body' => $category->toArray(),
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to retrieve category',
                 errors: ['category' => ['An error occurred while retrieving the category. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -110,11 +110,11 @@ class CategoryService
                 'message' => 'Category updated successfully',
                 'body' => $category->toArray(),
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to update category',
                 errors: ['category' => ['An error occurred while updating the category. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -129,11 +129,11 @@ class CategoryService
                 'message' => 'Category deleted successfully',
             ];
             return ApiResponse::success(message: '');
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to delete category',
                 errors: ['category' => ['An error occurred while deleting the category. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -155,11 +155,11 @@ class CategoryService
                 'message' => 'Course categories retrieved successfully',
                 'body' => $category->toArray(),
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to retrieve course categories',
                 errors: ['courseCategories' => ['An error occurred while retrieving course categories. Please try again later.']],
-                exception: $th,
+                exception: $e,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }

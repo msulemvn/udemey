@@ -2,14 +2,13 @@
 
 namespace App\Services\Subscription;
 
-use Exception;
 use Carbon\Carbon;
 use App\Models\Student;
 use App\Helpers\ApiResponse;
 use App\Models\Subscription;
 use App\Jobs\ExpireSubscriptionJob;
 use Illuminate\Support\Facades\Log;
-use App\DTOsSubscription\SubscriptionDTO;
+use App\DTOs\Subscription\SubscriptionDTO;
 use Symfony\Component\HttpFoundation\Response;
 
 class SubscriptionService
@@ -90,7 +89,7 @@ class SubscriptionService
                 });
 
             return ApiResponse::success(data: ['activeSubscriptions' => $activeSubscriptions]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponse::error('An error occurred while fetching active subscriptions', statusCode: 500);
         }
     }

@@ -11,20 +11,20 @@ class RegisterService
 {
     public function registerUser(array $data): User
     {
-        $userDTO = new UserDTO([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        try {
+            $userDTO = new UserDTO($data);
 
-        $user = User::create($userDTO->toArray());
-        $studentDTO = new StudentDTO([
-            'account_id' => $user->id,
-        ]);
+            $user = User::create($userDTO->toArray());
+            $studentDTO = new StudentDTO([
+                'account_id' => $user->id,
+            ]);
 
-        $student = Student::create($studentDTO->toArray());
-        $user->assignRole('Student'); // Assign Student role
+            $student = Student::create($studentDTO->toArray());
+            $user->assignRole('Student'); // Assign Student role
 
-        return $user;
+            return $user;
+        } catch (\Exception $e) {
+            //throw $th;
+        }
     }
 }

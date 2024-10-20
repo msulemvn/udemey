@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Page;
 
-use Exception;
-use Throwable;
 use App\Models\Page;
 use App\DTOs\Page\PageDTO;
 use App\Helpers\ApiResponse;
@@ -62,16 +60,16 @@ class PageController extends Controller
   {
     $response = $this->pageService->getPageById($pageId);
     return $response['success'] ?
-    ApiResponse::success(
-      data: $response['data']->toArray() ?? null,
-      message: 'Page retrieved successfully!',
-      statusCode: Response::HTTP_OK
-    ) :
-    ApiResponse::error(
-      message: 'No page found with the given id!',
-      errors: ['error' => ['No page found with id: ' . $pageId]],
-      statusCode: Response::HTTP_NOT_FOUND,
-    );
+      ApiResponse::success(
+        data: $response['data']->toArray() ?? null,
+        message: 'Page retrieved successfully!',
+        statusCode: Response::HTTP_OK
+      ) :
+      ApiResponse::error(
+        message: 'No page found with the given id!',
+        errors: ['error' => ['No page found with id: ' . $pageId]],
+        statusCode: Response::HTTP_NOT_FOUND,
+      );
   }
 
   public function getPages()
@@ -85,7 +83,7 @@ class PageController extends Controller
       }
 
       return ApiResponse::success(data: $finalResponse->toArray(), message: 'Pages retrieved successfully!', statusCode: Response::HTTP_OK);
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
       return ApiResponse::error(
         message: 'Unable to fetch pages',
         exception: $e,
@@ -104,7 +102,7 @@ class PageController extends Controller
       }
       $this->pageService->deletePage($pageId);
       return ApiResponse::success(message: 'Page deleted successfully!', statusCode: Response::HTTP_OK);
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
       return ApiResponse::error(
         message: 'Failed to delete the page',
         exception: $e,

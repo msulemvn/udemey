@@ -31,8 +31,8 @@ class TwoFactorService
             $user = Auth::user();
             Cache::put('google2fa_secret_' . $user->id, $secretKey, 60);
             return ['success' => true, 'message' => 'Secret key generated successfully.', 'data' => ['type' => 'Time based (TOTP)', 'google2fa_secret' => $secretKey, 'label' => 'Udemey']];
-        } catch (\Throwable $th) {
-            return ['success' => false, 'errors' => ['google2fa_secret' => ['Failed to generate secret key.']], 'request' => $request, 'exception' => $th];
+        } catch (\Exception $e) {
+            return ['success' => false, 'errors' => ['google2fa_secret' => ['Failed to generate secret key.']], 'request' => $request, 'exception' => $e];
         }
     }
 
@@ -94,8 +94,8 @@ class TwoFactorService
                 $user->google2fa_secret = null;
                 /** @var \App\User|null $user */
                 $user->save();
-            } catch (\Throwable $th) {
-                return ['success' => false, 'errors' => ['google2fa_secret' => ['Failed to disable 2-Factor Authentication']], 'request' => $data, 'exception' => $th];
+            } catch (\Exception $e) {
+                return ['success' => false, 'errors' => ['google2fa_secret' => ['Failed to disable 2-Factor Authentication']], 'request' => $data, 'exception' => $e];
             }
         } else {
             return ['success' => false, 'errors' => ['password' => ['Password is invalid']]];

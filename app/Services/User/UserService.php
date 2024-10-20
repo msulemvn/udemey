@@ -13,13 +13,17 @@ class UserService
 {
     public function store(array $data): User
     {
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        try {
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+            ]);
 
-        return $user;
+            return $user;
+        } catch (\Exception $e) {
+            //throw $th;
+        }
     }
 
     public function changePassword($data): JsonResponse

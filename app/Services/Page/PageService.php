@@ -6,7 +6,6 @@ use App\DTOs\Page\PageDTO;
 use App\Helpers\ApiResponse;
 use App\Models\Page;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 
 class PageService
 {
@@ -17,7 +16,7 @@ class PageService
                 (new PageDTO($pageData))->toArray()
             );
             return $page;
-        } catch (Throwable $th) {
+        } catch (\Exception $e) {
             $errors = ['error' => ['An error occurred while creating the page. Please try again.']];
             return ApiResponse::error(message: 'Page creation failed', errors: $errors);
         }
@@ -40,7 +39,7 @@ class PageService
 
             $page->update($updateData);
             return $page;
-        } catch (Throwable $th) {
+        } catch (\Exception $e) {
             $errors = ['error' => ['An error occurred while updating the page. Please try again.']];
             return ApiResponse::error(message: 'Page update failed', errors: $errors);
         }
@@ -73,7 +72,7 @@ class PageService
         try {
             $pages = Page::all();
             return $pages;
-        } catch (Throwable $th) {
+        } catch (\Exception $e) {
             $errors = ['error' => ['An error occurred while retrieving the pages. Please try again.']];
             return ApiResponse::error(message: 'Pages retrieval failed', errors: $errors);
         }
@@ -92,7 +91,7 @@ class PageService
                 );
             }
             return $page->delete();
-        } catch (Throwable $th) {
+        } catch (\Exception $e) {
             $errors = ['error' => ['An error occurred while deleting the page. Please try again.']];
             return ApiResponse::error(message: 'Page deletion failed', errors: $errors);
         }
@@ -108,7 +107,7 @@ class PageService
             }
             $page->restore();
             return $page;
-        } catch (Throwable $th) {
+        } catch (\Exception $e) {
             $errors = ['error' => ['An error occurred while restoring the page. Please try again.']];
             return ApiResponse::error(message: 'Page restoration failed', errors: $errors);
         }

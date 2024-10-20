@@ -1,16 +1,16 @@
 <?php
+
 namespace App\Services\SiteSetting;
-use Exception;
-use Throwable;
+
 use App\Models\SiteSetting;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\DTOs\SiteSettings\SiteSettingDTO;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class SiteSettingService {
+class SiteSettingService
+{
 
     public function createSetting($data)
     {
@@ -52,15 +52,14 @@ class SiteSettingService {
                 $siteSettingDTO = new SiteSettingDTO($updates);
                 $siteSetting->update($siteSettingDTO->toArray());
             }
-        }
-         catch (Throwable $th) {
-            Log::error('Error uploading logo: ' . $th->getMessage());
+        } catch (\Exception $e) {
+            Log::error('Error uploading logo: ' . $e->getMessage());
             return [
                 'success' => false,
                 'errors' => [
                     'message' => ['Failed to upload logo.']
                 ],
-                'exception' => $th
+                'exception' => $e
             ];
         }
         return ['success' => true, 'data' => $siteSetting];
@@ -68,7 +67,7 @@ class SiteSettingService {
 
     public function deleteSetting($id)
     {
-        try{
+        try {
             $siteSetting = SiteSetting::findOrFail($id);
             if (Storage::disk('public')->exists('uploads/' . $siteSetting->logo_path)) {
                 Storage::disk('public')->delete('uploads/' . $siteSetting->logo_path);
@@ -76,13 +75,13 @@ class SiteSettingService {
                 Log::info('File does not exist: ' . 'uploads/' . $siteSetting->logo_path);
             }
             $siteSetting->delete();
-        }catch(Throwable $th){
+        } catch (\Exception $e) {
             return [
                 'success' => false,
                 'errors' => [
                     'message' => [' Unable to delete site setting']
                 ],
-                'exception' => $th
+                'exception' => $e
             ];
         }
         return ['success' => true, 'data' => $siteSetting];
@@ -93,27 +92,27 @@ class SiteSettingService {
         try {
             $deletedSiteSetting = SiteSetting::onlyTrashed()->find($id);
             if (!$deletedSiteSetting) {
-                throw new Exception("No settings found for the Id " . $id);
+                throw new \Exception("No settings found for the Id " . $id);
             }
             $deletedSiteSetting->restore();
             return ['success' => true, 'data' => $deletedSiteSetting];
-        } catch (Throwable $th) {
+        } catch (\Exception $e) {
             return [
                 'success' => false,
                 'errors' => [
                     'message' => [' Unable to restore site setting']
                 ],
-                'exception' => $th
+                'exception' => $e
             ];
         }
     }
 
     public function getSettings($id)
-    { 
-        try{
+    {
+        try {
             $siteSetting = SiteSetting::findOrFail($id);
-            if($siteSetting){
-                $logoPath = $siteSetting->logo_path ? asset('storage/uploads/' . $siteSetting->logo_path): null;
+            if ($siteSetting) {
+                $logoPath = $siteSetting->logo_path ? asset('storage/uploads/' . $siteSetting->logo_path) : null;
 
                 $responseData = [
                     'site_title' => $siteSetting->site_title,
@@ -121,17 +120,15 @@ class SiteSettingService {
                     'logo_path' => $logoPath,
                 ];
             }
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return [
                 'success' => false,
                 'errors' => [
                     'message' => [' No site setting found with this id!']
                 ],
-                'exception' => $th
+                'exception' => $e
             ];
         }
         return ['success' => true, 'data' => $responseData];
     }
-
-   
 }
