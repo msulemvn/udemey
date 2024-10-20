@@ -7,9 +7,8 @@ use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use App\DTOs\Category\CategoryDTO;
 use Symfony\Component\HttpFoundation\Response;
-use App\Interfaces\Category\CategoryServiceInterface;
 
-class CategoryService implements CategoryServiceInterface
+class CategoryService
 {
     public function index()
     {

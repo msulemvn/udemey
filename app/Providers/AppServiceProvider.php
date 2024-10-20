@@ -17,54 +17,44 @@ class AppServiceProvider extends ServiceProvider
         //
 
         $this->app->bind(
-            \App\Interfaces\User\UserServiceInterface::class,
             \App\Services\User\UserService::class
         );
 
         $this->app->bind(
-            \App\Interfaces\User\RegisterServiceInterface::class,
             \App\Services\User\RegisterService::class
         );
 
         $this->app->bind(
-            \App\Interfaces\Course\CourseServiceInterface::class,
             \App\Services\Course\CourseService::class
         );
 
         $this->app->bind(
-            \App\Interfaces\Category\CategoryServiceInterface::class,
             \App\Services\Category\CategoryService::class
         );
 
         $this->app->bind(
-            \App\Interfaces\CourseCategory\CourseCategoryServiceInterface::class,
             \App\Services\CourseCategory\CourseCategoryService::class
         );
 
         $this->app->bind(
-            \App\Interfaces\Cart\CartServiceInterface::class,
             \App\Services\Cart\CartService::class
         );
 
         $this->app->bind(
-            \App\Interfaces\Purchase\PurchaseServiceInterface::class,
             \App\Services\Purchase\PurchaseService::class
         );
 
         $this->app->bind(
-            \App\Interfaces\Auth\TwoFactorServiceInterface::class,
             \App\Services\Auth\TwoFactorService::class
         );
 
         $this->app->bind(
-            \App\Interfaces\Auth\AuthServiceInterface::class,
             \App\Services\Auth\AuthService::class
         );
 
-		$this->app->bind(
-			\App\Interfaces\Comment\CommentServiceInterface::class,
-			\App\Services\Comment\CommentService::class
-		);
+        $this->app->bind(
+          \App\Services\Comment\CommentService::class
+        );
     }
 
     /**

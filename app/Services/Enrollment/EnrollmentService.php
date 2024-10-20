@@ -2,14 +2,11 @@
 
 namespace App\Services\Enrollment;
 
-use App\Models\Course;
 use App\Models\Enrollment;
 use App\Helpers\ApiResponse;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Interfaces\Enrollment\EnrollmentServiceInterface;
 
-class EnrollmentService implements EnrollmentServiceInterface
+class EnrollmentService
 {
     public function index()
     {

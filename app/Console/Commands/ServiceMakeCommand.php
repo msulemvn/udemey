@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\GeneratorCommand;
-use Illuminate\Support\Facades\Artisan;
 use App\Console\Commands\Traits\ServiceProviderInjector;
 
 class ServiceMakeCommand extends GeneratorCommand
@@ -16,7 +15,6 @@ class ServiceMakeCommand extends GeneratorCommand
     public function handle()
     {
         $codeToAdd = "\n\t\t\$this->app->bind(\n" .
-            "\t\t\t\\App\\Interfaces\\" . str_replace('/', '\\', $this->argument('name')) . "Interface::class,\n" .
             "\t\t\t\\App\\Services\\" . str_replace('/', '\\', $this->argument('name')) . "::class\n" .
             "\t\t);\n";
 
@@ -24,14 +22,12 @@ class ServiceMakeCommand extends GeneratorCommand
 
         $this->injectCodeToRegisterMethod($appServiceProviderFile, $codeToAdd);
 
-        Artisan::call('make:interface', [
-            'name' => $this->argument('name') . 'Interface'
-        ]);
         return parent::handle();
     }
 
     protected function getStub()
     {
+        // Modified stub to remove interface
         return __DIR__ . '/stubs/service.stub';
     }
 
