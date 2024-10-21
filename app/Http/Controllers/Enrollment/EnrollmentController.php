@@ -19,19 +19,19 @@ class EnrollmentController extends Controller
 
     public function index()
     {
-        $Response = $this->enrollmentService->index();
+        $response = $this->enrollmentService->index();
         return ApiResponse::success(
-            message: $Response['message'],
-            data: $Response['body']
+            message: $response['message'],
+            data: $response['body']
         );
     }
 
     public function show($slug)
     {
-        $Response = $this->enrollmentService->show($slug);
+        $response = $this->enrollmentService->show($slug);
         return ApiResponse::success(
-            message: $Response['message'],
-            data: $Response['body']
+            message: $response['message'],
+            data: $response['body']
         );
     }
 }

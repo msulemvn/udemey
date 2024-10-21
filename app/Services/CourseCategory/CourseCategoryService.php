@@ -109,7 +109,7 @@ class CourseCategoryService
         }
     }
 
-    public function getCoursewithCourseCategories($id)
+    public function getCourseWithCourseCategories($id)
     {
         try {
             $courseCategory = CourseCategory::with('course')->find($id);

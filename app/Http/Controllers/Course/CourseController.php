@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Services\Course\CourseService;
 use App\Http\Requests\Course\CreateCourseRequest;
 use App\Http\Requests\Course\UpdateCourseRequest;
-use Symfony\Component\HttpFoundation\Response;
 
 
 class CourseController extends Controller
@@ -21,55 +20,55 @@ class CourseController extends Controller
 
     public function index()
     {
-        $Response = $this->courseService->index();
+        $response = $this->courseService->index();
         return ApiResponse::success(
-            message: $Response['message'],
-            data: $Response['body']
+            message: $response['message'],
+            data: $response['body']
         );
     }
 
     public function store(CreateCourseRequest $request)
     {
-        $Response = $this->courseService->store($request);
+        $response = $this->courseService->store($request);
         return ApiResponse::success(
-            message: $Response['message'],
-            data: $Response['body']
+            message: $response['message'],
+            data: $response['body']
         );
     }
 
 
     public function show($slug)
     {
-        $Response = $this->courseService->show($slug);
+        $response = $this->courseService->show($slug);
         return ApiResponse::success(
-            message: $Response['message'],
-            data: $Response['body']
+            message: $response['message'],
+            data: $response['body']
         );
     }
 
     public function update(UpdateCourseRequest $request, $id)
     {
-        $Response = $this->courseService->update($request, $id);
+        $response = $this->courseService->update($request, $id);
         return ApiResponse::success(
-            message: $Response['message'],
-            data: $Response['body']
+            message: $response['message'],
+            data: $response['body']
         );
     }
 
     public function destroy($id)
     {
 
-        $Response = $this->courseService->destroy($id);
+        $response = $this->courseService->destroy($id);
         return ApiResponse::success(
-            message: $Response['message']
+            message: $response['message']
         );
     }
-    public function getArticlewithCourse($slug)
+    public function getArticleWithCourse($slug)
     {
-        $Response = $this->courseService->getArticlewithCourse($slug);
+        $response = $this->courseService->getArticleWithCourse($slug);
         return ApiResponse::success(
-            message: $Response['message'],
-            data: $Response['body']
+            message: $response['message'],
+            data: $response['body']
         );
     }
 }
