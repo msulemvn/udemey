@@ -45,7 +45,6 @@ class ApiResponse
      */
     public static function error(mixed $request, mixed $exception,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
     {
-        $response['message'] = $message ?? Response::$statusTexts[$statusCode];
         if ($request && $exception) {
             $dto = new ErrorLogsDTO([
                 'request' => $request,
