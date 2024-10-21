@@ -2,21 +2,59 @@
 
 namespace App\Services\Article;
 
-use App\Models\Article;
-use App\DTOs\Article\ArticleDTO;
-use Illuminate\Support\Str;
 use Exception;
+use App\Models\Article;
+use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
-use Symfony\Component\HttpFoundation\Response;
+use App\DTOs\Article\ArticleDTO;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
+use Nette\Utils\Paginator;
 
 class ArticleService
 {
     // Get all articles logic
+    // public function getAllArticles()
+    // {
+    //     try {
+    //         $articles = Article::all();
+
+    //         // Add image URL to each article
+    //         foreach ($articles as $article) {
+    //             $article->image_url = $article->image_path ? asset('storage/' . $article->image_path) : null;
+    //         }
+
+    //         return ApiResponse::success(data: ['articles' => $articles]);
+    //     } catch (Exception $e) {
+    //         return ApiResponse::error(
+    //             message: 'Failed to retrieve articles',
+    //             exception: $e,
+    //             statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+    //         );
+    //     }
+    // }
+
+
     public function getAllArticles()
     {
         try {
-            $articles = Article::all();
+            $articles = Article::paginate(2);
+
+            // Add image URL and base64-encoded image to each article
+            foreach ($articles as $article) {
+                if ($article->image_path) {
+                    $imagePath = storage_path('app/public/' . $article->image_path);
+                    if (file_exists($imagePath)) {
+                        $imageData = file_get_contents($imagePath);
+                        $base64Image = base64_encode($imageData);
+                        // $article->image = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $base64Image;
+                        $article->body = $article->body;
+                    }
+                } else {
+                    $article->image = null;
+                }
+            }
+
             return ApiResponse::success(data: ['articles' => $articles]);
         } catch (Exception $e) {
             return ApiResponse::error(
@@ -31,31 +69,39 @@ class ArticleService
     public function createArticle($request)
     {
         try {
-            // Get validated data and create a DTO
-            $dto = new ArticleDTO($request->validated());
+            // Handle image upload and save the file to a directory
+            if ($request->hasFile('image_file')) {
+                // Store the image in the 'articles' directory within the 'public' disk
+                $file = $request->file('image_file');
+                $imagePath = $file->store('articles', 'public');
 
-            // If slug is not provided, create a unique slug based on title
-            if (!$dto->slug) {
-                $dto->slug = $this->checkSlugExists($dto->title);
+
+                Storage::disk('public')->put($imagePath, file_get_contents($file->getRealPath()));
+            } else {
+                $imagePath = null;  // No image was uploaded
             }
 
-            // Ensure image path is received from the frontend and assigned to the DTO
-            if (isset($request['image_path'])) {
-                $dto->image_path = $request['image_path'];  // Assign the provided path from the frontend
-            }
+            $dtoData = $request->validated();
 
-            // Create the article with the provided data
+            $dtoData['slug'] = $this->generateUniqueSlug($dtoData['title']);
+            $dtoData['image_path'] = $imagePath;  // Assign the image path to the DTO data
+
+            $dto = new ArticleDTO($dtoData);
+
             $article = Article::create($dto->toArray());
+
+            $article->image_url = $article->image_path ? asset('storage/' . $article->image_path) : null;
 
             return ApiResponse::success(data: ['article' => $article]);
         } catch (Exception $e) {
             return ApiResponse::error(
                 message: 'Failed to create article',
                 exception: $e,
-                statusCode: Response::HTTP_UNAUTHORIZED
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
+
 
     // Get a specific article by ID
     public function getArticleById($id)
@@ -65,6 +111,8 @@ class ArticleService
             if (!$article) {
                 return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
             }
+            $article->image_url = $article->image_path ? asset('storage/' . $article->image_path) : null;
+
             return ApiResponse::success(data: ['article' => $article]);
         } catch (Exception $e) {
             return ApiResponse::error(
@@ -75,6 +123,7 @@ class ArticleService
         }
     }
 
+    // Get a specific article by slug
     public function getArticleBySlug($slug)
     {
         try {
@@ -83,6 +132,7 @@ class ArticleService
             if (!$article) {
                 return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
             }
+            $article->image_url = $article->image_path ? asset('storage/' . $article->image_path) : null;
 
             return ApiResponse::success(data: ['article' => $article]);
         } catch (Exception $e) {
@@ -124,6 +174,8 @@ class ArticleService
 
             $article->update($dto->toArray());
 
+            $article->image_url = $article->image_path ? asset('storage/' . $article->image_path) : null;
+
             return ApiResponse::success(
                 data: ['article' => $article],
                 message: 'Article updated successfully'
@@ -162,7 +214,17 @@ class ArticleService
         }
     }
 
-    // Helper function to check slug uniqueness
+    // Helper function to generate a unique slug
+    protected function generateUniqueSlug($title)
+    {
+        $slug = Str::slug($title, '-');
+        $count = Article::where('slug', 'LIKE', "$slug%")->count();
+
+        // If slug exists, append the count to make it unique
+        return $count > 0 ? "{$slug}-{$count}" : $slug;
+    }
+
+    // Helper function to check slug uniqueness for update
     protected function checkSlugExists($title, $articleId = null)
     {
         $slug = Str::slug($title, '-');
