@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTOsSubscription;
+namespace App\DTOs\Subscription;
 
 use App\DTOs\BaseDTO;
 

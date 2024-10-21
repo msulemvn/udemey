@@ -9,7 +9,7 @@ use App\Helpers\ApiResponse;
 use App\Models\Subscription;
 use App\Jobs\ExpireSubscriptionJob;
 use Illuminate\Support\Facades\Log;
-use App\DTOsSubscription\SubscriptionDTO;
+use App\DTOs\Subscription\SubscriptionDTO;
 use Symfony\Component\HttpFoundation\Response;
 
 class SubscriptionService

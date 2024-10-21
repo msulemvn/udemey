@@ -17,6 +17,7 @@ use App\Http\Controllers\Subscription\SubscriptionController;
 // included auth.php
 require __DIR__ . '/auth.php';
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
