@@ -42,9 +42,9 @@ class PurchaseService
 
     public function checkout($request)
     {
-        // Receive course data from the frontend
-        $courses = $request->input('courses'); // Expected to be an array of course objects
 
+
+        $courses = $request->input('courses');
 
         if (empty($courses) || !is_array($courses)) {
             return ApiResponse::error(
@@ -70,14 +70,12 @@ class PurchaseService
                     );
                 }
 
-                // Create purchase record
                 Purchase::create([
                     'course_id' => $course->id,
                     'user_id' => auth()->id(),
                     'amount' => $course->discounted_price ?? $course->price,
                 ]);
 
-                // Create enrollment record
                 Enrollment::create([
                     'course_id' => $course->id,
                     'user_id' => auth()->id(),

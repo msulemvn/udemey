@@ -36,9 +36,7 @@ class CourseService
     public function store($request)
     {
         try {
-            // Handle the thumbnail upload
             $imagePath = null;
-
             if ($request->hasFile('thumbnail')) {
                 // Store the image in the public disk and get the storage path
                 $file = $request->file('thumbnail');
@@ -57,7 +55,6 @@ class CourseService
             $slug = $this->generateUniqueSlug($request->get('title'));
 
             // Prepare the validated data and add additional fields
-            $dtoData = $request->validated();
             $dtoData['slug'] = $slug;
             $dtoData['user_id'] = auth()->id();
             $dtoData['thumbnail'] = $imagePath;
@@ -203,7 +200,7 @@ class CourseService
 
 
 
-    public function getArticlewithCourse($slug)
+    public function getArticleWithCourse($slug)
     {
         try {
             $course = Course::with('articles')
