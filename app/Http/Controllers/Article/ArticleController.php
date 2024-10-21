@@ -6,8 +6,6 @@ use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Services\Article\ArticleService;
 use App\Http\Requests\Article\ArticleRequest;
-use Symfony\Component\HttpFoundation\Response;
-use Exception;
 
 class ArticleController extends Controller
 {

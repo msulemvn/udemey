@@ -9,7 +9,6 @@ use App\Helpers\ApiResponse;
 use App\DTOs\Article\ArticleDTO;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
-use Nette\Utils\Paginator;
 
 class ArticleService
 {
