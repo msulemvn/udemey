@@ -58,7 +58,6 @@ class PurchaseService
                     ];
                 }
 
-                // Create purchase record
                 Purchase::create([
                     'course_id' => $course->id,
                     'user_id' => auth()->id(),
