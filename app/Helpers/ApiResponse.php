@@ -21,30 +21,13 @@ class ApiResponse
     public static function success(
         string $message = null,
         array $data = [],
+        array $errors = [],
         int $statusCode = Response::HTTP_OK,
     ): JsonResponse {
         $response['message'] = $message ?? Response::$statusTexts[$statusCode];
         if ($data) {
             $response['data'] = $data;
         }
-
-        return response()->json($response, $statusCode);
-    }
-
-    /**
-     * Returns a failure JSON response with optional data
-     *
-     * @param mixed $data
-     * @param string $message
-     * @param string|null $token
-     * @return JsonResponse
-     */
-    public static function failure(
-        string $message = null,
-        array $errors = [],
-        int $statusCode = Response::HTTP_BAD_REQUEST,
-    ): JsonResponse {
-        $response['message'] = $message ?? Response::$statusTexts[$statusCode];
 
         if ($errors) {
             $response['errors'] = $errors;
@@ -60,7 +43,7 @@ class ApiResponse
      * @param int $statusCode The HTTP status code for the response.
      * @return JsonResponse
      */
-    public static function error(mixed $request, \Exception $exception,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
+    public static function error(mixed $request, mixed $exception,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
     {
         $response['message'] = $message ?? Response::$statusTexts[$statusCode];
         if ($request && $exception) {

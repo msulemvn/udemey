@@ -19,6 +19,6 @@ class BaseRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         $errors = $this->validator->errors();
-        throw new HttpResponseException(ApiResponse::failure(errors: $errors->toArray()));
+        throw new HttpResponseException(ApiResponse::success(errors: $errors->toArray()));
     }
 }

@@ -58,7 +58,7 @@ class ArticleService
         try {
             $article = Article::find($id);
             if (!$article) {
-                return ApiResponse::failure('Article not found', statusCode: Response::HTTP_NOT_FOUND);
+                return ApiResponse::success('Article not found', statusCode: Response::HTTP_NOT_FOUND);
             }
             return ApiResponse::success(data: ['article' => $article]);
         } catch (\Exception $e) {
@@ -75,7 +75,7 @@ class ArticleService
             $article = Article::where('slug', $slug)->first();
 
             if (!$article) {
-                return ApiResponse::failure('Article not found');
+                return ApiResponse::success('Article not found');
             }
 
             return ApiResponse::success(data: ['article' => $article]);
@@ -94,7 +94,7 @@ class ArticleService
             $article = Article::find($id);
 
             if (!$article) {
-                return ApiResponse::failure('Article not found');
+                return ApiResponse::success('Article not found');
             }
 
             $dto = new ArticleDTO($request->validated());
@@ -135,7 +135,7 @@ class ArticleService
         try {
             $article = Article::find($id);
             if (!$article) {
-                return ApiResponse::failure('Article not found', statusCode: Response::HTTP_NOT_FOUND);
+                return ApiResponse::success('Article not found', statusCode: Response::HTTP_NOT_FOUND);
             }
 
             // Delete associated image if exists

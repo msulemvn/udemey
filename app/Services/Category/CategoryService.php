@@ -15,7 +15,7 @@ class CategoryService
         try {
             $categories = Category::all();
             if ($categories->isEmpty()) {
-                return ApiResponse::failure(
+                return ApiResponse::success(
                     message: 'No categories available',
                     errors: ['categories' => ['No categories found in the system']],
                 );
@@ -61,7 +61,7 @@ class CategoryService
         try {
             $category = Category::findOrFail($id);
             if (!$category) {
-                return ApiResponse::failure(
+                return ApiResponse::success(
                     message: 'Category not found',
                     errors: ['category' => ['No category found with the given ID']],
                     statusCode: Response::HTTP_NOT_FOUND
@@ -84,7 +84,7 @@ class CategoryService
         try {
             $category = Category::findOrFail($id);
             if (!$category) {
-                return ApiResponse::failure(
+                return ApiResponse::success(
                     message: 'Category not found',
                     errors: ['category' => ['No category found with the given ID']],
                 );
@@ -133,7 +133,7 @@ class CategoryService
             $category = Category::with('courseCategories')->find($id);
 
             if (!$category) {
-                return ApiResponse::failure(
+                return ApiResponse::success(
                     message: 'Category not found',
                     errors: ['category' => ['No category found with the given ID']],
                 );

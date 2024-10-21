@@ -94,7 +94,7 @@ class CourseService
             $course = Course::where('slug', $slug)->first();
 
             if (!$course) {
-                return ApiResponse::failure(
+                return ApiResponse::success(
                     message: 'Course not found',
                     errors: ['course' => ['The course with the given slug was not found.']],
                     statusCode: Response::HTTP_NOT_FOUND
@@ -211,7 +211,7 @@ class CourseService
                 ->first();
 
             if (!$course) {
-                return ApiResponse::failure(
+                return ApiResponse::success(
                     message: 'Course not found',
                     errors: ['course' => ['The course with the provided ID was not found.']],
                     statusCode: Response::HTTP_NOT_FOUND
@@ -220,7 +220,7 @@ class CourseService
 
             // Check if the course has articles
             if ($course->articles->isEmpty()) {
-                return ApiResponse::failure(
+                return ApiResponse::success(
                     message: 'No articles found for this course',
                     errors: ['articles' => ['This course does not have any articles associated with it.']],
                     statusCode: Response::HTTP_NOT_FOUND

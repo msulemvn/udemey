@@ -27,7 +27,7 @@ class Authenticate extends Middleware
         $authenticationResult = $this->authenticate($request, $guards);
 
         if ($authenticationResult === 'authentication_failed') {
-            return ApiResponse::failure(message: 'Token is missing or expired!', statusCode: Response::HTTP_UNAUTHORIZED);
+            return ApiResponse::success(message: 'Token is missing or expired!', statusCode: Response::HTTP_UNAUTHORIZED);
         }
 
         return $next($request);

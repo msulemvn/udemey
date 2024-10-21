@@ -37,10 +37,6 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            \App\Services\Cart\CartService::class
-        );
-
-        $this->app->bind(
             \App\Services\Purchase\PurchaseService::class
         );
 
@@ -53,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-          \App\Services\Comment\CommentService::class
+            \App\Services\Comment\CommentService::class
         );
     }
 

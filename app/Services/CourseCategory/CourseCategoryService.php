@@ -15,7 +15,7 @@ class CourseCategoryService
         try {
             $courseCategories = CourseCategory::all();
             if ($courseCategories->isEmpty()) {
-                return ApiResponse::failure(
+                return ApiResponse::success(
                     message: 'No course categories available at the moment',
                     errors: ['courseCategories' => ['No categories found']],
                     statusCode: Response::HTTP_NOT_FOUND
@@ -35,7 +35,7 @@ class CourseCategoryService
         try {
             $courseCategory = CourseCategory::findOrFail($id);
             if (!$courseCategory) {
-                return ApiResponse::failure(
+                return ApiResponse::success(
                     message: 'Course category not found',
                     errors: ['courseCategory' => ['No course category found with the given ID']],
                     statusCode: Response::HTTP_NOT_FOUND
@@ -73,7 +73,7 @@ class CourseCategoryService
         try {
             $courseCategory = CourseCategory::findOrFail($id);
             if (!$courseCategory) {
-                return ApiResponse::failure(
+                return ApiResponse::success(
                     message: 'Course category not found',
                     errors: ['courseCategory' => ['No course category found with the given ID']],
                     statusCode: Response::HTTP_NOT_FOUND
@@ -114,7 +114,7 @@ class CourseCategoryService
         try {
             $courseCategory = CourseCategory::with('course')->find($id);
             if (!$courseCategory) {
-                return ApiResponse::failure(
+                return ApiResponse::success(
                     message: 'Course not found',
                     errors: ['courseCategory' => ['No course category found with the given ID']],
                     statusCode: Response::HTTP_NOT_FOUND

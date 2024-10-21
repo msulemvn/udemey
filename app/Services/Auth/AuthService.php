@@ -15,9 +15,9 @@ class AuthService
      */
     public function login($loginData)
     {
-        // Retrieve the validated input data...
-        $token = Auth::attempt($loginData);
         try {
+            // Retrieve the validated input data...
+            $token = Auth::attempt($loginData);
             $user = Auth::user();
             /** @var \App\User|null $user */
             $roleName = $user->getRoleNames()[0];

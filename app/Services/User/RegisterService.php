@@ -2,17 +2,18 @@
 
 namespace App\Services\User;
 
-use App\DTOs\User\UserDTO;
-use App\DTOs\Student\StudentDTO;
-use App\Models\Student;
 use App\Models\User;
+use App\Models\Student;
+use App\DTOs\User\UserDTO;
+use App\Helpers\ApiResponse;
+use App\DTOs\Student\StudentDTO;
 
 class RegisterService
 {
-    public function registerUser(array $data): User
+    public function registerUser(array $request): User
     {
         try {
-            $userDTO = new UserDTO($data);
+            $userDTO = new UserDTO($request);
 
             $user = User::create($userDTO->toArray());
             $studentDTO = new StudentDTO([
@@ -24,7 +25,7 @@ class RegisterService
 
             return $user;
         } catch (\Exception $e) {
-            //throw $th;
+            return ApiResponse::error(request: $request, exception: $e);
         }
     }
 }

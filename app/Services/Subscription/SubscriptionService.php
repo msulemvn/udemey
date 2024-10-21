@@ -20,7 +20,7 @@ class SubscriptionService
         $student = Student::where('account_id', auth()->id())->first();
 
         if (!$student) {
-            return ApiResponse::failure('User not authenticated', statusCode: Response::HTTP_UNAUTHORIZED);
+            return ApiResponse::success('User not authenticated', statusCode: Response::HTTP_UNAUTHORIZED);
         }
 
         Log::info('Authenticated student ID: ' . $student->id);
@@ -52,7 +52,7 @@ class SubscriptionService
         $student = Student::where('account_id', auth()->id())->first();
 
         if (!$student) {
-            return ApiResponse::failure('Student not found', statusCode: Response::HTTP_NOT_FOUND);
+            return ApiResponse::success('Student not found', statusCode: Response::HTTP_NOT_FOUND);
         }
 
         $subscription = Subscription::where('student_id', $student->id)
@@ -60,13 +60,13 @@ class SubscriptionService
             ->first();
 
         if (!$subscription) {
-            return ApiResponse::failure('No subscription found', statusCode: Response::HTTP_NOT_FOUND);
+            return ApiResponse::success('No subscription found', statusCode: Response::HTTP_NOT_FOUND);
         }
 
         $now = Carbon::now();
 
         if ($now->greaterThan($subscription->trial_end_at) || $subscription->status === 'expired') {
-            return ApiResponse::failure('Trial has expired', statusCode: Response::HTTP_UNAUTHORIZED);
+            return ApiResponse::success('Trial has expired', statusCode: Response::HTTP_UNAUTHORIZED);
         }
 
         return ApiResponse::success(message: 'Trial is still active', data: ['subscription' => $subscription]);

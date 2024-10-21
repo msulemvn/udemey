@@ -31,7 +31,7 @@ class PageController extends Controller
   {
     $updatedPage = $this->pageService->updatePage($pageId, $request->all());
     if (!$updatedPage) {
-      return ApiResponse::failure(message: 'Page not found!');
+      return ApiResponse::success(message: 'Page not found!');
     }
     return ApiResponse::success(
       data: $updatedPage->toArray(),
@@ -47,7 +47,7 @@ class PageController extends Controller
         data: $response['data']->toArray() ?? null,
         message: 'Page retrieved successfully!',
       ) :
-      ApiResponse::failure(
+      ApiResponse::success(
         message: 'No page found with the given slug!',
         errors: ['error' => ['No page found with slug: ' . $slug]],
       );
@@ -61,7 +61,7 @@ class PageController extends Controller
         data: $response['data']->toArray() ?? null,
         message: 'Page retrieved successfully!',
       ) :
-      ApiResponse::failure(
+      ApiResponse::success(
         message: 'No page found with the given id!',
         errors: ['error' => ['No page found with id: ' . $pageId]],
       );
@@ -74,7 +74,7 @@ class PageController extends Controller
       $finalResponse = $this->pageService->getPages();
 
       if ($finalResponse->isEmpty()) {
-        return ApiResponse::failure(message: 'Pages not found!');
+        return ApiResponse::success(message: 'Pages not found!');
       }
 
       return ApiResponse::success(data: $finalResponse->toArray(), message: 'Pages retrieved successfully!', statusCode: Response::HTTP_OK);
@@ -92,7 +92,7 @@ class PageController extends Controller
       $page = Page::find($request);
 
       if (!$page) {
-        return ApiResponse::failure(message: 'No page found with the provided ID');
+        return ApiResponse::success(message: 'No page found with the provided ID');
       }
       $this->pageService->deletePage($request);
       return ApiResponse::success(message: 'Page deleted successfully!');
@@ -108,7 +108,7 @@ class PageController extends Controller
     $restoredPage = $this->pageService->restorePage($pageId);
 
     if (!$restoredPage) {
-      return ApiResponse::failure();
+      return ApiResponse::success();
     }
     return ApiResponse::success(
       message: 'Page restored successfully!',

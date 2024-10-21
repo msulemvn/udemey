@@ -29,7 +29,7 @@ class SubscriptionController extends Controller
         $studentId = auth()->id(); // Get the authenticated user's ID
 
         if (!$studentId) {
-            return ApiResponse::failure('User not authenticated', statusCode: Response::HTTP_UNAUTHORIZED);
+            return ApiResponse::success('User not authenticated', statusCode: Response::HTTP_UNAUTHORIZED);
         }
 
         return $this->subscriptionService->checkSubscription($studentId);

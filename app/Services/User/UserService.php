@@ -3,26 +3,24 @@
 namespace App\Services\User;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
+use App\DTOs\User\UserDTO;
 use App\Helpers\ApiResponse;
 use \Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserService
 {
-    public function store(array $data): User
+    public function store($request)
     {
         try {
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-            ]);
+            $userDTO = new UserDTO($request);
+            $user = User::create($userDTO);
 
-            return $user;
+            return ApiResponse::success(data: $user->toArray());
         } catch (\Exception $e) {
-            //throw $th;
+            return ApiResponse::error(request: $request, exception: $e);
         }
     }
 
@@ -33,11 +31,11 @@ class UserService
 
         // Check if the current password is correct
         if (!Hash::check($data['current_password'], $user->password)) {
-            return ApiResponse::failure(message: 'Current password is incorrect', statusCode: Response::HTTP_UNAUTHORIZED);
+            return ApiResponse::success(message: 'Current password is incorrect', statusCode: Response::HTTP_UNAUTHORIZED);
         }
 
         if (Hash::check($data['new_password'], $user->password)) {
-            return ApiResponse::failure(message: 'New password cannot be same as old', statusCode: Response::HTTP_UNAUTHORIZED);
+            return ApiResponse::success(message: 'New password cannot be same as old', statusCode: Response::HTTP_UNAUTHORIZED);
         }
 
         // Update the user's password
