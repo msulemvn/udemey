@@ -10,10 +10,10 @@ class UserDTO extends BaseDTO
     public $email;
     public $password;
 
-    public function __construct($registrationData)
+    public function __construct($request)
     {
-        $this->name = $registrationData['name'];
-        $this->email = $registrationData['email'];
-        $this->password = $registrationData['password'];
+        $this->name = $request['name'];
+        $this->email = $request['email'];
+        $this->password = $request['password'];
     }
 }
