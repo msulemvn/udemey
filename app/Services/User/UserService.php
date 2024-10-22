@@ -40,6 +40,8 @@ class UserService
         // Update the user's password
         $user->password = $data['new_password'];
         /** @var \App\Models\User|null $user */
+        $user->password = $data['new_password'];
+        /** @var \App\Models\User|null $user */
         $user->save();
 
         // Return a success response

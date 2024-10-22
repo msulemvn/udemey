@@ -9,7 +9,7 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/get-page-by-slug/{slug}', 'getPageBySlug');
 });
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::controller(PageController::class)->group(function () {
         Route::post('/create-page', 'create');
         Route::post('/update-page/{pageId}', 'update');
