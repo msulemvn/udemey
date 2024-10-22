@@ -14,15 +14,15 @@ class TwoFactorService
     /**
      * Generate two-factor authentication
      *
-     * @param GenerateTwoFactorRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param mixed $request
+     * @return mixed
      */
     public function generateSecretKey($request)
     {
         $user = Auth::user();
         // Check if 2FA already enabled
         if ($user->google2fa_secret) {
-            return ['success' => true, 'message' => '2-Factor Authentication is already enabled.'];
+            return ['message' => '2-Factor Authentication is already enabled.'];
         }
 
         try {
@@ -30,9 +30,9 @@ class TwoFactorService
             $secretKey = $google2fa->generateSecretKey(32);
             $user = Auth::user();
             Cache::put('google2fa_secret_' . $user->id, $secretKey, 60);
-            return ['success' => true, 'message' => 'Secret key generated successfully.', 'data' => ['type' => 'Time based (TOTP)', 'google2fa_secret' => $secretKey, 'label' => 'Udemey']];
+            return ['message' => 'Secret key generated successfully.', 'data' => ['type' => 'Time based (TOTP)', 'google2fa_secret' => $secretKey, 'label' => 'Udemey']];
         } catch (\Exception $e) {
-            return ['success' => false, 'errors' => ['google2fa_secret' => ['Failed to generate secret key.']], 'request' => $request, 'exception' => $e];
+            return ['errors' => ['google2fa_secret' => ['Failed to generate secret key.']], 'request' => $request, 'exception' => $e];
         }
     }
 
@@ -40,50 +40,52 @@ class TwoFactorService
      * Enable Google 2-Factor Authentication for the current user.
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return mixed
      */
     public function enable2FA($data)
     {
         $user = Auth::user();
         // Check if 2FA already enabled
         if ($user->google2fa_secret) {
-            return ['success' => true, 'message' => '2-Factor Authentication is already enabled.'];
+            return ['message' => '2-Factor Authentication is already enabled.'];
         }
 
         $secretKey = Cache::get('google2fa_secret_' . $user->id);
 
         if (!$secretKey || empty($secretKey)) {
-            return ['success' => false, 'errors' => ['google2fa_secret' => ['Invalid or expired secret key.']], 'statusCode' => Response::HTTP_BAD_REQUEST];
+            return ['errors' => ['google2fa_secret' => ['Invalid or expired secret key.']], 'statusCode' => Response::HTTP_BAD_REQUEST];
         }
+
+
 
         $otp = $data->input('one_time_password'); // Get OTP from user input
 
         $google2fa = new Google2FA();
-        /** @var \App\Google2FA|null $google2fa */
+        /** @var \PragmaRX\Google2FA\Google2FA|null $google2fa */
         if ($google2fa->verifyKey($secretKey, $otp)) {           // OTP is valid
             $user->google2fa_secret = $secretKey;
-            /** @var \App\User|null $user */
+            /** @var \App\Models\User|null $user */
             $user->save();
             Cache::forget('google2fa_secret_' . $user->id);
-            return ['success' => true, 'message' => '2-Factor Authentication successfully enabled.'];
+            return ['message' => '2-Factor Authentication successfully enabled.'];
         }
 
         // OTP is invalid
-        return ['success' => false,  'errors' => ['one_time_password' => ['Invalid OTP.']]];
+        return ['errors' => ['one_time_password' => ['Invalid OTP.']]];
     }
 
     /**
      * Disable Google 2-Factor Authentication for the current user.
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return mixed
      */
     public function disable2FA($data)
     {
         $user = Auth::user();
         // Check if 2FA already enabled
         if (!$user->google2fa_secret) {
-            return ['success' => true, 'message' => '2-Factor Authentication is already disabled.'];
+            return ['message' => '2-Factor Authentication is already disabled.'];
         }
 
         $password = $data->input('password');
@@ -92,38 +94,38 @@ class TwoFactorService
             try {
                 // OTP is valid
                 $user->google2fa_secret = null;
-                /** @var \App\User|null $user */
+                /** @var \App\Models\User|null $user */
                 $user->save();
-                return ['success' => true, 'message' => '2-Factor Authentication successfully disabled.'];
+                return ['message' => '2-Factor Authentication successfully disabled.'];
             } catch (\Exception $e) {
-                return ['success' => false, 'errors' => ['google2fa_secret' => ['Failed to disable 2-Factor Authentication']], 'request' => $data, 'exception' => $e];
+                return ['errors' => ['google2fa_secret' => ['Failed to disable 2-Factor Authentication']], 'request' => $data, 'exception' => $e];
             }
         } else {
-            return ['success' => false, 'errors' => ['password' => ['Password is invalid']]];
+            return ['errors' => ['password' => ['Password is invalid']]];
         }
     }
 
     /**
      * Verify two-factor authentication
      *
-     * @param VerifyTwoFactorRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param mixed $request
+     * @return mixed
      */
     public function verify2FA($request)
     {
         $user = Auth::user();
         if (!$user->google2fa_secret) {
-            return ['success' => true, 'message' => '2-Factor Authentication not enabled.'];
+            return ['message' => '2-Factor Authentication not enabled.'];
         }
 
         $google2fa = new Google2FA();
         $otp_secret = $user->google2fa_secret;
 
         if (!$google2fa->verifyKey($otp_secret, $request->one_time_password)) {
-            return ['success' => false, 'errors' => ['one_time_password' => ['The one time password is invalid.']]];
+            return ['errors' => ['one_time_password' => ['The one time password is invalid.']]];
         }
 
-        return ['success' => true, 'message' => 'one_time_password verified successfully'];
+        return ['message' => 'one_time_password verified successfully'];
     }
 
     /**
@@ -219,7 +221,7 @@ class TwoFactorService
     /**
      * Clear session data
      *
-     * @param VerifyTwoFactorRequest $request
+     * @param mixed $request
      */
     protected function clearSession($request)
     {

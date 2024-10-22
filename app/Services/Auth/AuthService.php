@@ -2,24 +2,24 @@
 
 namespace App\Services\Auth;
 
+use App\Helpers\ApiResponse;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 
 class AuthService
 {
     /**
-     * Generate two-factor authentication
-     *
-     * @param GenerateTwoFactorloginData $loginData
-     * @return \Illuminate\Http\RedirectResponse
+     * Summary of login
+     * @param mixed $request
+     * @return mixed
      */
-    public function login($loginData)
+    public function login($request)
     {
         try {
             // Retrieve the validated input data...
-            $token = Auth::attempt($loginData);
+            $token = Auth::attempt($request);
             $user = Auth::user();
-            /** @var \App\User|null $user */
+            /** @var \App\Models\User|null $user */
             $roleName = $user->getRoleNames()[0];
             if ($roleName) {
                 $data['role'] = $roleName;
@@ -29,9 +29,9 @@ class AuthService
                 $data['2fa'] =  ($user->google2fa_secret) ? true : false;
             }
             $data['access_token'] = $token;
-            return ['success' => true, 'data' => $data];
+            return ['data' => $data];
         } catch (\Exception $e) {
-            return ['success' => false, 'message' => 'Invalid credentials', 'errors' =>  ['credentials' => ['Email or password is incorrect. Please try again.']], 'loginData' => $loginData, 'exception' => $e];
+            return ApiResponse::error(request: $request, exception: $e);
         }
     }
 }

@@ -18,7 +18,7 @@ class RegisterController extends Controller
 
     public function register(RegisterUserRequest $request)
     {
-        $user = $this->registerService->registerUser($request->validated());
+        $user = $this->registerService->registerUser($request);
         return ApiResponse::success(message: 'You are successfully registered');
     }
 }

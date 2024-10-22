@@ -5,7 +5,6 @@ namespace App\Services\User;
 use App\Models\User;
 use App\DTOs\User\UserDTO;
 use App\Helpers\ApiResponse;
-use \Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,15 +15,15 @@ class UserService
     {
         try {
             $userDTO = new UserDTO($request);
-            $user = User::create($userDTO);
+            $user = User::create($userDTO->toArray());
 
-            return ApiResponse::success(data: $user->toArray());
+            return ['data' => $user->toArray()];
         } catch (\Exception $e) {
             return ApiResponse::error(request: $request, exception: $e);
         }
     }
 
-    public function changePassword($data): JsonResponse
+    public function changePassword($data)
     {
         // Get the authenticated user from the JWT token
         $user = Auth::user();
@@ -40,10 +39,10 @@ class UserService
 
         // Update the user's password
         $user->password = $data['new_password'];
-        /** @var \App\User|null $user */
+        /** @var \App\Models\User|null $user */
         $user->save();
 
         // Return a success response
-        return ApiResponse::success(message: 'Password changed successfully');
+        return ['message' => 'Password changed successfully'];
     }
 }
