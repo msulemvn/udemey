@@ -4,6 +4,7 @@ namespace App\Services\Page;
 
 use App\DTOs\Page\PageDTO;
 use App\Helpers\ApiResponse;
+use App\Http\Resources\Page\PageResource;
 use App\Models\Page;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,9 +16,13 @@ class PageService
             $response = Page::create(
                 (new PageDTO($request))->toArray()
             );
-            return $response;
+            $resource  = new PageResource($response);
+            return [
+                'success' => true,
+                'data' => $resource->toArray($request),
+            ];
         } catch (\Exception $e) {
-            return ApiResponse::error(request:$request, exception:$e);
+            return ApiResponse::error(request: $request, exception: $e);
         }
     }
 
@@ -27,7 +32,16 @@ class PageService
             $response = Page::find($pageId);
 
             if (!$response) {
-                return null;
+                return [
+                    'success' => false,
+                    'message' => 'page not found',
+                    'errors' => [
+                        'page' => [
+                            'There is no page with this id.'
+                        ]
+                    ],
+                    'statusCode' => Response::HTTP_NOT_FOUND,
+                ];
             }
 
             $pageDTO = new PageDTO($request);
@@ -35,32 +49,46 @@ class PageService
             $updateData = array_filter($pageDTO->toArray(), function ($value) {
                 return !is_null($value);
             });
-
             $response->update($updateData);
-            return $response;
+            $resource  = new PageResource($response);
+            return [
+                'success' => true,
+                'message' => 'updated successfully!',
+                'data' => $resource->toArray($request)
+            ];
         } catch (\Exception $e) {
-            return ApiResponse::error(request:$request, exception:$e);
+            return ApiResponse::error(request: $request, exception: $e);
         }
     }
 
     public function getPageBySlug(string $slug)
     {
         $response = Page::where('slug', $slug)->first();
-        return $response  ? ['success' => true, 'message' => '', 'data' => $response] : [
+        $resource  = new PageResource($response);
+        return $response  ? [
+            'success' => true,
+            'data' => $resource->toArray($slug)
+        ] :
+        [
             'success' => false,
-            'message' => 'Page not found!',
-            'errors' => ['error' => ['The requested page does not exist.']],
+            'message' => 'Page not found',
+            'errors' => ['page' => ['The requested page does not exist.']],
             'statusCode' => Response::HTTP_NOT_FOUND,
         ];
     }
 
-    public function getPageById($pageId)
+    public function getPageById($id)
     {
-        $response = Page::where('id', $pageId)->first();
-        return $response  ? ['success' => true, 'message' => '', 'data' => $response] : [
+        $response = Page::where('id', $id)->first();
+        $resource  = new PageResource($response);
+
+        return $response  ? [
+            'success' => true,
+            'data' => $resource->toArray($id)
+        ] :
+        [
             'success' => false,
-            'message' => 'Page not found!',
-            'errors' => ['error' => ['The requested page does not exist.']],
+            'errors' => ['page' => ['The requested page does not exist.']],
             'statusCode' => Response::HTTP_NOT_FOUND,
         ];
     }
@@ -69,9 +97,18 @@ class PageService
     {
         try {
             $response = Page::all();
-            return $response;
+            $resource = PageResource::collection($response);
+            return $response  ? [
+                'success' => true,
+                'data' => $resource
+            ] :
+            [
+                'success' => false,
+                'errors' => ['page' => ['The requested page does not exist.']],
+                'statusCode' => Response::HTTP_NOT_FOUND,
+            ];
         } catch (\Exception $e) {
-            return ApiResponse::error(request:null, exception:$e);
+            return ApiResponse::error(request: null, exception: $e);
         }
     }
 
@@ -81,11 +118,20 @@ class PageService
             $response = Page::find($id);
 
             if (!$response) {
-                return null;
+                return [
+                    'success' => false,
+                    'errors' => ['page' => ['The requested page does not exist.']],
+                    'message' => 'page not found',
+                    'statusCode' => Response::HTTP_NOT_FOUND,
+                ];
             }
-            return $response->delete();
+            $response->delete();
+            return [
+                'success' => true,
+                'message' => 'page deleted successfully!'
+            ];
         } catch (\Exception $e) {
-            return ApiResponse::error(request:null, exception:$e);
+            return ApiResponse::error(request: null, exception: $e);
         }
     }
 
@@ -95,12 +141,29 @@ class PageService
             $response = Page::withTrashed()->find($id);
 
             if (!$response) {
-                return null;
+                return [
+                    'success' => false,
+                    'errors' => ['page' => ['The requested page does not exist.']],
+                    'message' => 'Page not found',
+                    'statusCode' => Response::HTTP_NOT_FOUND,
+                ];
+            }
+            if (!$response->trashed()) {
+                return [
+                    'success' => false,
+                    'message' => 'Page is already active and does not need restoration.',
+                    'errors' => ['page' => ['The requested page does not exist.']],
+                    'statusCode' => Response::HTTP_BAD_REQUEST,
+                ];
             }
             $response->restore();
-            return $response;
+
+            return [
+                'success' => true,
+                'message' => 'Page restored successfully!',
+            ];
         } catch (\Exception $e) {
-            return ApiResponse::error(request:null, exception:$e);
+            return ApiResponse::error(request: null, exception: $e);
         }
     }
 }
