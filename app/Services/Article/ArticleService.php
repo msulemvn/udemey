@@ -69,6 +69,7 @@ class ArticleService
 
             $article->image_url = $article->image_path ? asset('storage/' . $article->image_path) : null;
 
+
             return ApiResponse::success(data: ['article' => $article]);
         } catch (Exception $e) {
             return ApiResponse::error(
