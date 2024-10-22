@@ -9,6 +9,6 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/update-site-setting/{id}', 'updateSetting');
         Route::delete('/delete-site-setting/{id}', 'deleteSetting');
         Route::post('/restore-site-setting/{id}', 'restoreSoftDeletedSetting');
-        Route::get('/get-site-settings/{id}', 'getSettings');
+        Route::get('/get-site-settings', 'getSettings');
     });
 });

@@ -82,9 +82,9 @@ class SiteSettingController extends Controller
             );
     }
 
-    public function getSettings($id)
+    public function getSettings()
     {
-        $response = $this->siteSettingService->getSettings($id);
+        $response = $this->siteSettingService->getSettings();
 
         return $response['success'] ?
             ApiResponse::success(
@@ -93,7 +93,7 @@ class SiteSettingController extends Controller
             ) :
             ApiResponse::success(
                 message: 'No setting found with the given id!',
-                errors: ['error' => ['No setting found with id: ' . $id]],
+                errors: ['error' => ['No setting found with id: ']],
             );
     }
 }

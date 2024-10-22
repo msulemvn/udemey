@@ -107,10 +107,10 @@ class SiteSettingService
         }
     }
 
-    public function getSettings($id)
+    public function getSettings()
     {
         try {
-            $siteSetting = SiteSetting::findOrFail($id);
+            $siteSetting = SiteSetting::first();
             if ($siteSetting) {
                 $logoPath = $siteSetting->logo_path ? asset('storage/uploads/' . $siteSetting->logo_path) : null;
 

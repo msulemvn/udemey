@@ -9,46 +9,44 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PageService
 {
-    public function createPage($pageData)
+    public function createPage($request)
     {
         try {
-            $page = Page::create(
-                (new PageDTO($pageData))->toArray()
+            $response = Page::create(
+                (new PageDTO($request))->toArray()
             );
-            return $page;
+            return $response;
         } catch (\Exception $e) {
-            $errors = ['error' => ['An error occurred while creating the page. Please try again.']];
-            return ApiResponse::error(message: 'Page creation failed', errors: $errors);
+            return ApiResponse::error(request:$request, exception:$e);
         }
     }
 
-    public function updatePage($pageId, array $pageData)
+    public function updatePage($pageId, array $request)
     {
         try {
-            $page = Page::find($pageId);
+            $response = Page::find($pageId);
 
-            if (!$page) {
+            if (!$response) {
                 return null;
             }
 
-            $pageDTO = new PageDTO($pageData);
+            $pageDTO = new PageDTO($request);
 
             $updateData = array_filter($pageDTO->toArray(), function ($value) {
                 return !is_null($value);
             });
 
-            $page->update($updateData);
-            return $page;
+            $response->update($updateData);
+            return $response;
         } catch (\Exception $e) {
-            $errors = ['error' => ['An error occurred while updating the page. Please try again.']];
-            return ApiResponse::error(message: 'Page update failed', errors: $errors);
+            return ApiResponse::error(request:$request, exception:$e);
         }
     }
 
     public function getPageBySlug(string $slug)
     {
-        $page = Page::where('slug', $slug)->first();
-        return $page  ? ['success' => true, 'message' => '', 'data' => $page] : [
+        $response = Page::where('slug', $slug)->first();
+        return $response  ? ['success' => true, 'message' => '', 'data' => $response] : [
             'success' => false,
             'message' => 'Page not found!',
             'errors' => ['error' => ['The requested page does not exist.']],
@@ -58,8 +56,8 @@ class PageService
 
     public function getPageById($pageId)
     {
-        $page = Page::where('id', $pageId)->first();
-        return $page  ? ['success' => true, 'message' => '', 'data' => $page] : [
+        $response = Page::where('id', $pageId)->first();
+        return $response  ? ['success' => true, 'message' => '', 'data' => $response] : [
             'success' => false,
             'message' => 'Page not found!',
             'errors' => ['error' => ['The requested page does not exist.']],
@@ -70,46 +68,39 @@ class PageService
     public function getPages()
     {
         try {
-            $pages = Page::all();
-            return $pages;
+            $response = Page::all();
+            return $response;
         } catch (\Exception $e) {
-            $errors = ['error' => ['An error occurred while retrieving the pages. Please try again.']];
-            return ApiResponse::error(message: 'Pages retrieval failed', errors: $errors);
+            return ApiResponse::error(request:null, exception:$e);
         }
     }
 
-    public function deletePage(int $pageId)
+    public function deletePage(int $id)
     {
         try {
-            $page = Page::find($pageId);
+            $response = Page::find($id);
 
-            if (!$page) {
-                return ApiResponse::error(
-                    message: 'Page not found!',
-                    errors: ['error' => ['The page you are trying to delete does not exist.']],
-                    statusCode: Response::HTTP_NOT_FOUND
-                );
-            }
-            return $page->delete();
-        } catch (\Exception $e) {
-            $errors = ['error' => ['An error occurred while deleting the page. Please try again.']];
-            return ApiResponse::error(message: 'Page deletion failed', errors: $errors);
-        }
-    }
-
-    public function restorePage($pageId)
-    {
-        try {
-            $page = Page::withTrashed()->find($pageId);
-
-            if (!$page) {
+            if (!$response) {
                 return null;
             }
-            $page->restore();
-            return $page;
+            return $response->delete();
         } catch (\Exception $e) {
-            $errors = ['error' => ['An error occurred while restoring the page. Please try again.']];
-            return ApiResponse::error(message: 'Page restoration failed', errors: $errors);
+            return ApiResponse::error(request:null, exception:$e);
+        }
+    }
+
+    public function restorePage($id)
+    {
+        try {
+            $response = Page::withTrashed()->find($id);
+
+            if (!$response) {
+                return null;
+            }
+            $response->restore();
+            return $response;
+        } catch (\Exception $e) {
+            return ApiResponse::error(request:null, exception:$e);
         }
     }
 }
