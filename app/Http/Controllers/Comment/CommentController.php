@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Comment;
 
-
 use App\Http\Controllers\Controller;
 use App\Helpers\ApiResponse;
-use App\Models\Comment;
 use App\Services\Comment\CommentService;
 use App\Http\Requests\Comment\StoreCommentRequest;
 use App\Http\Requests\Comment\UpdateCommentRequest;

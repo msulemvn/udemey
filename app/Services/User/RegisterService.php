@@ -23,7 +23,7 @@ class RegisterService
             $student = Student::create($studentDTO->toArray());
             $user->assignRole(roles: 'Student'); // Assign Student role
 
-            return ['message' => 'You are successfully registered', 'data' => $user->toArray()];
+            return ['data' => $user];
         } catch (\Exception $e) {
             return ApiResponse::error(request: $request, exception: $e);
         }
