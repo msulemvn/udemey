@@ -34,7 +34,8 @@ class Permission
             $availablePermissions = PermissionVariable::allRoutes();
             foreach ($availablePermissions as $permission) {
                 $path = array_key_exists('prefix', $permission) ? $permission['prefix'] . $permission['path'] : $permission['path'];
-                if ($path == $request->path() && in_array($permission['permission'], $permissions)) {
+                $path = array_key_exists('postfix', $permission) ? $path . $permission['postfix'] : $path;
+                if (fnmatch($path, $request->path()) && in_array($permission['permission'], $permissions)) {
                     return $next($request);
                 }
             }
