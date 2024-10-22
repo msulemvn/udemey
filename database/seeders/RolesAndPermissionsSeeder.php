@@ -76,7 +76,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $adminUser = User::firstOrCreate([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
-            'password' => bcrypt('password'),
+            'password' => 'password',
         ]);
 
         if ($adminUser)

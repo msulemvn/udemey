@@ -39,7 +39,7 @@ class UserService
         }
 
         // Update the user's password
-        $user->password = bcrypt($data['new_password']);
+        $user->password = $data['new_password'];
         /** @var \App\User|null $user */
         $user->save();
 
