@@ -10,7 +10,7 @@ use App\DTOs\Student\StudentDTO;
 
 class RegisterService
 {
-    public function registerUser(array $request): User
+    public function registerUser($request)
     {
         try {
             $userDTO = new UserDTO($request);
@@ -23,7 +23,7 @@ class RegisterService
             $student = Student::create($studentDTO->toArray());
             $user->assignRole('Student'); // Assign Student role
 
-            return $user;
+            return ['data' => $user];
         } catch (\Exception $e) {
             return ApiResponse::error(request: $request, exception: $e);
         }

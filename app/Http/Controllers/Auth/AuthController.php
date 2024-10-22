@@ -22,8 +22,8 @@ class AuthController extends Controller
 
     public function login(LoginAuthRequest $request)
     {
-        $response = $this->AuthService->login($request->validated());
-        return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::success(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
+        $response = $this->AuthService->login($request);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? []);
     }
 
     public function logout()

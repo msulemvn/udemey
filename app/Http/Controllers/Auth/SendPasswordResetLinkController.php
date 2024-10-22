@@ -13,7 +13,7 @@ class SendPasswordResetLinkController extends Controller
      * Handle the incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return mixed
      */
     public function __invoke(SendPasswordResetLinkAuthRequest $request)
     {
@@ -21,7 +21,7 @@ class SendPasswordResetLinkController extends Controller
         if ($status === Password::RESET_LINK_SENT) {
             return ApiResponse::success(message: 'Reset link sent successfully');
         } else {
-            return ApiResponse::error(message: 'Failed to send reset link');
+            return ApiResponse::success(message: 'Failed to send reset link');
         }
     }
 }

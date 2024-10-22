@@ -17,7 +17,7 @@ class ResetPasswordController extends Controller
      * Handle the incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return mixed
      */
     public function __invoke(ResetPasswordAuthRequest $request)
     {

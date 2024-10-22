@@ -5,6 +5,7 @@ namespace App\Services\Comment;
 use App\Models\Comment;
 use App\Helpers\ApiResponse;
 use App\DTOs\Comment\CommentDTO;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class CommentService
@@ -12,11 +13,11 @@ class CommentService
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return mixed
      */
     public function index($request)
     {
-        return ['success' => true, 'data' =>  Comment::where('commentable_type', $request->commentableType)
+        return ['data' =>  Comment::where('commentable_type', $request->commentableType)
             ->when($request->commentableId, function ($query) use ($request) {
                 $query->where('id', $request->commentableId);
             })
@@ -27,17 +28,17 @@ class CommentService
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreCommentRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param  mixed  $request
+     * @return mixed
      */
-    public function store($request)
+    public function store($request): array|JsonResponse
     {
         try {
             $user = Auth::user(); // Get the authenticated user
             $commentDTO = new CommentDTO($request);
-            /** @var \App\User|null $user */
+            /** @var \App\Models\User|null $user */
             $data = $user->comments()->create($commentDTO->toArray())->toArray();
-            return ['success' => true, 'data' => $data];
+            return ['data' => $data];
         } catch (\Exception $e) {
             return ApiResponse::error(request: $request, exception: $e);
         }
@@ -46,9 +47,8 @@ class CommentService
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateCommentRequest  $request
-     * @param  \App\Models\Comment  $comment
-     * @return \Illuminate\Http\Response
+     * @param  mixed  $request
+     * @return mixed
      */
     public function update($request)
     {
@@ -56,24 +56,24 @@ class CommentService
             $data = $comment = Comment::find($request->commentId);
             $comment->status = $request->status;
             $result = $comment->save();
-            return ['success' => true, 'message' => $result ? 'successfully updated' : 'failed to update', 'data' => $data->toArray()];
+            return ['message' => $result ? 'successfully updated' : 'failed to update', 'data' => $data->toArray()];
         } catch (\Exception $e) {
-            return ['success' => false, 'errors' => ['status' => $e->getMessage()], 'request' => $request, 'exception' => $e, 'statusCode' => 500];
+            return ['errors' => ['status' => $e->getMessage()], 'request' => $request, 'exception' => $e, 'statusCode' => 500];
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Comment  $comment
-     * @return \Illuminate\Http\Response
+     * @param  mixed
+     * @return mixed
      */
     public function destroy($request)
     {
         try {
             $comment = Comment::find($request->commentId);
             $result = $comment->delete();
-            return ['success' => true, 'message' => $result ? 'Commented deleted successfully.' : 'Failed to delete comment.'];
+            return ['message' => $result ? 'Commented deleted successfully.' : 'Failed to delete comment.'];
         } catch (\Exception $e) {
             return ApiResponse::error(request: $request, exception: $e);
         }
