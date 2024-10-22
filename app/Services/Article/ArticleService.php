@@ -32,9 +32,12 @@ class ArticleService
             }
 
             return ApiResponse::success(data: ['articles' => $articles]);
-        } catch (\Exception $e) {
-            // return ApiResponse::error(exception: $e,);
-            dd();
+        } catch (Exception $e) {
+            return ApiResponse::error(
+                message: 'Failed to retrieve articles',
+                exception: $e,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -81,7 +84,7 @@ class ArticleService
         try {
             $article = Article::find($id);
             if (!$article) {
-                return ApiResponse::success('Article not found', statusCode: Response::HTTP_NOT_FOUND);
+                return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
             }
 
             // Generate image URL and base64 image
@@ -98,11 +101,12 @@ class ArticleService
             }
 
             return ApiResponse::success(data: ['article' => $article]);
-        } catch (\Exception $e) {
-            // return ApiResponse::error(
-            //     exception: $e,
-            // );
-            dd();
+        } catch (Exception $e) {
+            return ApiResponse::error(
+                message: 'Failed to retrieve article',
+                exception: $e,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -112,7 +116,7 @@ class ArticleService
             $article = Article::where('slug', $slug)->first();
 
             if (!$article) {
-                return ApiResponse::success('Article not found');
+                return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
             }
 
             // Generate image URL and base64 image
@@ -129,11 +133,12 @@ class ArticleService
             }
 
             return ApiResponse::success(data: ['article' => $article]);
-        } catch (\Exception $e) {
-            // return ApiResponse::error(
-            //     exception: $e,
-            // );
-            dd();
+        } catch (Exception $e) {
+            return ApiResponse::error(
+                message: 'Failed to retrieve article',
+                exception: $e,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -143,7 +148,7 @@ class ArticleService
             $article = Article::find($id);
 
             if (!$article) {
-                return ApiResponse::success('Article not found');
+                return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
             }
 
             $dto = new ArticleDTO($request->validated());
@@ -175,11 +180,12 @@ class ArticleService
                 data: ['article' => $article],
                 message: 'Article updated successfully'
             );
-        } catch (\Exception $e) {
-            // return ApiResponse::error(
-            //     exception: $e,
-            // );
-            dd();
+        } catch (Exception $e) {
+            return ApiResponse::error(
+                message: 'Failed to update article',
+                exception: $e,
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -189,7 +195,7 @@ class ArticleService
             $article = Article::find($id);
 
             if (!$article) {
-                return ApiResponse::success('Article not found', statusCode: Response::HTTP_NOT_FOUND);
+                return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
             }
 
             if ($article->image_path) {
@@ -225,7 +231,7 @@ class ArticleService
             ->exists();
 
         if ($existingSlug) {
-            throw new \Exception('Slug already exists for another article.');
+            throw new Exception('Slug already exists for another article.');
         }
 
         return $slug;
