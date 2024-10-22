@@ -14,12 +14,12 @@ class Role
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     * @return mixed
      */
     public function handle(Request $request, Closure $next, $role = null)
     {
         if ($role) {
-            /** @var \App\User|null $user */
+            /** @var \App\Models\User|null $user */
             $user =  Auth::user();
             if (Auth::check() && $user->hasAnyRole($role)) {
                 return $next($request);

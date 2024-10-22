@@ -41,7 +41,7 @@ class UserService
         $user->password = $data['new_password'];
         /** @var \App\Models\User|null $user */
         $user->password = $data['new_password'];
-        /** @var \App\User|null $user */
+        /** @var \App\Models\User|null $user */
         $user->save();
 
         // Return a success response

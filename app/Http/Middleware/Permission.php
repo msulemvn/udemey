@@ -29,7 +29,7 @@ class Permission
 
         $user = Auth::user();
         if ($user) {
-            /** @var \App\User|null $user */
+            /** @var \App\Models\User|null $user */
             $permissions = $user->getAllPermissions()->pluck('name')->toArray();
             $availablePermissions = PermissionVariable::allRoutes();
             foreach ($availablePermissions as $permission) {
