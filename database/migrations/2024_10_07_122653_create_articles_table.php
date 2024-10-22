@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('body')->nullable();
+            $table->longtext('body')->nullable();
             $table->string('slug')->unique();
             $table->string('image_path')->nullable();  // This will store the image path
             $table->foreignId('user_id')->constrained('users');

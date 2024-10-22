@@ -28,11 +28,7 @@ class ApiResponse
         if ($data) {
             $response['data'] = $data;
         }
-
-        if ($errors) {
-            $response['errors'] = $errors;
-        }
-
+        
         return response()->json($response, $statusCode);
     }
 
