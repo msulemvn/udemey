@@ -9,7 +9,7 @@ Route::controller(CourseController::class)->group(function () {
     Route::get('/courses/{slug}/articles', 'getArticlewithCourse');
 });
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::controller(CourseController::class)->group(function () {
         Route::post('/create-course', 'store');
         Route::put('/update-course/{id}', 'update');
