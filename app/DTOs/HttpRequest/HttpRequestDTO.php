@@ -13,13 +13,13 @@ class HttpRequestDTO extends BaseDTO
     public $payload;
     public $headers;
 
-    public function __construct($httpRequestData)
+    public function __construct($request)
     {
-        $this->session_id = $httpRequestData['session_id'];
-        $this->ip = $httpRequestData['ip'];
-        $this->method = $httpRequestData['method'];
-        $this->url = $httpRequestData['url'];
-        $this->payload = $httpRequestData['payload'];
-        $this->headers = $httpRequestData['headers'];
+        $this->session_id = session()->getId();
+        $this->ip = $request->ip();
+        $this->method = $request->method();
+        $this->url = $request->fullUrl();
+        $this->payload = json_encode($request->toArray());
+        $this->headers = json_encode($request->header());
     }
 }
