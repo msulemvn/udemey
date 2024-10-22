@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\DTOs\Auth\AuthDTO;
 use App\DTOs\User\UserDTO;
 use App\Helpers\ApiResponse;
 use Spatie\Permission\Models\Role;
@@ -17,8 +18,7 @@ class AuthService
     public function login($request)
     {
         try {
-            // Retrieve the validated input data...
-            $token = Auth::attempt((new UserDTO($request))->toArray());
+            $token = Auth::attempt((new AuthDTO($request))->toArray());
             if ($token) {
                 $user = Auth::user();
                 /** @var \App\Models\User|null $user */
