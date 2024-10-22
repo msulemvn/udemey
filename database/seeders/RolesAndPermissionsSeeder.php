@@ -52,27 +52,6 @@ class RolesAndPermissionsSeeder extends Seeder
                 'user can purchase courses',
                 'user can access purchased courses',
             ]);
-
-        $routeCollection = Route::getRoutes()->get();
-        $routeCollection = array_filter($routeCollection, function ($route) {
-            return !(
-                strpos($route->uri, '_ignition') === 0 || $route->uri === 'sanctum/csrf-cookie'
-            );
-        });
-        // dd($routeCollection);
-        foreach ($routeCollection as $value) {
-            $name = $value->action;
-            if (!empty($name['as'])) {
-                $permission = $name['as'];
-                $str = trim(strtolower($permission));
-                $newStr = preg_replace('/[\s.,-]+/', ' ', $str);
-                $permissions[] = $newStr;
-                Permission::create([
-                    'name' => $newStr
-                ]);
-            }
-        }
-
         $adminUser = User::firstOrCreate([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
