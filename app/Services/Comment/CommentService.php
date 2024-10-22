@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Auth;
 class CommentService
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return mixed
+     * Get data
+     * @param mixed $request
+     * @return array[]
      */
     public function index($request)
     {
