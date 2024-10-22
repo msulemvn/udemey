@@ -17,7 +17,7 @@ class AuthService
     {
         try {
             // Retrieve the validated input data...
-            $token = Auth::attempt($request);
+            $token = Auth::attempt($request->toArray());
             $user = Auth::user();
             /** @var \App\Models\User|null $user */
             $roleName = $user->getRoleNames()[0];
