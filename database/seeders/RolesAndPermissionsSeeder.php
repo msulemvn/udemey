@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\GlobalVariables\PermissionVariable;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
@@ -21,37 +22,40 @@ class RolesAndPermissionsSeeder extends Seeder
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $studentRole = Role::firstOrCreate(['name' => 'student']);
 
-        $permissions = [
-            'user can create courses',
-            'user can edit courses',
-            'user can delete courses',
-            'user can view courses',
-            'user can manage users',
-            'user can manage course content',
-            'user can purchase courses',
-            'user can access purchased courses',
-        ];
-
+        $permissions = array_filter(array_column(PermissionVariable::allRoutes(), 'permission'));
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
         }
 
-        if ($adminRole)
-            $adminRole->givePermissionTo([
-                'user can create courses',
-                'user can edit courses',
-                'user can delete courses',
-                'user can view courses',
-                'user can manage users',
-                'user can manage course content',
-            ]);
+        if ($adminRole) {
+            $role = 'admin';
+            $adminRole->givePermissionTo(
+                array_column(
+                    array_filter(
+                        PermissionVariable::allRoutes(),
+                        function ($item) use ($role) {
+                            return in_array($role, $item['roles']);
+                        }
+                    ),
+                    'permission'
+                )
+            );
+        }
 
         if ($studentRole)
-            $studentRole->givePermissionTo([
-                'user can view courses',
-                'user can purchase courses',
-                'user can access purchased courses',
-            ]);
+            $role = 'student';
+        $adminRole->givePermissionTo(
+            array_column(
+                array_filter(
+                    PermissionVariable::allRoutes(),
+                    function ($item) use ($role) {
+                        return in_array($role, $item['roles']);
+                    }
+                ),
+                'permission'
+            )
+        );
+
         $adminUser = User::firstOrCreate([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
