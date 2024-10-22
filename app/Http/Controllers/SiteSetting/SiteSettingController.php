@@ -25,13 +25,14 @@ class SiteSettingController extends Controller
 
         return $response['success'] ?
             ApiResponse::success(
-                data: $response['data']->toArray() ?? null,
-                message: 'Settings created successfully!',
+                data: $response['data'] ?? null,
+                message: $response['message'],
+                statusCode:Response::HTTP_CREATED
 
             ) :
             ApiResponse::success(
                 message: 'Unable to create setting!',
-                errors: ['error' => ['Unable to create setting!']],
+                errors: ['site setting' => ['Unable to create setting!']],
             );
     }
 
@@ -42,13 +43,12 @@ class SiteSettingController extends Controller
 
         return $response['success'] ?
             ApiResponse::success(
-                data: $response['data']->toArray() ?? null,
-                message: 'Site setting updated successfully!',
-
+                data: $response['data'] ?? null,
+                message: $response['message'],
             ) :
             ApiResponse::success(
                 message: 'No setting found with the given id!',
-                errors: ['error' => ['No setting found with id: ' . $id]],
+                errors: ['site setting' => ['No setting found with id: ' . $id]],
             );
     }
 
@@ -57,12 +57,11 @@ class SiteSettingController extends Controller
         $response = $this->siteSettingService->deleteSetting($id);
         return $response['success'] ?
             ApiResponse::success(
-                message: 'Site setting deleted successfully!',
-
+                message: $response['message'],
             ) :
             ApiResponse::success(
                 message: 'No setting found with the given id!',
-                errors: ['error' => ['No setting found with id: ' . $id]],
+                errors: ['site setting' => ['No setting found with id: ' . $id]],
             );
     }
 
@@ -78,7 +77,7 @@ class SiteSettingController extends Controller
             ) :
             ApiResponse::success(
                 message: 'No setting found with the given id!',
-                errors: ['error' => ['No setting found with id: ' . $id]],
+                errors: ['site setting' => ['No setting found with id: ' . $id]],
             );
     }
 
@@ -88,12 +87,12 @@ class SiteSettingController extends Controller
 
         return $response['success'] ?
             ApiResponse::success(
-                data: $response['data'] ?? null,
+                data: $response['data']->toArray(request() ?? []),
                 message: 'Setting retrieved successfully!'
             ) :
             ApiResponse::success(
                 message: 'No setting found with the given id!',
-                errors: ['error' => ['No setting found with id: ']],
+                errors: ['site setting' => ['No setting found with id: ']],
             );
     }
 }
