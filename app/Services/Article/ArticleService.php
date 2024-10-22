@@ -17,17 +17,12 @@ class ArticleService
         try {
             $articles = Article::all();
 
-            // Add image URL and base64-encoded image to each article
+            // Add image URL to each article
             foreach ($articles as $article) {
                 if ($article->image_path) {
-                    $imagePath = storage_path('app/public/' . $article->image_path);
-                    if (file_exists($imagePath)) {
-                        $imageData = file_get_contents($imagePath);
-                        $base64Image = base64_encode($imageData);
-                        $article->image = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . $base64Image;
-                    }
+                    $article->image_path = asset('storage/' . $article->image_path);
                 } else {
-                    $article->image = null;
+                    $article->image_path = null;
                 }
             }
 
@@ -67,7 +62,7 @@ class ArticleService
             $article = Article::create($dto->toArray());
 
 
-            $article->image_url = $article->image_path ? asset('storage/' . $article->image_path) : null;
+            $article->image_path = $article->image_path ? asset('storage/' . $article->image_path) : null;
 
 
             return ApiResponse::success(data: ['article' => $article]);
