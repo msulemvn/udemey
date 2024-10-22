@@ -9,7 +9,7 @@ use \App\Models\HttpRequest;
 use \App\DTOs\HttpRequest\HttpRequestDTO;
 
 
-class TerminatingMiddleware
+class Terminating
 {
     /**
      * Handle an incoming request.
@@ -20,17 +20,8 @@ class TerminatingMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $dto = new HttpRequestDTO([
-            'session_id' => session()->getId(),
-            'ip' => $request->ip(),
-            'method' => $request->method(),
-            'url' => $request->fullUrl(),
-            'payload' => $request->toArray(),
-            'headers' => json_encode($request->header()),
-        ]);
-
         // Log the DTO
-        $httpRequest = HttpRequest::create($dto->toArray());
+        $httpRequest = HttpRequest::create((new HttpRequestDTO($request))->toArray());
         $request['request_log_id'] = $httpRequest->id;
 
         return $next($request);
@@ -41,14 +32,16 @@ class TerminatingMiddleware
      */
     public function terminate($request, $response): void
     {
-        HttpRequest::find($request['request_log_id'])->update(
-            [
-                'user_id' => $request->user()->id ?? null,
-                'response' =>  json_encode($response->getOriginalContent()),
-                'status_code' => $response->getStatusCode(),
-            ]
-        );
-
+        $httpRequest = HttpRequest::find($request['request_log_id']);
+        if ($httpRequest) {
+            $httpRequest->update(
+                [
+                    'user_id' => $request->user()->id ?? null,
+                    'response' =>  json_encode($response->getOriginalContent()),
+                    'status_code' => $response->getStatusCode(),
+                ]
+            );
+        }
         // \Log::info('request_log_id', [$request['request_log_id']]);
         unset($request['request_log_id']);
     }
