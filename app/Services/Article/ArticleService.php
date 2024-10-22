@@ -39,31 +39,11 @@ class ArticleService
     public function createArticle($request)
     {
         try {
-            // Handle image upload and save the file to a directory
-            if ($request->hasFile('image_file')) {
-                $file = $request->file('image_file');
-                $timestamp = now()->format('YmdHs');
-                $originalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $extension = $file->getClientOriginalExtension();
-                $newFileName = Str::slug($originalFileName) . '_' . $timestamp . '.' . $extension;
 
-                $file->storeAs('uploads', $newFileName, 'public');
-                $imagePath = 'uploads/' . $newFileName;
-            } else {
-                $imagePath = null;  // No image was uploaded
-            }
-
-            $dtoData = $request->validated();
-
-            $dtoData['slug'] = $this->generateUniqueSlug($dtoData['title']);
-            $dtoData['image_path'] = $imagePath;
-
-            $dto = new ArticleDTO($dtoData);
+            $dto = new ArticleDTO($request);
             $article = Article::create($dto->toArray());
 
-
             $article->image_path = $article->image_path ? asset('storage/' . $article->image_path) : null;
-
 
             return ApiResponse::success(data: ['article' => $article]);
         } catch (Exception $e) {
@@ -208,28 +188,5 @@ class ArticleService
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
-    }
-
-    protected function generateUniqueSlug($title)
-    {
-        $slug = Str::slug($title, '-');
-        $count = Article::where('slug', 'LIKE', "$slug%")->count();
-
-        return $count > 0 ? "{$slug}-{$count}" : $slug;
-    }
-
-    protected function checkSlugExists($title, $articleId = null)
-    {
-        $slug = Str::slug($title, '-');
-
-        $existingSlug = Article::where('slug', $slug)
-            ->where('id', '!=', $articleId)
-            ->exists();
-
-        if ($existingSlug) {
-            throw new Exception('Slug already exists for another article.');
-        }
-
-        return $slug;
     }
 }

@@ -3,6 +3,8 @@
 namespace App\DTOs\Article;
 
 use App\DTOs\BaseDTO;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleDTO extends BaseDTO
 {
@@ -14,14 +16,29 @@ class ArticleDTO extends BaseDTO
     public $course_id;
     public $status;
 
-    public function __construct($data)
+    public function __construct($request)
     {
-        $this->title = $data['title'];
-        $this->body = $data['body'] ?? null;
-        $this->slug = $data['slug'] ?? null;
-        $this->image_path = $data['image_path'] ?? null;  // Updated from image_url to image_path
-        $this->user_id = $data['user_id'] ?? null;
-        $this->course_id = $data['course_id'];
-        $this->status = $data['status'];
+        $this->title = $request['title'];
+        $this->body = $request['body'] ?? null;
+        $this->slug = $request['slug'] ?? null;
+
+        if ($request->hasFile('image_file')) {
+            $file = $request->file('image_file');
+            $timestamp = now()->format('YmdHs');
+            $originalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $newFileName = Str::slug($originalFileName) . '_' . $timestamp . '.' . $extension;
+
+            $file->storeAs('uploads', $newFileName, 'public');
+            $imagePath = 'uploads/' . $newFileName;
+        } else {
+            $imagePath = null;  // No image was uploaded
+        }
+
+        $this->image_path = $imagePath;  // Updated from image_url to image_path
+        //$this->user_id = $request['user_id'] ?? null;
+        $this->user_id = Auth::user()->id;
+        $this->course_id = $request['course_id'];
+        $this->status = $request['status'];
     }
 }
