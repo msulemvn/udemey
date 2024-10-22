@@ -15,13 +15,5 @@ class SiteSetting extends Model
         'site_title',
         'logo_path',
         'copyright',
-    ];
-
-    protected $hidden =[
-
-        'created_at',
-        'updated_at',
-        'deleted_at'
-    ];
-    
+    ];  
 }
