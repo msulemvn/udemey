@@ -78,6 +78,48 @@ class PageService
             return ApiResponse::error(request: $request, exception: $e);
         }
     }
+>>>>>>> 42e3356 (response is optimized now)
+
+    public function index($request)
+    {
+        try {
+<<<<<<< HEAD
+            if ($request->id && $request->slug) {
+                return ['message' => 'Both ID and slug cannot be provided','data' => [],];
+            }
+            $query = Page::query();
+            $query->when($request->id, function ($query) use ($request) {
+                $query->where('id', $request->id);
+            })->when($request->slug, function ($query) use ($request) {
+                $query->where('slug', $request->slug);
+            });
+
+            $response = $request->id || $request->slug
+            ? new PageResource($query->firstOrFail())
+            : PageResource::collection($query->get());
+            return ['message' => 'Page(s) retrieved successfully','data' => $response];
+        } catch (Exception $e) {
+            return ApiResponse::error(request: $request, exception: $e);
+        }
+    }
+
+    public function destroy(int $id)
+    {
+        try {
+            $page = Page::findOrFail($id);
+            if ($page->trashed()) {
+                return [
+                    'message' => 'Page already deleted',
+                    'errors' => ['page' => ['The requested page has already been deleted.']],
+                    'statusCode' => Response::HTTP_BAD_REQUEST,
+                ];
+            }
+
+            DB::transaction(function () use ($page) {
+                $page->delete();
+            });
+            
+            return ['message' => 'Page deleted successfully!','statusCode' => Response::HTTP_OK];
 
     public function destroy(int $id)
     {
