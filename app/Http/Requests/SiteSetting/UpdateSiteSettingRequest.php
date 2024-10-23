@@ -23,12 +23,15 @@ class UpdateSiteSettingRequest extends BaseRequest
     public function messages()
     {
         return [
-            'key.required' => 'The key is required.',
-            'key.unique' => 'The key must be unique.',
-            'value.required' => 'The value is required.',
-            'value.file' => 'The value must be a valid file.',
-            'value.mimes' => 'The logo must be a file of type: jpeg, png, jpg, gif.',
-            'value.max' => 'The maximum file size for the logo is 2MB.',
+            'site_title.required' => 'The site title is required.',
+            'site_title.string' => 'The site title must be a string.',
+            'site_title.max' => 'The site title must not exceed 255 characters.',
+            'logo_path.file' => 'The logo must be a valid file.',
+            'logo_path.mimes' => 'The logo must be a file of type: jpeg, png, jpg, gif.',
+            'logo_path.max' => 'The maximum file size for the logo is 2MB.',
+            'copyright.required' => 'The copyright is required.',
+            'copyright.string' => 'The copyright must be a string.',
+            'copyright.max' => 'The copyright must not exceed 255 characters.',
         ];
     }
 }

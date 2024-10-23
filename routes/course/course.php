@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Course\CourseController;
 
 Route::controller(CourseController::class)->group(function () {
-    Route::get('/courses', 'index');           // List all courses
-    Route::get('/courses/{slug}', 'show');
+    Route::get('/courses', 'index');
+    Route::get('/courses/{slug}', 'getCourseBySlug');
     Route::get('/courses/{slug}/articles', 'getArticlewithCourse');
 });
 

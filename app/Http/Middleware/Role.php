@@ -13,7 +13,7 @@ class Role
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return mixed
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle($request, Closure $next, ...$roles)
     {

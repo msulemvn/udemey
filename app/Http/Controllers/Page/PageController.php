@@ -7,6 +7,8 @@ use App\DTOs\Page\PageDTO;
 use App\Helpers\ApiResponse;
 use App\Services\Page\PageService;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Page\PageResource;
+use App\Http\Requests\Page\GetPageRequest;
 use App\Http\Requests\Page\CreatePageRequest;
 use App\Http\Requests\Page\UpdatePageRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,98 +22,63 @@ class PageController extends Controller
     $this->pageService = $pageService;
   }
 
-  public function create(CreatePageRequest $request)
+  public function index(GetPageRequest $request)
   {
-    $finalResponse = $this->pageService->createPage($request);
-
-    return ApiResponse::success(data: $finalResponse->toArray(), message: 'Page created successfully!', statusCode: Response::HTTP_CREATED);
+    
+    return $this->pageService->index($request);
   }
 
-  public function update(UpdatePageRequest $request, $pageId)
+  public function store(CreatePageRequest $request)
   {
-    $updatedPage = $this->pageService->updatePage($pageId, $request->all());
-    if (!$updatedPage) {
-      return ApiResponse::success(message: 'Page not found!');
+    $response = $this->pageService->store($request);
+    return ApiResponse::success(message: $response['message'], data: $response['data'], statusCode: Response::HTTP_CREATED);
+  }
+
+  public function update(UpdatePageRequest $request, $id)
+  {
+    $response = $this->pageService->update($request, $id);
+    return ApiResponse::success(message: $response['message'], data: $response['data']);
+  }
+
+  public function destroy(int $id)
+  {
+    $response = $this->pageService->destroy($id);
+    if (isset($response['errors'])) {
+      return ApiResponse::success(message: $response['message'], errors: $response['errors'], statusCode: $response['statusCode']);
     }
-    return ApiResponse::success(
-      data: $updatedPage->toArray(),
-      message: 'Page updated successfully!',
-    );
+    return ApiResponse::success(message: $response['message'], statusCode: $response['statusCode']);
   }
 
-  public function getPageBySlug(string $slug)
+  public function restore(int $id)
   {
-    $response  = $this->pageService->getPageBySlug($slug);
-    return $response['success'] ?
-      ApiResponse::success(
-        data: $response['data']->toArray() ?? null,
-        message: 'Page retrieved successfully!',
-      ) :
-      ApiResponse::success(
-        message: 'No page found with the given slug!',
-        errors: ['error' => ['No page found with slug: ' . $slug]],
-      );
-  }
-
-  public function getPageById($pageId)
-  {
-    $response = $this->pageService->getPageById($pageId);
-    return $response['success'] ?
-      ApiResponse::success(
-        data: $response['data']->toArray() ?? null,
-        message: 'Page retrieved successfully!',
-      ) :
-      ApiResponse::success(
-        message: 'No page found with the given id!',
-        errors: ['error' => ['No page found with id: ' . $pageId]],
-      );
-  }
-
-  public function getPages($request)
-  {
-
-    try {
-      $finalResponse = $this->pageService->getPages();
-
-      if ($finalResponse->isEmpty()) {
-        return ApiResponse::success(message: 'Pages not found!');
-      }
-
-      return ApiResponse::success(data: $finalResponse->toArray(), message: 'Pages retrieved successfully!', statusCode: Response::HTTP_OK);
-    } catch (\Exception $e) {
-      return ApiResponse::error(
-        exception: $e,
-        request: $request
-      );
+    $response = $this->pageService->restore($id);
+    if (isset($response['errors'])) {
+      return ApiResponse::success(message: $response['message'], errors: $response['errors'], statusCode: $response['statusCode']);
     }
+    return ApiResponse::success(message: $response['message'], statusCode: $response['statusCode']);
   }
+  // public function restore($id)
+  // {
+  //   $response = $this->pageService->restore($id);
 
-  public function destroy($request)
-  {
-    try {
-      $page = Page::find($request);
+  //   return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null) : ApiResponse::success(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
+  // }
 
-      if (!$page) {
-        return ApiResponse::success(message: 'No page found with the provided ID');
-      }
-      $this->pageService->deletePage($request);
-      return ApiResponse::success(message: 'Page deleted successfully!');
-    } catch (\Exception $e) {
-      return ApiResponse::error(
-        exception: $e,
-        request: $request,
-      );
-    }
-  }
-  public function restore($pageId)
-  {
-    $restoredPage = $this->pageService->restorePage($pageId);
+  // public function getPageBySlug(string $slug)
+  // {
+  //   $response  = $this->pageService->getPageBySlug($slug);
+  //   return ApiResponse::success(message: $response['message'], data: $response['data']);
+  // }
 
-    if (!$restoredPage) {
-      return ApiResponse::success();
-    }
-    return ApiResponse::success(
-      message: 'Page restored successfully!',
-    );
-  }
+  // public function getPageById($id)
+  // {
+  //   $response = $this->pageService->getPageById($id);
+  //   return $response['success'] ? ApiResponse::success(message: $response['message'], data: $response['data']) : ApiResponse::success(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
+  // }
+
+  // public function getPages()
+  // {
+  //   $response = $this->pageService->getPages();
+  //   return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data']->toArray(request() ?? [])) : ApiResponse::success(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
+  // }
 }

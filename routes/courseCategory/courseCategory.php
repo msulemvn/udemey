@@ -11,8 +11,8 @@ Route::controller(CourseCategoryController::class)->group(function () {
 
 Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::controller(CourseCategoryController::class)->group(function () {
-        Route::post('/create-course-categories', 'store');
-        Route::put('/update-course-categories/{id}', 'update');
+        Route::post('/create-course-category', 'store');
+        Route::put('/update-course-category/{id}', 'update');
         Route::delete('/course-categories/{id}', 'destroy');
     });
 });

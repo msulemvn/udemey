@@ -10,142 +10,91 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CourseCategoryService
 {
+    /************************************ Get all course Categories  ************************************/
+
     public function index()
     {
-        try {
-            $courseCategories = CourseCategory::all();
-            if ($courseCategories->isEmpty()) {
-                return ApiResponse::success(
-                    message: 'No course categories available at the moment',
-                    errors: ['courseCategories' => ['No categories found']],
-                    statusCode: Response::HTTP_NOT_FOUND
-                );
-            }
-            return $courseCategories;
-        } catch (\Exception $e) {
-            // return ApiResponse::error(
-            //     exception: $e,
-            // );
-            dd();
+        $courseCategories = CourseCategory::all();
+        if (!$courseCategories) {
+            return [
+                'errors' => ['course Categories' => ['No categories found']],
+                'statusCode' => Response::HTTP_NOT_FOUND
+            ];
         }
+        return ['message' => 'All course categories retrieved successfully', 'data' => $courseCategories->toArray()];
     }
+
+    /************************************ Get course Category By Id  ************************************/
 
     public function show($id)
     {
-        try {
-            $courseCategory = CourseCategory::findOrFail($id);
-            if (!$courseCategory) {
-                return ApiResponse::success(
-                    message: 'Course category not found',
-                    errors: ['courseCategory' => ['No course category found with the given ID']],
-                    statusCode: Response::HTTP_NOT_FOUND
-                );
-            }
-            return $courseCategory;
-        } catch (\Exception $e) {
-            // return ApiResponse::error(
-            //     exception: $e,
-            // );
-            dd();
+        $courseCategory = CourseCategory::find($id);
+        if (!$courseCategory) {
+            return [
+                'errors' => ['course Categories' => ['No course category found with the given ID']],
+                'statusCode' => Response::HTTP_NOT_FOUND
+            ];
         }
+        return ['message' => 'Course category retrieved successfully', 'data' => $courseCategory->toArray()];
     }
+    /************************************ create course Category   ************************************/
 
     public function store($request)
     {
         try {
-            $slug = $this->generateUniqueSlug($request['title']);
-
-            $request['slug'] = $slug;
-
             $courseCategoryDTO = new CourseCategoryDTO($request);
             $courseCategory = CourseCategory::create($courseCategoryDTO->toArray());
-            return $courseCategory;
+            return ['message' => 'course categories created successfully', 'data' => $courseCategory->toArray(), 'statusCode' => Response::HTTP_CREATED];
         } catch (\Exception $e) {
-            // return ApiResponse::error(
-            //     exception: $e,
-            // );
-            dd();
+            return ApiResponse::error(request: $request, exception: $e);
         }
     }
+    /************************************ Update course Category   ************************************/
 
     public function update($request, $id)
     {
         try {
-            $courseCategory = CourseCategory::findOrFail($id);
+            $courseCategory = CourseCategory::find($id);
             if (!$courseCategory) {
-                return ApiResponse::success(
-                    message: 'Course category not found',
-                    errors: ['courseCategory' => ['No course category found with the given ID']],
-                    statusCode: Response::HTTP_NOT_FOUND
-                );
+                return [
+                    'errors' => ['course Category' => ['No course category found with the given ID']],
+                    'statusCode' => Response::HTTP_NOT_FOUND
+                ];
             }
-            $slug = $this->generateUniqueSlug($request['title']);
-
-            $request['slug'] = $slug;
 
             $courseCategoryDTO = new CourseCategoryDTO($request);
 
             $courseCategory->update($courseCategoryDTO->toArray());
-            return $courseCategory;
+            return ['message' => 'course categories created successfully', 'data' => $courseCategory->toArray()];
         } catch (\Exception $e) {
-            // return ApiResponse::error(
-            //     exception: $e,
-            // );
-            dd();
+            return ApiResponse::error(request: $request, exception: $e);
         }
     }
+    /************************************ Delete course Category   ************************************/
 
-    public function destroy($id)
+    public function destroy($request)
     {
         try {
-            $courseCategory = CourseCategory::findOrFail($id);
+            $courseCategory = CourseCategory::findOrFail($request);
             $courseCategory->delete();
-            return ApiResponse::success(message: 'Course category deleted successfully', data: $courseCategory, statusCode: Response::HTTP_CREATED);
+            return ['message' => 'Course category deleted successfully'];
         } catch (\Exception $e) {
-            // return ApiResponse::error(
-            //     exception: $e,
-            // );
-            dd();
+            return ApiResponse::error(request: $request, exception: $e);
         }
     }
+    /************************************ Delete courses   ************************************/
 
-    public function getCoursewithCourseCategories($id)
+    public function getCourseWithCourseCategories($id)
     {
-        try {
-            $courseCategory = CourseCategory::with('course')->find($id);
-            if (!$courseCategory) {
-                return ApiResponse::success(
-                    message: 'Course not found',
-                    errors: ['courseCategory' => ['No course category found with the given ID']],
-                    statusCode: Response::HTTP_NOT_FOUND
-                );
-            }
-            return $courseCategory;
-        } catch (\Exception $e) {
-            // return ApiResponse::error(
-            //     exception: $e,
-            // );
-            dd();
+        $courseCategory = CourseCategory::with('course')->find($id);
+        if (!$courseCategory) {
+            return [
+                'errors' => ['course Category' => ['No course category found with the given ID']],
+                'statusCode' => Response::HTTP_NOT_FOUND
+
+            ];
         }
-    }
-
-    private function generateUniqueSlug($title)
-    {
-        $slug = Str::slug($title, '-');
-
-        $existingSlug = COurseCategory::where('slug', $slug)->first();
-
-        if ($existingSlug) {
-            // If slug already exists, append a number to make it unique
-            $count = 1;
-            while ($existingSlug) {
-                $newSlug = $slug . '-' . $count;
-                $existingSlug = COurseCategory::where('slug', $newSlug)->first();
-                $count++;
-            }
-            return $newSlug;
-        }
-
-        return $slug;
+        $courses = $courseCategory->course;
+        return ['message' => 'Course retrieved successfully', 'data' => $courses->toArray()];
     }
 }

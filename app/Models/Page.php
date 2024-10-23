@@ -28,7 +28,6 @@ class Page extends Model
         });
     }
 
-
     protected static function generateUniqueSlug($title)
     {
        
