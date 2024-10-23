@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Services\Course\CourseService;
 use App\Http\Requests\Course\CreateCourseRequest;
 use App\Http\Requests\Course\UpdateCourseRequest;
-use Symfony\Component\HttpFoundation\Response;
 
 
 class CourseController extends Controller
@@ -21,55 +20,36 @@ class CourseController extends Controller
 
     public function index()
     {
-        $Response = $this->courseService->index();
-        return ApiResponse::success(
-            message: $Response['message'],
-            data: $Response['body']
-        );
+        $response = $this->courseService->index();
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
+    }
+    public function getCourseBySlug($slug)
+    {
+        $response = $this->courseService->getCourseBySlug($slug);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function store(CreateCourseRequest $request)
     {
-        $Response = $this->courseService->store($request);
-        return ApiResponse::success(
-            message: $Response['message'],
-            data: $Response['body']
-        );
-    }
-
-
-    public function show($slug)
-    {
-        $Response = $this->courseService->show($slug);
-        return ApiResponse::success(
-            message: $Response['message'],
-            data: $Response['body']
-        );
+        $response = $this->courseService->store($request);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function update(UpdateCourseRequest $request, $id)
     {
-        $Response = $this->courseService->update($request, $id);
-        return ApiResponse::success(
-            message: $Response['message'],
-            data: $Response['body']
-        );
+        $response = $this->courseService->update($request, $id);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function destroy($id)
     {
 
-        $Response = $this->courseService->destroy($id);
-        return ApiResponse::success(
-            message: $Response['message']
-        );
+        $response = $this->courseService->destroy($id);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
-    public function getArticlewithCourse($slug)
+    public function getArticleWithCourse($slug)
     {
-        $Response = $this->courseService->getArticlewithCourse($slug);
-        return ApiResponse::success(
-            message: $Response['message'],
-            data: $Response['body']
-        );
+        $response = $this->courseService->getArticleWithCourse($slug);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 }
