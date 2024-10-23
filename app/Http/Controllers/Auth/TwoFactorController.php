@@ -10,16 +10,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TwoFactorController extends Controller
 {
-    private $TwoFactorService;
+    private $twoFactorService;
 
-    public function __construct(TwoFactorService $TwoFactorService)
+    public function __construct(TwoFactorService $twoFactorService)
     {
-        $this->TwoFactorService = $TwoFactorService;
+        $this->twoFactorService = $twoFactorService;
     }
 
     public function verify2FA(Request $request)
     {
-        $response = $this->TwoFactorService->verify2FA($request);
+        $response = $this->twoFactorService->verify2FA($request);
         return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'], statusCode: $response['statusCode'] ?? 200);
     }
 
@@ -31,7 +31,7 @@ class TwoFactorController extends Controller
      */
     public function generateSecretKey(Request $request)
     {
-        $response = $this->TwoFactorService->generateSecretKey($request);
+        $response = $this->twoFactorService->generateSecretKey($request);
         return ApiResponse::success(message: $response['message'], data: $response['data'] ?? [], errors: $response['errors'], statusCode: $response['statusCode'] ?? 200);
     }
 
@@ -43,7 +43,7 @@ class TwoFactorController extends Controller
      */
     public function enable2FA(Request $request)
     {
-        $response = $this->TwoFactorService->enable2FA($request);
+        $response = $this->twoFactorService->enable2FA($request);
         return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? []);
     }
 
@@ -55,7 +55,7 @@ class TwoFactorController extends Controller
      */
     public function disable2FA(Request $request)
     {
-        $response = $this->TwoFactorService->disable2FA($request);;
+        $response = $this->twoFactorService->disable2FA($request);;
         return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? null);
     }
 }

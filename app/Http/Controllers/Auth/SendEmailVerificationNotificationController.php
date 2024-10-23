@@ -4,11 +4,19 @@ namespace App\Http\Controllers\Auth;
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Services\Auth\SendEmailVerificationNotificationService;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class SendEmailVerificationNotificationController extends Controller
 {
+    private $sendEmailVerificationNotificationService;
+
+    public function __construct(SendEmailVerificationNotificationService $sendEmailVerificationNotificationService)
+    {
+        $this->sendEmailVerificationNotificationService = $sendEmailVerificationNotificationService;
+    }
+
     /**
      * Handle the incoming request.
      *
