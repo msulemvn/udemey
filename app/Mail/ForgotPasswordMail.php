@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class TestMail extends Mailable
+class ForgotPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
@@ -31,7 +31,7 @@ class TestMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Test Mail',
+            subject: 'Forgot Password Mail',
         );
     }
 
@@ -42,8 +42,8 @@ class TestMail extends Mailable
      */
     public function build()
     {
-        return $this->view('test')
-            ->subject('Test Mail Subject')
+        return $this->view('forgotPassword')
+            ->subject('Forgot Password Mail Subject')
             ->from('your-email@example.com', 'Your Name');
     }
 
