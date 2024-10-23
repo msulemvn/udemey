@@ -21,7 +21,7 @@ class RegisterService
             ]);
 
             $student = Student::create($studentDTO->toArray());
-            $user->assignRole('Student'); // Assign Student role
+            $user->assignRole(roles: 'Student'); // Assign Student role
 
             return ['message' => 'You are successfully registered', 'data' => $user->toArray()];
         } catch (\Exception $e) {

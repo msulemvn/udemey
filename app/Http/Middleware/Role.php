@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Helpers\ApiResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class Role
@@ -16,16 +15,17 @@ class Role
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $role = null)
+    public function handle($request, Closure $next, ...$roles)
     {
-        if ($role) {
+        if ($roles) {
+            $user = Auth::user();
             /** @var \App\Models\User|null $user */
-            $user =  Auth::user();
-            if (Auth::check() && $user->hasAnyRole($role)) {
+            if (Auth::check() && $user->hasAnyRole($roles)) {
                 return $next($request);
             }
             return ApiResponse::success(message: 'Unauthorized');
+        } else {
+            return $next($request);
         }
-        return $next($request);
     }
 }

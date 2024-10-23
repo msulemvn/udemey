@@ -44,7 +44,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         if ($studentRole)
             $role = 'student';
-        $adminRole->givePermissionTo(
+        $studentRole->givePermissionTo(
             array_column(
                 array_filter(
                     PermissionVariable::allRoutes(),

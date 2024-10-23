@@ -12,12 +12,12 @@ class CommentDTO extends BaseDTO
     public ?string $body;
     public string $status;
 
-    public function __construct(mixed $data)
+    public function __construct($request)
     {
-        $this->parent_comment_id = $data['parentCommentId'];
-        $this->commentable_id = $data['commentableId'];
-        $this->commentable_type = $data['commentableType'];
-        $this->body =  $data['body'];
-        // $this->status = $data['status'] ?? 'pending';
+        $commentableId = $request->commentableType::where('slug', $request->slug)->first()->id;
+        $this->parent_comment_id = $request['parentCommentId'];
+        $this->commentable_id = $commentableId;
+        $this->commentable_type = $request['commentableType'];
+        $this->body =  $request['body'];
     }
 }
