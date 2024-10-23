@@ -51,6 +51,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Services\Comment\CommentService::class
         );
+
+		$this->app->bind(
+			\App\Services\Auth\ResetPasswordService::class
+		);
     }
 
     /**

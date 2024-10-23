@@ -22,11 +22,9 @@ class CourseService
         foreach ($courses as $course) {
             $course->short_description = json_decode($course->short_description);
             if (!empty($course->thumbnail)) {
-                if (filter_var($course->thumbnail, FILTER_VALIDATE_URL)) {
-                    $course->thumbnail = $course->thumbnail;
-                } else {
-                    $course->thumbnail = asset('storage/' . $course->thumbnail);
-                }
+                $course->thumbnail = filter_var($course->thumbnail, FILTER_VALIDATE_URL)
+                    ? $course->thumbnail
+                    : asset('storage/' . $course->thumbnail);
             } else {
                 $course->thumbnail = null;
             }
@@ -51,11 +49,9 @@ class CourseService
             ];
         }
         if (!empty($course->thumbnail)) {
-            if (filter_var($course->thumbnail, FILTER_VALIDATE_URL)) {
-                $course->thumbnail = $course->thumbnail;
-            } else {
-                $course->thumbnail = asset('storage/' . $course->thumbnail);
-            }
+            $course->thumbnail = filter_var($course->thumbnail, FILTER_VALIDATE_URL)
+                ? $course->thumbnail
+                : asset('storage/' . $course->thumbnail);
         } else {
             $course->thumbnail = null;
         }
