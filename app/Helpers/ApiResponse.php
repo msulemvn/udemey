@@ -47,7 +47,7 @@ class ApiResponse
     {
         if ($request && $exception) {
             $dto = new ErrorLogsDTO([
-                'request' => $request,
+                'request' => $request->$request,
                 'exception' => $exception,
                 'function' => debug_backtrace()[1]['function'],
             ]);
