@@ -78,7 +78,6 @@ class PageService
             return ApiResponse::error(request: $request, exception: $e);
         }
     }
->>>>>>> f858753 (response is optimized now)
 
     public function destroy(int $id)
     {
