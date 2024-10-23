@@ -16,10 +16,10 @@ class StoreCommentRequest extends BaseRequest
     public function rules()
     {
         return [
-            'commentableId' => 'required|integer',
             'commentableType' => ['nullable', 'string', new ClassExists],
+            'slug' => 'nullable|string|exists:articles,slug',
             'parentCommentId' => 'nullable|integer',
-            'body' => 'required|string|min:5',
+            'body' => 'required|string|min:1',
         ];
     }
 
@@ -32,10 +32,10 @@ class StoreCommentRequest extends BaseRequest
     public function messages()
     {
         return [
-            'commentableId.required' => 'Commentable id is required',
             'commentableType.required' => 'Commentable type is required',
+            'slug.exists' => 'Invalid slug',
             'body.required' => 'Comment body is required',
-            'body.min' => 'Comment body must be at least 5 characters',
+            'body.min' => 'Comment body must be at least 1 character',
         ];
     }
 
@@ -49,7 +49,7 @@ class StoreCommentRequest extends BaseRequest
         $this->merge([
             'commentableType' => $this->route('commentableType') ?
                 'App\\Models\\' . Str::studly(Str::singular($this->route('commentableType'))) : null,
-            'parentCommentId' => $this->route('parentCommentId'),
+            'slug' => $this->route(param: 'slug'),
         ]);
     }
 }

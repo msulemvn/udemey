@@ -22,9 +22,11 @@ class Permission
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Allow access to public routes
-        if (in_array($request->path(), PermissionVariable::publicRoutes())) {
-            return $next($request);
+        //Allow access to public routes
+        foreach (PermissionVariable::publicRoutes() as $route) {
+            if (fnmatch($route, $request->path())) {
+                return $next($request);
+            }
         }
 
         $user = Auth::user();

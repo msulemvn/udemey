@@ -16,7 +16,7 @@ class DestroyCommentRequest extends BaseRequest
     public function rules()
     {
         return [
-            'commentId' => 'required|integer',
+            'slug' => 'nullable|string|exists:articles,slug',
             'commentableType' => ['nullable', 'string', new ClassExists],
         ];
     }
@@ -30,8 +30,8 @@ class DestroyCommentRequest extends BaseRequest
     public function messages()
     {
         return [
-            'commentId.required' => 'Comment id is required',
             'commentableType.required' => 'Commentable type is required',
+            'slug.exists' => 'Invalid slug',
         ];
     }
 
@@ -45,7 +45,7 @@ class DestroyCommentRequest extends BaseRequest
         $this->merge([
             'commentableType' => $this->route('commentableType') ?
                 'App\\Models\\' . Str::studly(Str::singular($this->route('commentableType'))) : null,
-            'commentId' => $this->route('commentId'),
+            'slug' => $this->route(param: 'slug'),
         ]);
     }
 }

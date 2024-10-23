@@ -16,9 +16,9 @@ class UpdateCommentRequest extends BaseRequest
     public function rules()
     {
         return [
-            'commentId' => 'required|integer',
             'commentableType' => ['nullable', 'string', new ClassExists],
-            'status' => 'required|in:pending,approved,rejected,suleman',
+            'slug' => 'nullable|string|exists:articles,slug',
+            'status' => 'required|in:pending,approved,rejected',
         ];
     }
 
@@ -32,6 +32,7 @@ class UpdateCommentRequest extends BaseRequest
     {
         return [
             'commentableType.required' => 'Commentable type is required',
+            'slug.exists' => 'Invalid slug',
         ];
     }
 
@@ -45,7 +46,7 @@ class UpdateCommentRequest extends BaseRequest
         $this->merge([
             'commentableType' => $this->route('commentableType') ?
                 'App\\Models\\' . Str::studly(Str::singular($this->route('commentableType'))) : null,
-            'commentId' => $this->route('commentId'),
+            'slug' => $this->route(param: 'slug'),
         ]);
     }
 }

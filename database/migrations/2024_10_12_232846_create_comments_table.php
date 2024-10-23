@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('body');
             $table->unsignedBigInteger('parent_comment_id')->nullable();
             $table->foreign('parent_comment_id')->references('id')->on('comments');
-            $table->enum('status', ['approved', 'rejected', 'pending'])->default('pending');
+            $table->enum('status', ['approved', 'rejected', 'pending'])->default('approved');
             $table->timestamps();
             $table->softDeletes();
             $table->index(['commentable_id', 'commentable_type']);

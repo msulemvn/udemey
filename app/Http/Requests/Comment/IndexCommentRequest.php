@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Comment;
 
-use App\Http\Requests\BaseRequest;
 use App\Rules\ClassExists;
 use Illuminate\Support\Str;
+use App\Http\Requests\BaseRequest;
 
 class IndexCommentRequest extends BaseRequest
 {
@@ -16,8 +16,8 @@ class IndexCommentRequest extends BaseRequest
     public function rules()
     {
         return [
-            'commentableId' => 'nullable|integer',
             'commentableType' => ['nullable', 'string', new ClassExists],
+            'slug' => 'nullable|string|exists:articles,slug',
         ];
     }
 
@@ -31,6 +31,7 @@ class IndexCommentRequest extends BaseRequest
     {
         return [
             'commentableType.in' => 'Invalid commentable type',
+            'slug.exists' => 'Invalid slug',
         ];
     }
 
@@ -44,7 +45,7 @@ class IndexCommentRequest extends BaseRequest
         $this->merge([
             'commentableType' => $this->route('commentableType') ?
                 'App\\Models\\' . Str::studly(Str::singular($this->route('commentableType'))) : null,
-            'commentableId' => $this->route('commentableId'),
+            'slug' => $this->route(param: 'slug'),
         ]);
     }
 }
