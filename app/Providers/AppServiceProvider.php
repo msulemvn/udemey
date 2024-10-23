@@ -52,17 +52,17 @@ class AppServiceProvider extends ServiceProvider
             \App\Services\Comment\CommentService::class
         );
 
-		$this->app->bind(
-			\App\Services\Auth\ResetPasswordService::class
-		);
+        $this->app->bind(
+            \App\Services\Auth\ResetPasswordService::class
+        );
 
-		$this->app->bind(
-			\App\Services\Auth\SendPasswordResetLinkService::class
-		);
+        $this->app->bind(
+            \App\Services\Auth\SendPasswordResetLinkService::class
+        );
 
-		$this->app->bind(
-			\App\Services\Auth\SendEmailVerificationNotificationService::class
-		);
+        $this->app->bind(
+            \App\Services\Auth\SendEmailVerificationNotificationService::class
+        );
     }
 
     /**
@@ -72,8 +72,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        ResetPassword::createUrlUsing(function ($notifiable, string $token) {
-            return 'http://localhost:8080/reset-password?email=' . $notifiable->getEmailForPasswordReset() . '&token=' . $token;
-        });
+        //
     }
 }
