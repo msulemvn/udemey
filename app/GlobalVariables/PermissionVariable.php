@@ -167,7 +167,7 @@ class PermissionVariable
     ];
 
     public static array $canPurchase = [
-        'path' => 'purchase-course',
+        'path' => 'purchase',
         'permission' => 'User can purchase course',
         'roles' => ['student'],
     ];
