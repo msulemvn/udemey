@@ -21,54 +21,35 @@ class CourseController extends Controller
     public function index()
     {
         $response = $this->courseService->index();
-        return ApiResponse::success(
-            message: $response['message'],
-            data: $response['body']
-        );
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
+    }
+    public function getCourseBySlug($slug)
+    {
+        $response = $this->courseService->getCourseBySlug($slug);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function store(CreateCourseRequest $request)
     {
         $response = $this->courseService->store($request);
-        return ApiResponse::success(
-            message: $response['message'],
-            data: $response['body']
-        );
-    }
-
-
-    public function show($slug)
-    {
-        $response = $this->courseService->show($slug);
-        return ApiResponse::success(
-            message: $response['message'],
-            data: $response['body']
-        );
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function update(UpdateCourseRequest $request, $id)
     {
         $response = $this->courseService->update($request, $id);
-        return ApiResponse::success(
-            message: $response['message'],
-            data: $response['body']
-        );
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function destroy($id)
     {
 
         $response = $this->courseService->destroy($id);
-        return ApiResponse::success(
-            message: $response['message']
-        );
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
     public function getArticleWithCourse($slug)
     {
         $response = $this->courseService->getArticleWithCourse($slug);
-        return ApiResponse::success(
-            message: $response['message'],
-            data: $response['body']
-        );
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 }

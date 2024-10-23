@@ -22,36 +22,37 @@ class CourseCategoryController extends Controller
     public function index()
     {
 
-        $courseCategories = $this->courseCategoryService->index();
-        return ApiResponse::success(message: 'All course categories retrieved successfully', data: $courseCategories->toArray());
+        $response = $this->courseCategoryService->index();
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function show($id)
     {
-        $courseCategory = $this->courseCategoryService->show($id);
-        return ApiResponse::success(message: 'Course category retrieved successfully', data: $courseCategory->toArray());
+        $response = $this->courseCategoryService->show($id);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function store(CreateCourseCategoryRequest $request)
     {
-        $courseCategory = $this->courseCategoryService->store($request);
-        return ApiResponse::success(message: 'course categories created successfully', data: $courseCategory->toArray(), statusCode: Response::HTTP_CREATED);
+        $response = $this->courseCategoryService->store($request);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function update(UpdateCourseCategoryRequest $request, $id)
     {
-        $courseCategory = $this->courseCategoryService->update($request, $id);
-        return ApiResponse::success(message: 'Course category updated successfully', data: $courseCategory->toArray());
+        $response = $this->courseCategoryService->update($request, $id);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function destroy($id)
     {
-        return $this->courseCategoryService->destroy($id);
+        $response = $this->courseCategoryService->destroy($id);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function getCourseWithCourseCategories($id)
     {
-        $courseCategory = $this->courseCategoryService->getCourseWithCourseCategories($id);
-        return ApiResponse::success(message: 'Course retrieved successfully', data: $courseCategory->Course->toArray());
+        $response = $this->courseCategoryService->getCourseWithCourseCategories($id);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 }
