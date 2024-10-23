@@ -16,7 +16,6 @@ class ResetPasswordService
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
                 $user->forceFill([
-                    'password' => Hash::make($request->password),
                     'remember_token' => Str::random(60),
                 ])->save();
                 event(new PasswordReset($user));

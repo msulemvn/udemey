@@ -55,6 +55,14 @@ class AppServiceProvider extends ServiceProvider
 		$this->app->bind(
 			\App\Services\Auth\ResetPasswordService::class
 		);
+
+		$this->app->bind(
+			\App\Services\Auth\SendPasswordResetLinkService::class
+		);
+
+		$this->app->bind(
+			\App\Services\Auth\SendEmailVerificationNotificationService::class
+		);
     }
 
     /**
