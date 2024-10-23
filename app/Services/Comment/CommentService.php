@@ -34,7 +34,7 @@ class CommentService
      * @param  mixed  $request
      * @return mixed
      */
-    public function store($request): array|JsonResponse: array|JsonResponse
+    public function store($request)
     {
         try {
             $user = Auth::user(); // Get the authenticated user
