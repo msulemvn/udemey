@@ -13,6 +13,6 @@ Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::controller(CourseCategoryController::class)->group(function () {
         Route::post('/create-course-category', 'store');
         Route::put('/update-course-category/{id}', 'update');
-        Route::delete('/course-categories/{id}', 'destroy');
+        Route::delete('/delete-course-category/{id}', 'destroy');
     });
 });
