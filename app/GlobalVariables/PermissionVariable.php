@@ -75,9 +75,8 @@ class PermissionVariable
         'permission' => 'User can see comments',
         'roles' => ['admin', 'student'],
         'prefix' => 'api/*/*',
-        'postfix' => '*',
     ];
-
+    // 'postfix' => '*',
     public static array $postComment = [
         'path' => 'post-comment',
         'permission' => 'User can post comment',
