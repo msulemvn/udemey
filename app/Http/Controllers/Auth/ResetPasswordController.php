@@ -42,5 +42,10 @@ class ResetPasswordController extends Controller
         // SendTestMail::dispatch($data);
 
         // return response()->json(['message' => 'Mail sent successfully!']);
+
+
+        // ResetPassword::createUrlUsing(function ($notifiable, string $token) {
+        //     return 'http://localhost:8080/reset-password?email=' . $notifiable->getEmailForPasswordReset() . '&token=' . $token;
+        // });
     }
 }
