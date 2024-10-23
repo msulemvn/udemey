@@ -12,8 +12,8 @@ Route::controller(PageController::class)->group(function () {
 Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::controller(PageController::class)->group(function () {
         Route::post('/create-page', 'store');
-        Route::post('/update-page/{pageId}', 'update');
-        Route::delete('/delete-page/{pageId}', 'destroy');
-        Route::post('/restore-page/{pageId}', 'restore');
+        Route::post('/update-page/{id}', 'update');
+        Route::delete('/delete-page/{id}', 'destroy');
+        Route::post('/restore-page/{id}', 'restore');
     });
 });
