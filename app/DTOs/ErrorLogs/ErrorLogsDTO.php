@@ -16,7 +16,7 @@ class ErrorLogsDTO extends BaseDTO
 
     public function __construct($data)
     {
-        $this->request_log_id = $data['request']->request_log_id;
+        $this->request_log_id = $data['request']->request;
         $this->line_number = $data['exception']->getLine();
         $this->function = $data['function'];
         $this->file = $data['exception']->getFile();

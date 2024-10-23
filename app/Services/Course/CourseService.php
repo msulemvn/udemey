@@ -117,9 +117,10 @@ class CourseService
                 Storage::disk('public')->delete($course->thumbnail);
             }
             $course->delete();
-            return ApiResponse::success(
-                message: 'Deleted the course successfully'
-            );
+
+            return [
+                'message' => 'Deleted the course successfully',
+            ];
         } catch (\Exception $e) {
             return ApiResponse::error(request: $request, exception: $e);
         }
