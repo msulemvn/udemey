@@ -14,109 +14,75 @@ class ArticleService
 {
     public function getAllArticles()
     {
-        try {
-            $articles = Article::all();
 
-            // Add image URL to each article
-            foreach ($articles as $article) {
-                if ($article->image_path) {
-                    $article->image_path = asset('storage/' . $article->image_path);
-                } else {
-                    $article->image_path = null;
-                }
+        $articles = Article::all();
+
+        // Add image URL to each article
+        foreach ($articles as $article) {
+            if ($article->image_path) {
+                $article->image_path = asset('storage/' . $article->image_path);
+            } else {
+                $article->image_path = null;
             }
-
-            return ApiResponse::success(data: ['articles' => $articles]);
-        } catch (Exception $e) {
-            return ApiResponse::error(
-                message: 'Failed to retrieve articles',
-                exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-            );
         }
+        return ['data' => ['articles' => $articles]];
     }
 
     public function createArticle($request)
     {
         try {
-
+            // Initialize the DTO and handle the request
             $dto = new ArticleDTO($request);
+
+            // Create the article from the DTO
             $article = Article::create($dto->toArray());
 
-            $article->image_path = $article->image_path ? asset('storage/' . $article->image_path) : null;
+            // Set the image URL if the image path exists
+            $article->image_url = $article->image_path ? asset('storage/' . $article->image_path) : null;
 
-            return ApiResponse::success(data: ['article' => $article]);
+            // Return response with article data and image URL
+            return [
+                'message' => 'Article created successfully',
+                'data' => ['article' => $article],
+                'statusCode' => Response::HTTP_CREATED
+            ];
         } catch (Exception $e) {
             return ApiResponse::error(
-                message: 'Failed to create article',
+                request: $request,
                 exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
+
 
     public function getArticleById($id)
     {
-        try {
-            $article = Article::find($id);
-            if (!$article) {
-                return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
-            }
-
-            // Generate image URL and base64 image
-            $article->image_url = $article->image_path ? asset('storage/' . $article->image_path) : null;
-
-            if ($article->image_path) {
-                $imagePath = storage_path('app/public/' . $article->image_path);
-                if (file_exists($imagePath)) {
-                    $imageData = file_get_contents($imagePath);
-                    $article->image = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . base64_encode($imageData);
-                }
-            } else {
-                $article->image = null;
-            }
-
-            return ApiResponse::success(data: ['article' => $article]);
-        } catch (Exception $e) {
-            return ApiResponse::error(
-                message: 'Failed to retrieve article',
-                exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+        $article = Article::find($id);
+        if (!$article) {
+            return ['message' => 'Article not found', 'statusCode' => Response::HTTP_NOT_FOUND];
         }
+
+        // Add image URL to the article
+        $article->image_url = $article->image_path ? asset('storage/' . $article->image_path) : null;
+
+        return ['data' => ['article' => $article]];
     }
+
 
     public function getArticleBySlug($slug)
     {
-        try {
-            $article = Article::where('slug', $slug)->first();
+        $article = Article::where('slug', $slug)->first();
 
-            if (!$article) {
-                return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
-            }
-
-            // Generate image URL and base64 image
-            $article->image_url = $article->image_path ? asset('storage/' . $article->image_path) : null;
-
-            if ($article->image_path) {
-                $imagePath = storage_path('app/public/' . $article->image_path);
-                if (file_exists($imagePath)) {
-                    $imageData = file_get_contents($imagePath);
-                    $article->image = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . base64_encode($imageData);
-                }
-            } else {
-                $article->image = null;
-            }
-
-            return ApiResponse::success(data: ['article' => $article]);
-        } catch (Exception $e) {
-            return ApiResponse::error(
-                message: 'Failed to retrieve article',
-                exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+        if (!$article) {
+            return ['message' => 'Article Not Found', 'statusCode' => Response::HTTP_NOT_FOUND];
         }
+
+        // Add image URL to the article
+        $article->image_url = $article->image_path ? asset('storage/' . $article->image_path) : null;
+
+        return ['data' => ['article' => $article]];
     }
+
 
     public function updateArticle($request, $id)
     {
@@ -124,69 +90,39 @@ class ArticleService
             $article = Article::find($id);
 
             if (!$article) {
-                return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
+                return ['message' => 'Article Not Found', 'statusCode' => Response::HTTP_NOT_FOUND];
             }
 
-            $dto = new ArticleDTO($request->validated());
-
-            if (isset($dto->title)) {
-                $dto->slug = $this->checkSlugExists($dto->title, $id);
-            }
-
-            // Handle image update
-            if ($request->hasFile('image')) {
-                if ($article->image_path) {
-                    Storage::disk('public')->delete($article->image_path);
-                }
-
-                $timestamp = now()->format('YmdHs');
-                $originalFileName = pathinfo($request->file('image')->getClientOriginalName(), PATHINFO_FILENAME);
-                $extension = $request->file('image')->getClientOriginalExtension();
-                $newFileName = Str::slug($originalFileName) . '_' . $timestamp . '.' . $extension;
-
-                $request->file('image')->storeAs('uploads', $newFileName, 'public');
-                $dto->image_path = 'uploads/' . $newFileName;
-            }
+            // Pass the original $request instead of validated array
+            $dto = new ArticleDTO($request);
 
             $article->update($dto->toArray());
 
             $article->image_url = $article->image_path ? asset('storage/' . $article->image_path) : null;
 
-            return ApiResponse::success(
-                data: ['article' => $article],
-                message: 'Article updated successfully'
-            );
+            return ['data' => ['article' => $article], 'message' => 'Article updated successfully'];
         } catch (Exception $e) {
             return ApiResponse::error(
-                message: 'Failed to update article',
+                request: $request,
                 exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
 
+
     public function deleteArticle($id)
     {
-        try {
-            $article = Article::find($id);
+        $article = Article::find($id);
 
-            if (!$article) {
-                return ApiResponse::error('Article not found', statusCode: Response::HTTP_NOT_FOUND);
-            }
-
-            if ($article->image_path) {
-                Storage::disk('public')->delete($article->image_path);
-            }
-
-            $article->delete();
-
-            return ApiResponse::success(message: 'Article deleted successfully');
-        } catch (Exception $e) {
-            return ApiResponse::error(
-                message: 'Failed to delete article',
-                exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+        if (!$article) {
+            return ['message' => 'Article Not Found', 'statusCode' => Response::HTTP_NOT_FOUND];
         }
+
+        if ($article->image_path) {
+            Storage::disk('public')->delete($article->image_path);
+        }
+
+        $article->delete();
+        return ['message' => 'Article deleted successfully'];
     }
 }

@@ -56,7 +56,6 @@ class ApiResponse
         }
 
         if (debug_backtrace()[1]['function'] == 'render') {
-            unset($response['errors']['render']);
             $response['errors']['server error'] = ['Something went wrong'];
         }
 
