@@ -5,9 +5,7 @@ use App\Http\Controllers\Category\CategoryController;
 
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories', 'index');
-    // Route::get('/category/{id}', 'getCategoryById');
     Route::get('/categories/{id}', 'getCategoryById');
-    // Route::get('/category/{id}/course-categories', 'getCategoryCourseCategories');
     Route::get('/categories/{id}/course-categories', 'getCategoryCourseCategories');
 });
     
