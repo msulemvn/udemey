@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Jobs\SendTestMail;
 use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -30,5 +31,16 @@ class ResetPasswordController extends Controller
     {
         $response = $this->resetPasswordService->resetPassword($request);
         return  ApiResponse::success(message: $response['message']);
+
+        // $data = [
+        //     'name' => 'John Doe',
+        //     'email' => 'john.doe@example.com',
+        //     'message' => 'Hello, this is a custom mail!',
+        // ];
+
+        // // Dispatch the job
+        // SendTestMail::dispatch($data);
+
+        // return response()->json(['message' => 'Mail sent successfully!']);
     }
 }
