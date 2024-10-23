@@ -5,21 +5,24 @@ namespace App\Services\Comment;
 use App\Models\Comment;
 use App\Helpers\ApiResponse;
 use App\DTOs\Comment\CommentDTO;
+use App\Models\Article;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class CommentService
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return mixed
+     * Summary of index
+     * @param mixed $request
+     * @return array[]
      */
     public function index($request)
     {
-        return ['data' =>  Comment::where('commentable_type', $request->commentableType)
-            ->when($request->commentableId, function ($query) use ($request) {
-                $query->where('id', $request->commentableId);
+        //handled in validation if slug exists
+        $commentableId = $request->commentableType::where('slug', $request->slug)->first()->id;
+        return ['data' =>  Comment::where('commentable_type', operator: $request->commentableType)
+            ->when($request->commentId, function ($query) use ($request) {
+                $query->where('id', $request->commentId);
             })
             ->get()
             ->toArray()];
@@ -35,9 +38,8 @@ class CommentService
     {
         try {
             $user = Auth::user(); // Get the authenticated user
-            $commentDTO = new CommentDTO($request);
             /** @var \App\Models\User|null $user */
-            $data = $user->comments()->create($commentDTO->toArray())->toArray();
+            $data = $user->comments()->create((new CommentDTO($request))->toArray())->toArray();
             return ['data' => $data];
         } catch (\Exception $e) {
             return ApiResponse::error(request: $request, exception: $e);
