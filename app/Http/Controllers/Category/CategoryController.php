@@ -21,36 +21,36 @@ class CategoryController extends Controller
     public function index()
     {
         $response = $this->categoryService->index();
-        return ApiResponse::success(message: $response['message'], data: $response['body']);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
+    }
+
+    public function getCategoryById($id)
+    {
+        $response = $this->categoryService->getCategoryById($id);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function store(CreateCategoryRequest $request)
     {
         $response = $this->categoryService->store($request);
-        return ApiResponse::success(message: $response['message'], data: $response['body']);
-    }
-
-    public function show($id)
-    {
-        $response = $this->categoryService->show($id);
-        return ApiResponse::success(message: $response['message'], data: $response['body']);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function update(UpdateCategoryRequest $request, $id)
     {
         $response = $this->categoryService->update($request, $id);
-        return ApiResponse::success(message: $response['message'], data: $response['body']);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function destroy($id)
     {
         $response = $this->categoryService->destroy($id);
-        return ApiResponse::success(message: $response['message'], data: $response['body']);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function getCategoryCourseCategories($id)
     {
         $response = $this->categoryService->getCategoryCourseCategories($id);
-        return ApiResponse::success(message: $response['message'], data: $response['body']);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 }

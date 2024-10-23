@@ -28,7 +28,7 @@ class CourseSeeder extends Seeder
                 ],
                 'price' => 99.99,
                 'discounted_price' => 49.99,
-                'thumbnail' => 'https://example.com/thumbnail/laravel.png', // Replace with a real image URL
+                'thumbnail' => 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png', // Replace with a real image URL
                 'user_id' => 1,
                 'course_categories_id' => 1,
                 'duration' => 52,
@@ -44,7 +44,7 @@ class CourseSeeder extends Seeder
                 ],
                 'price' => 129.99,
                 'discounted_price' => 79.99,
-                'thumbnail' => 'https://example.com/thumbnail/php.png', // Replace with a real image URL
+                'thumbnail' => 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png', // Replace with a real image URL
                 'user_id' => 1,
                 'course_categories_id' => 1,
                 'duration' => 72,
@@ -60,7 +60,7 @@ class CourseSeeder extends Seeder
                 ],
                 'price' => 89.99,
                 'discounted_price' => 49.99,
-                'thumbnail' => 'https://via.placeholder.com/150/0000FF/FFFFFF?text=JavaScript', // Replace with a real image URL
+                'thumbnail' => 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png', // Replace with a real image URL
                 'user_id' => 1,
                 'course_categories_id' => 1,
                 'duration' => 45,
@@ -76,7 +76,7 @@ class CourseSeeder extends Seeder
                 ],
                 'price' => 119.99,
                 'discounted_price' => 69.99,
-                'thumbnail' => 'https://via.placeholder.com/150/FF0000/FFFFFF?text=Python', // Replace with a real image URL
+                'thumbnail' => 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png',
                 'user_id' => 1,
                 'course_categories_id' => 1,
                 'duration' => 60,
@@ -92,7 +92,7 @@ class CourseSeeder extends Seeder
                 ],
                 'price' => 109.99,
                 'discounted_price' => 59.99,
-                'thumbnail' => 'https://via.placeholder.com/150/FFFF00/000000?text=React', // Replace with a real image URL
+                'thumbnail' => 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png',
                 'user_id' => 1,
                 'course_categories_id' => 2,
                 'duration' => 55,
@@ -108,7 +108,7 @@ class CourseSeeder extends Seeder
                 ],
                 'price' => 89.99,
                 'discounted_price' => 49.99,
-                'thumbnail' => 'https://via.placeholder.com/150/00FF00/000000?text=API', // Replace with a real image URL
+                'thumbnail' => 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png', // Replace with a real image URL
                 'user_id' => 1,
                 'course_categories_id' => 2,
                 'duration' => 50,
@@ -124,7 +124,7 @@ class CourseSeeder extends Seeder
                 ],
                 'price' => 99.99,
                 'discounted_price' => 59.99,
-                'thumbnail' => 'https://via.placeholder.com/150/FF00FF/FFFFFF?text=Django', // Replace with a real image URL
+                'thumbnail' => 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png', // Replace with a real image URL
                 'user_id' => 1,
                 'course_categories_id' => 3,
                 'duration' => 70,
@@ -140,7 +140,7 @@ class CourseSeeder extends Seeder
                 ],
                 'price' => 79.99,
                 'discounted_price' => 39.99,
-                'thumbnail' => 'https://via.placeholder.com/150/0000FF/FFFFFF?text=CSS', // Replace with a real image URL
+                'thumbnail' => 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png', // Replace with a real image URL
                 'user_id' => 1,
                 'course_categories_id' => 4,
                 'duration' => 40,
@@ -156,7 +156,7 @@ class CourseSeeder extends Seeder
                 ],
                 'price' => 69.99,
                 'discounted_price' => 29.99,
-                'thumbnail' => 'https://via.placeholder.com/150/FFFF00/000000?text=SQL', // Replace with a real image URL
+                'thumbnail' => 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png', // Replace with a real image URL
                 'user_id' => 1,
                 'course_categories_id' => 5,
                 'duration' => 45,
@@ -172,7 +172,7 @@ class CourseSeeder extends Seeder
                 ],
                 'price' => 109.99,
                 'discounted_price' => 69.99,
-                'thumbnail' => 'https://via.placeholder.com/150/00FFFF/000000?text=Flutter', // Replace with a real image URL
+                'thumbnail' => 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png', // Replace with a real image URL
                 'user_id' => 1,
                 'course_categories_id' => 6,
                 'duration' => 80,
@@ -188,7 +188,7 @@ class CourseSeeder extends Seeder
                 ],
                 'price' => 89.99,
                 'discounted_price' => 49.99,
-                'thumbnail' => 'https://via.placeholder.com/150/FF8800/FFFFFF?text=Design', // Replace with a real image URL
+                'thumbnail' => 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png', // Replace with a real image URL
                 'user_id' => 1,
                 'course_categories_id' => 7,
                 'duration' => 50,
@@ -204,7 +204,7 @@ class CourseSeeder extends Seeder
                 ],
                 'price' => 99.99,
                 'discounted_price' => 59.99,
-                'thumbnail' => 'https://via.placeholder.com/150/FF4444/FFFFFF?text=Security', // Replace with a real image URL
+                'thumbnail' => 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png', // Replace with a real image URL
                 'user_id' => 1,
                 'course_categories_id' => 8,
                 'duration' => 75,
@@ -220,7 +220,7 @@ class CourseSeeder extends Seeder
                 ],
                 'price' => 149.99,
                 'discounted_price' => 99.99,
-                'thumbnail' => 'https://via.placeholder.com/150/000000/FFFFFF?text=Blockchain', // Replace with a real image URL
+                'thumbnail' => 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png', // Replace with a real image URL
                 'user_id' => 1,
                 'course_categories_id' => 2,
                 'duration' => 65,
@@ -236,7 +236,7 @@ class CourseSeeder extends Seeder
                 ],
                 'price' => 129.99,
                 'discounted_price' => 79.99,
-                'thumbnail' => 'https://via.placeholder.com/150/00FF44/FFFFFF?text=AI', // Replace with a real image URL
+                'thumbnail' => 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png', // Replace with a real image URL
                 'user_id' => 1,
                 'course_categories_id' => 3,
                 'duration' => 70,
@@ -252,7 +252,7 @@ class CourseSeeder extends Seeder
                 ],
                 'price' => 99.99,
                 'discounted_price' => 49.99,
-                'thumbnail' => 'https://via.placeholder.com/150/FF0077/FFFFFF?text=Cloud', // Replace with a real image URL
+                'thumbnail' => 'https://foundr.com/wp-content/uploads/2021/09/Best-online-course-platforms.png', // Replace with a real image URL
                 'user_id' => 1,
                 'course_categories_id' => 9,
                 'duration' => 60,
