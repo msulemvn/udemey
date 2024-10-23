@@ -6,186 +6,113 @@ use App\Models\Course;
 use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use App\DTOs\Course\CourseDTO;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class CourseService
 {
+    /************************************ Get all course  ************************************/
+
     public function index()
     {
-        try {
-            $courses = Course::all();
+        $courses = Course::all();
 
-
-            foreach ($courses as $course) {
-                $course->short_description = json_decode($course->short_description);
+        foreach ($courses as $course) {
+            $course->short_description = json_decode($course->short_description);
+            if (!empty($course->thumbnail)) {
+                if (filter_var($course->thumbnail, FILTER_VALIDATE_URL)) {
+                    $course->thumbnail = $course->thumbnail;
+                } else {
+                    $course->thumbnail = asset('storage/' . $course->thumbnail);
+                }
+            } else {
+                $course->thumbnail = null;
             }
-            return [
-                'message' => 'All courses',
-                'body' => $courses->toArray(),
-            ];
-        } catch (\Exception $e) {
-            // return ApiResponse::error(
-            //     exception: $e,
-            // );
-            dd();
         }
+
+        return [
+            'message' => 'All courses retrieved successfully',
+            'data' => $courses->toArray()
+        ];
     }
+
+    /************************************ specified course  ************************************/
+
+    public function getCourseBySlug($slug)
+    {
+        $course = Course::where('slug', $slug)->first();
+
+        if (!$course) {
+            return [
+                'errors' => ['course' => ['The course with the given slug is not found.']],
+                'statusCode' => Response::HTTP_NOT_FOUND
+            ];
+        }
+        if (!empty($course->thumbnail)) {
+            if (filter_var($course->thumbnail, FILTER_VALIDATE_URL)) {
+                $course->thumbnail = $course->thumbnail;
+            } else {
+                $course->thumbnail = asset('storage/' . $course->thumbnail);
+            }
+        } else {
+            $course->thumbnail = null;
+        }
+
+        $course->short_description = json_decode($course->short_description);
+        return ['message' => 'Course fetched successfully', 'data' => $course->toArray()];
+    }
+
+    /************************************ Create course  ************************************/
 
     public function store($request)
     {
         try {
-            // Handle the thumbnail upload
-            $imagePath = null;
-
-            if ($request->hasFile('thumbnail')) {
-                // Store the image in the public disk and get the storage path
-                $file = $request->file('thumbnail');
-                $timestamp = now()->timestamp;
-                $originalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $extension = $file->getClientOriginalExtension();
-                $newFileName = Str::slug($originalFileName) . '_' . $timestamp . '.' . $extension;
-
-                $imagePath = 'course_image/' . $newFileName;
-                Storage::disk('public')->put($imagePath, file_get_contents($file->getRealPath()));
-
-                // Generate the public URL for the uploaded image using Storage::url or asset
-                $imagePath = Storage::url($imagePath);
-            }
-
-            $slug = $this->generateUniqueSlug($request->get('title'));
-
-            // Prepare the validated data and add additional fields
-            $dtoData = $request->validated();
-            $dtoData['slug'] = $slug;
-            $dtoData['user_id'] = auth()->id();
-            $dtoData['thumbnail'] = $imagePath;
-
-            if (isset($dtoData['short_description'])) {
-                $dtoData['short_description'] = json_encode($dtoData['short_description']);
-            }
-
-            // Use a Data Transfer Object (DTO) to handle the course creation
-            $courseDTO = new CourseDTO($dtoData);
+            $courseDTO = new CourseDTO($request);
             $course = Course::create($courseDTO->toArray());
 
-            return [
-                'message' => 'Course created successfully',
-                'statusCode' => Response::HTTP_CREATED,
-                'body' => $course->toArray(),
-            ];
+            return ['message' => 'Course created successfully', 'data' => $course->toArray(), 'statusCode' => Response::HTTP_CREATED];
         } catch (\Exception $e) {
-            // Return error response if something goes wrong
-            // return ApiResponse::error(
-            //     exception: $e,
-            // );
-            dd();
+            return ApiResponse::error(request: $request, exception: $e);
         }
     }
 
-
-
-    /************************************ specified course  ************************************/
-
-    public function show($slug)
-    {
-        try {
-            $course = Course::where('slug', $slug)->first();
-
-            if (!$course) {
-                return ApiResponse::success(
-                    message: 'Course not found',
-                    errors: ['course' => ['The course with the given slug was not found.']],
-                    statusCode: Response::HTTP_NOT_FOUND
-                );
-            }
-
-            $course->short_description = json_decode($course->short_description);
-            return [
-                'message' => 'Course fetched successfully',
-                'body' => $course->toArray(),
-            ];
-        } catch (\Exception $e) {
-            // return ApiResponse::error(
-            //     exception: $e,
-            // );
-            dd();
-        }
-    }
+    /************************************ Update course  ************************************/
 
     public function update($request, $id)
     {
         try {
             $course = Course::findOrFail($id);
 
-            // Handle the thumbnail upload and deletion of the old one
-            if ($request->hasFile('thumbnail')) {
+            $currentThumbnail = $course->thumbnail;
 
-                // Delete the old thumbnail if it exists
-                if ($course->thumbnail && Storage::disk('public')->exists($course->thumbnail)) {
-                    Storage::disk('public')->delete($course->thumbnail);
-                }
+            $courseUpdateDTO = new CourseDTO($request, $currentThumbnail);
 
-                // Store the new thumbnail and generate a public URL
-                $file = $request->file('thumbnail');
-                $timestamp = now()->timestamp;
-                $originalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $extension = $file->getClientOriginalExtension();
-                $newFileName = Str::slug($originalFileName) . '_' . $timestamp . '.' . $extension;
-
-                $imagePath = 'course_image/' . $newFileName;
-                Storage::disk('public')->put($imagePath, file_get_contents($file->getRealPath()));
-
-                // Update the course thumbnail to the public URL
-                $course->thumbnail = Storage::url($imagePath);
+            if ($request->hasFile('thumbnail') && $currentThumbnail) {
+                Storage::disk('public')->delete($currentThumbnail);
             }
 
-            // Generate a unique slug based on the title
-            $slug = $this->generateUniqueSlug($request->get('title'));
-
-            // Prepare the validated data and add additional fields
-            $dtoData = $request->validated();
-            $dtoData['slug'] = $slug;
-            $dtoData['user_id'] = auth()->id();
-
-            // Preserve the existing thumbnail if no new file is uploaded
-            if (!$request->hasFile('thumbnail')) {
-                $dtoData['thumbnail'] = $course->thumbnail;
-            }
-
-            // Encode the short description to JSON format if it exists
-            if (isset($dtoData['short_description'])) {
-                $dtoData['short_description'] = json_encode($dtoData['short_description']);
-            }
-
-            // Use a Data Transfer Object (DTO) to handle the course update
-            $courseUpdateDTO = new CourseDTO($dtoData);
             $course->update($courseUpdateDTO->toArray());
 
-            // Return success message with the updated course details
+
             return [
                 'message' => 'Course updated successfully',
-                'body' => $course->toArray(),
+                'data' => $course->toArray(),
             ];
         } catch (\Exception $e) {
-            // Return error response if something goes wrong
-            // return ApiResponse::error(
-            //     exception: $e,
-            // );
-            dd();
+            return ApiResponse::error(request: $request, exception: $e);
         }
     }
 
 
-
     /************************************ Remove the specified course ************************************/
 
-    public function destroy($id)
+    public function destroy($request)
     {
         try {
 
-            $course = Course::findOrFail($id);
+            $course = Course::findOrFail($request);
             if ($course->thumbnail && Storage::disk('public')->exists($course->thumbnail)) {
                 Storage::disk('public')->delete($course->thumbnail);
             }
@@ -194,68 +121,37 @@ class CourseService
                 message: 'Deleted the course successfully'
             );
         } catch (\Exception $e) {
-            // return ApiResponse::error(
-            //     exception: $e,
-            // );
-            dd();
+            return ApiResponse::error(request: $request, exception: $e);
         }
     }
 
-
-
-    public function getArticlewithCourse($slug)
+    public function getArticleWithCourse($slug)
     {
         try {
             $course = Course::with('articles')
                 ->where('slug', $slug)
                 ->first();
-
             if (!$course) {
-                return ApiResponse::success(
-                    message: 'Course not found',
-                    errors: ['course' => ['The course with the provided ID was not found.']],
-                    statusCode: Response::HTTP_NOT_FOUND
-                );
+                return [
+                    'errors' => ['course' => ['The course with the provided slug was not found']],
+                    'statusCode' => Response::HTTP_NOT_FOUND
+                ];
             }
 
-            // Check if the course has articles
             if ($course->articles->isEmpty()) {
-                return ApiResponse::success(
-                    message: 'No articles found for this course',
-                    errors: ['articles' => ['This course does not have any articles associated with it.']],
-                    statusCode: Response::HTTP_NOT_FOUND
-                );
+                return [
+                    'errors' => ['articles' => ['This course does not have any articles associated with it.']],
+                    'statusCode' => Response::HTTP_NOT_FOUND
+                ];
             }
+
+
             return [
                 'message' => 'Articles retrieved successfully',
-                'body' => $course->articles->toArray(),
+                'data' => $course->articles->toArray()  // Returning only articles
             ];
         } catch (\Exception $e) {
-            // return ApiResponse::error(
-            //     exception: $e,
-            // );
-            dd();
+            return ApiResponse::error(request: $slug, exception: $e);
         }
-    }
-
-
-    private function generateUniqueSlug($title)
-    {
-        $slug = Str::slug($title, '-');
-
-        $existingSlug = Course::where('slug', $slug)->first();
-
-        if ($existingSlug) {
-            // If slug already exists, append a number to make it unique
-            $count = 1;
-            while ($existingSlug) {
-                $newSlug = $slug . '-' . $count;
-                $existingSlug = Course::where('slug', $newSlug)->first();
-                $count++;
-            }
-            return $newSlug;
-        }
-
-        return $slug;
     }
 }

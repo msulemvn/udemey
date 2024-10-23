@@ -2,16 +2,24 @@
 
 namespace App\Http\Controllers\Comment;
 
+
 use App\Http\Controllers\Controller;
 use App\Helpers\ApiResponse;
+use App\Models\Comment;
 use App\Services\Comment\CommentService;
-use App\Http\Requests\Comment\IndexCommentRequest;
 use App\Http\Requests\Comment\StoreCommentRequest;
 use App\Http\Requests\Comment\UpdateCommentRequest;
 use App\Http\Requests\Comment\DestroyCommentRequest;
 
 class CommentController extends Controller
 {
+    protected $commentService;
+
+    public function __construct(CommentService $commentService)
+    {
+        $this->commentService = $commentService;
+    }
+
     protected $commentService;
 
     public function __construct(CommentService $commentService)

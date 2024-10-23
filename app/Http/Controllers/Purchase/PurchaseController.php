@@ -21,17 +21,12 @@ class PurchaseController extends Controller
     {
 
         $response = $this->purchaseService->index();
-        return ApiResponse::success(
-            message: $response['message'],
-            data: $response['body']
-        );
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     public function checkout(Request $request)
     {
-        $checkoutResponse = $this->purchaseService->checkout($request);
-        return ApiResponse::success(
-            message: $checkoutResponse['message'],
-        );
+        $response = $this->purchaseService->checkout($request);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 }

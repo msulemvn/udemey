@@ -3,67 +3,53 @@
 namespace App\Services\Enrollment;
 
 use App\Models\Enrollment;
-use App\Helpers\ApiResponse;
 use Symfony\Component\HttpFoundation\Response;
+
 
 class EnrollmentService
 {
+    /************************************ Get all Enrollments   ************************************/
+
     public function index()
     {
-        try {
-            $studentId = auth()->id();
 
-            // Fetch all enrolled courses for the student
-            $courses = Enrollment::with('course')
-                ->where('user_id', $studentId)
-                ->get()
-                ->pluck('course');
+        $studentId = auth()->id();
+        $courses = Enrollment::with('course')
+            ->where('user_id', $studentId)
+            ->get()
+            ->pluck('course');
+        if ($courses->isEmpty()) {
             return [
-                'message' => 'Enrolled courses retrieved successfully',
-                'body' => $courses->toArray(),
+                'message' => 'No courses found for this user.',
+                'statusCode' => Response::HTTP_NOT_FOUND
             ];
-        } catch (\Exception $e) {
-            return ApiResponse::error(
-                message: 'Failed to retrieve enrolled courses',
-                errors: ['enrollment' => ['Unable to retrieve courses. Please try again.']],
-                exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-            );
         }
+        return ['data' => $courses->toArray()];
     }
 
-    public function show($slug)
+    /************************************ Get all Enrollments By Slug   ************************************/
+
+    public function getCourseBySlug($slug)
     {
-        try {
-            $studentId = auth()->id();
+        $studentId = auth()->id();
 
-            // Find the specific enrollment
-            $enrollment = Enrollment::with('course')
-                ->where('user_id', $studentId)
-                ->whereHas('course', function ($query) use ($slug) {
-                    $query->where('slug', $slug);
-                })
-                ->first();
-
-            if (!$enrollment) {
-                return ApiResponse::error(
-                    message: 'Course not found',
-                    errors: ['course' => ['The requested course is not found.']],
-                    statusCode: Response::HTTP_NOT_FOUND
-                );
-            }
-            $course = $enrollment->course;
+        // Find the specific enrollment
+        $enrollment = Enrollment::with('course')
+            ->where('user_id', $studentId)
+            ->whereHas('course', function ($query) use ($slug) {
+                $query->where('slug', $slug);
+            })
+            ->first();
+        if (!$enrollment || !$enrollment->course) {
             return [
-                'message' => 'Course retrieved successfully',
-                'body' => $course->toArray(),
+                'errors' => ['course' => ['The course with the given slug is not found for this student.']],
+                'statusCode' => Response::HTTP_NOT_FOUND
+
             ];
-        } catch (\Exception $e) {
-            return ApiResponse::error(
-                message: 'Failed to retrieve course',
-                errors: ['course' => ['Unable to retrieve the course. Please try again.']],
-                exception: $e,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
-            );
         }
+
+        $course = $enrollment->course;
+        $course->short_description = json_decode($course->short_description);
+        return ['data' => $course->toArray()];
     }
 }

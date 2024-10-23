@@ -15,7 +15,8 @@ class UserService
     {
         try {
             $userDTO = new UserDTO($request);
-            $user = User::create($userDTO->toArray()->toArray());
+
+            $user = User::create($userDTO->toArray());
 
             return ['data' => $user->toArray()];
         } catch (\Exception $e) {
@@ -40,9 +41,37 @@ class UserService
         // Update the user's password
         $user->password = $data['new_password'];
         /** @var \App\Models\User|null $user */
+
+        $user->password = $data['new_password'];
+        /** @var \App\Models\User|null $user */
+
         $user->save();
 
         // Return a success response
         return ['message' => 'Password changed successfully'];
+
+    }
+
+    public function profile()
+    {
+        $userId = Auth::user()->id;
+        $user = Auth::user();
+        /** @var \App\Models\User|null $user */
+        $myRole = $user->getRoleNames()[0];
+        if ($myRole == 'admin') {
+            $adminData = User::find($userId)->toArray();
+            $adminData['2fa'] =  ($adminData['google2fa_secret']) ? true : false;
+            unset($adminData['google2fa_secret']);
+        }
+
+        return ['data' => $adminData ?? User::with($myRole)->whereId($userId)->get()->mapWithKeys(function ($user) {
+            $role = $user->getRoleNames()[0];
+            return [
+                'id' => $user->$role->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                '2fa' => ($user->google2fa_secret) ? true : false,
+            ];
+        })->toArray()];
     }
 }
