@@ -76,7 +76,14 @@ class PermissionVariable
         'roles' => ['admin', 'student'],
         'prefix' => 'api/*/*',
     ];
-    // 'postfix' => '*',
+
+    public static array $getCommentsSlug = [
+        'path' => 'comments',
+        'permission' => 'User can see comments',
+        'roles' => ['admin', 'student'],
+        'prefix' => 'api/*/*',
+        'postfix' => '*',
+    ];
     public static array $postComment = [
         'path' => 'post-comment',
         'permission' => 'User can post comment',
@@ -171,6 +178,12 @@ class PermissionVariable
     ];
 
     public static array $getEnrollments = [
+        'path' => 'api/enrollments',
+        'permission' => 'User can see course enrollments',
+        'roles' => ['student'],
+    ];
+
+    public static array $getEnrollmentsSlug = [
         'path' => 'api/enrollments',
         'permission' => 'User can see course enrollments',
         'roles' => ['student'],
@@ -281,6 +294,7 @@ class PermissionVariable
             self::$verify2FA,
             //Comment
             self::$getComments,
+            self::$getCommentsSlug,
             self::$postComment,
             self::$updateComment,
             self::$deleteComment,
@@ -301,6 +315,7 @@ class PermissionVariable
             self::$getPurchases,
             //Enrollment
             self::$getEnrollments,
+            self::$getEnrollmentsSlug,
             //Article
             self::$getArticles,
             self::$getArticle,
