@@ -17,7 +17,6 @@ class PermissionVariable
         'api/courses',
         'api/courses/*',
         'api/get-page-by-slug/*',
-        'get-site-settings',
     ];
 
     public static array $viewProfile = [
@@ -103,38 +102,38 @@ class PermissionVariable
     ];
 
     public static array $createCategory = [
-        'path' => 'create-category',
+        'path' => 'api/create-category',
         'permission' => 'User can create category',
         'roles' => ['admin'],
     ];
 
     public static array $updateCategory = [
-        'path' => 'update-category',
+        'path' => 'api/update-category',
         'permission' => 'User can update category',
         'roles' => ['admin'],
     ];
 
     public static array $deleteCategory = [
-        'path' => 'delete-category',
+        'path' => 'api/delete-category',
         'permission' => 'User can delete category',
         'roles' => ['admin'],
     ];
 
     public static array $createCourseCategory = [
-        'path' => 'create-course-category',
+        'path' => 'api/create-course-category',
         'permission' => 'User can create course category',
         'roles' => ['admin'],
     ];
 
     public static array $updateCourseCategory = [
-        'path' => 'update-course-category',
+        'path' => 'api/update-course-category',
         'permission' => 'User can update course category',
         'roles' => ['admin'],
         'postfix' => '*'
     ];
 
     public static array $deleteCourseCategory = [
-        'path' => 'delete-course-category',
+        'path' => 'api/delete-course-category',
         'permission' => 'User can delete course category',
         'roles' => ['admin'],
         'postfix' => '*'
@@ -142,126 +141,126 @@ class PermissionVariable
 
 
     public static array $createCourse = [
-        'path' => 'create-course',
+        'path' => 'api/create-course',
         'permission' => 'User can create course',
         'roles' => ['admin'],
     ];
 
     public static array $updateCourse = [
-        'path' => 'update-course',
+        'path' => 'api/update-course',
         'permission' => 'User can update course',
         'roles' => ['admin'],
         'postfix' => '*'
     ];
     public static array $deleteCourse = [
-        'path' => 'delete-course',
+        'path' => 'api/delete-course',
         'permission' => 'User can delete course',
         'roles' => ['admin'],
         'postfix' => '*'
     ];
 
     public static array $canPurchase = [
-        'path' => 'purchase-course',
+        'path' => 'api/purchase',
         'permission' => 'User can purchase course',
         'roles' => ['student'],
     ];
 
     public static array $getPurchases = [
-        'path' => 'purchases',
+        'path' => 'api/purchases',
         'permission' => 'User can see purchases',
         'roles' => ['admin'],
     ];
 
     public static array $getEnrollments = [
-        'path' => 'enrollments',
+        'path' => 'api/enrollments',
         'permission' => 'User can see course enrollments',
         'roles' => ['student'],
         'postfix' => '*'
     ];
 
     public static array $getArticles = [
-        'path' => 'articles',
+        'path' => 'api/articles',
         'permission' => 'User can see articles',
         'roles' => ['admin'],
     ];
 
     public static array $getArticle = [
-        'path' => 'articles',
+        'path' => 'api/articles',
         'permission' => 'User can see article',
         'roles' => ['student'],
         'postfix' => '*'
     ];
 
     public static array $createArticle = [
-        'path' => 'create-article',
+        'path' => 'api/create-article',
         'permission' => 'User can create article',
         'roles' => ['admin'],
     ];
 
     public static array $deleteArticle = [
-        'path' => 'delete-article',
+        'path' => 'api/delete-article',
         'permission' => 'User can delete article',
         'roles' => ['admin'],
         'postfix' => '*'
     ];
 
     public static array $updateArticle = [
-        'path' => 'update-article',
+        'path' => 'api/update-article',
         'permission' => 'User can update article',
         'roles' => ['admin'],
         'postfix' => '*'
     ];
     public static array $canSubscribe = [
-        'path' => 'subscribe',
+        'path' => 'api/subscribe',
         'permission' => 'User can subscribe',
         'roles' => ['student'],
     ];
     public static array $checkSubscription = [
-        'path' => 'check-my-subscription',
+        'path' => 'api/check-my-subscription',
         'permission' => 'User can see subscription',
         'roles' => ['student'],
     ];
     public static array $activeSubscriptions = [
-        'path' => 'active-subscriptions',
+        'path' => 'api/active-subscriptions',
         'permission' => 'User can see active subscriptions',
         'roles' => ['admin'],
     ];
 
     public static array $createPage = [
-        'path' => 'create-page',
+        'path' => 'api/create-page',
         'permission' => 'User can create page',
         'roles' => ['admin'],
     ];
 
     public static array $updatePage = [
-        'path' => 'update-page',
+        'path' => 'api/update-page',
         'permission' => 'User can update page',
         'roles' => ['admin'],
         'postfix' => '*',
     ];
 
     public static array $deletePage = [
-        'path' => 'delete-page',
+        'path' => 'api/delete-page',
         'permission' => 'User can delete page',
         'roles' => ['admin'],
         'postfix' => '*',
     ];
 
     public static array $restorePage = [
-        'path' => 'restore-page',
+        'path' => 'api/restore-page',
         'permission' => 'User can restore page',
         'roles' => ['admin'],
         'postfix' => '*',
     ];
 
     public static array $getPages = [
-        'path' => 'get-all-pages',
+        'path' => 'api/get-all-pages',
         'permission' => 'User can get pages',
         'roles' => ['admin'],
     ];
 
     public static array $getPage = [
-        'path' => 'get-page-by-id',
+        'path' => 'api/get-page-by-id',
         'permission' => 'User can get page',
         'roles' => ['admin'],
         'postfix' => '*',
