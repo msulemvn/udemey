@@ -4,7 +4,6 @@ namespace App\Services\Article;
 
 use Exception;
 use App\Models\Article;
-use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use App\DTOs\Article\ArticleDTO;
 use Illuminate\Support\Facades\Storage;
