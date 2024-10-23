@@ -1,5 +1,7 @@
 <?php
+
 namespace App\DTOs\SiteSettings;
+
 use App\DTOs\BaseDTO;
 
 class SiteSettingDTO extends BaseDTO
@@ -15,5 +17,4 @@ class SiteSettingDTO extends BaseDTO
     $this->logo_path = $settingData['logo_path'] ?? '';
     $this->copyright = $settingData['copyright'] ?? '';
   }
-
 }

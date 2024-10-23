@@ -7,37 +7,46 @@ use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use App\DTOs\SiteSettings\SiteSettingDTO;
+use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\SiteSetting\SiteSettingResource;
 
 class SiteSettingService
 {
-
-    public function createSetting($request)
+    public function store($request)
     {
         try {
             $file = $request['logo_path'];
             $timestamp = Carbon::now()->format('YmdHs');
             $originalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $extension = $file->getClientOriginalExtension();
-            $newFileName = Str::slug($originalFileName) . '_' . $timestamp . '.' . $extension;
 
+            $newFileName = Str::slug($originalFileName) . '_' . $timestamp . '.' . $extension;
             $file->storeAs('uploads', $newFileName, 'public');
-            // Storage::disk('public')->put($newFileName, file_get_contents($file->getRealPath()));
             Log::info('Logo file stored at: ' . $newFileName);
 
             $request['logo_path'] = $newFileName;
             $response = SiteSetting::create((new SiteSettingDTO($request))->toArray());
             $resource = new SiteSettingResource($response);
-            return ['success' => true, 'message' => 'Site setting created successfully!', 'data' => $resource->toArray($request)];
+
+
+            return ['message' => 'Site setting created successfully!', 'data' => $resource->toArray($request)];
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return ApiResponse::error(
+                request: $request,
+                statusCode: Response::HTTP_UNPROCESSABLE_ENTITY,
+                exception: $e->errors(),
+            );
         } catch (\Exception $e) {
-            return ApiResponse::error(request: $request, exception: $e);
+            Log::error($e->getMessage());
+            return ApiResponse::error(
+                request: $request,
+                exception: $e,
+            );
         }
     }
 
-
-    public function updateSetting($request, $id)
+    public function update($request, $id)
     {
         try {
             $file = $request['logo_path'];
@@ -61,11 +70,7 @@ class SiteSettingService
                 $response->update($siteSettingDTO->toArray());
                 $resource = new SiteSettingResource($response);
 
-                return [
-                    'success' => true,
-                    'message' => 'Site setting updated successfully!',
-                    'data' => $resource->toArray($request),
-                ];
+                return ['message' => 'Site setting updated successfully!','data' => $resource->toArray($request)];
             }   
         }
         catch (\Exception $e) {
@@ -74,59 +79,45 @@ class SiteSettingService
         }
     }
 
-    public function deleteSetting($id)
+    public function destroy($id)
     {
         try {
             $response = SiteSetting::findOrFail($id);
-            if (Storage::disk('public')->exists('uploads/' . $response->logo_path)) {
-                Storage::disk('public')->delete('uploads/' . $response->logo_path);
-            } else {
-                Log::info('File does not exist: ' . 'uploads/' . $response->logo_path);
-            }
+            // if (Storage::disk('public')->exists('uploads/' . $response->logo_path)) {
+            //     Storage::disk('public')->delete('uploads/' . $response->logo_path);
+            // } else {
+            //     Log::info('File does not exist: ' . 'uploads/' . $response->logo_path);
+            // }
             $response->delete();
-            return ['success' => true, 'message' => 'site setting deleted successfully!'];
+            return ['message' => 'site setting deleted successfully!'];
         } catch (\Exception $e) {
             return ApiResponse::error(request: $id, exception: $e);
         }
     }
 
-    public function restoreSetting($id)
+    public function restore($id)
     {
         try {
             $response = SiteSetting::onlyTrashed()->find($id);
             if (!$response) {
-                return [
-                    'success' => false,
-                    'errors' => ['page' => ['The requested setting does not exist.']],
-                    'message' => 'setting not found',
-                ];
+                return ['errors' => ['page' => ['The requested setting does not exist.']], 'message' => 'setting not found'];
             }
             $response->restore();
-            return ['success' => true, 'message' => 'setting restored successfully!', 'data' => $response];
+            return ['message' => 'setting restored successfully!', 'data' => $response];
         } catch (\Exception $e) {
             return ApiResponse::error(request: $id, exception: $e);
         }
     }
 
-    public function getSettings()
+    public function index()
     {
         try {
             $response = SiteSetting::latest()->first();
             if ($response) {
-                // $logoPath = $response->logo_path ? asset('storage/uploads/' . $response->logo_path) : null;
-
-                // $responseData = [
-                //     'site_title' => $response->site_title,
-                //     'copyright' => $response->copyright,
-                //     'logo_path' => $logoPath,
-                // ];
                 $resource = new SiteSettingResource($response);
-                return ['success' => true, 'data' => $resource];
-
-                // return ['success' => true, 'data' => $responseData];
+                return ['data' => $resource];
             }
-            return ['success' => false, 'message' => 'No site settings found.'];
-
+            return ['message' => 'No site settings found.'];
         } catch (\Exception $e) {
             return ApiResponse::error(request: null, exception: $e);
         }

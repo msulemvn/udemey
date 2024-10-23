@@ -19,6 +19,7 @@ class SiteSettingResource extends JsonResource
             'site_title' => $this->site_title,
             // 'logo_path' => $this->logo_path
             'logo_path'  => $this->logo_path ? asset('storage/uploads/' . $this->logo_path) : null,
+            'copyright' => $this->copyright
         ];
     }
 }

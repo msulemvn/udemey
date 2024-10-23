@@ -7,6 +7,8 @@ use App\DTOs\Page\PageDTO;
 use App\Helpers\ApiResponse;
 use App\Services\Page\PageService;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Page\PageResource;
+use App\Http\Requests\Page\GetPageRequest;
 use App\Http\Requests\Page\CreatePageRequest;
 use App\Http\Requests\Page\UpdatePageRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,50 +22,63 @@ class PageController extends Controller
     $this->pageService = $pageService;
   }
 
-  public function create(CreatePageRequest $request)
+  public function index(GetPageRequest $request)
   {
-    $finalResponse = $this->pageService->createPage($request);
-
-    return ApiResponse::success(data: $finalResponse['data'], message: 'Page created successfully!', statusCode: Response::HTTP_CREATED);
+    
+    return $this->pageService->index($request);
   }
 
-  public function update(UpdatePageRequest $request, $pageId)
+  public function store(CreatePageRequest $request)
   {
-    $response = $this->pageService->updatePage($pageId, $request->all());
-
-    return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::success(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
+    $response = $this->pageService->store($request);
+    return ApiResponse::success(message: $response['message'], data: $response['data'], statusCode: Response::HTTP_CREATED);
   }
 
-  public function getPageBySlug(string $slug)
+  public function update(UpdatePageRequest $request, $id)
   {
-    $response  = $this->pageService->getPageBySlug($slug);
-
-    return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::success(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
+    $response = $this->pageService->update($request, $id);
+    return ApiResponse::success(message: $response['message'], data: $response['data']);
   }
 
-  public function getPageById($id)
+  public function destroy(int $id)
   {
-    $response = $this->pageService->getPageById($id);
-    return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? []) : ApiResponse::success(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
+    $response = $this->pageService->destroy($id);
+    if (isset($response['errors'])) {
+      return ApiResponse::success(message: $response['message'], errors: $response['errors'], statusCode: $response['statusCode']);
+    }
+    return ApiResponse::success(message: $response['message'], statusCode: $response['statusCode']);
   }
 
-  public function getPages()
+  public function restore(int $id)
   {
-    $response = $this->pageService->getPages();
-    return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data']->toArray(request() ?? [])) : ApiResponse::success(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
+    $response = $this->pageService->restore($id);
+    if (isset($response['errors'])) {
+      return ApiResponse::success(message: $response['message'], errors: $response['errors'], statusCode: $response['statusCode']);
+    }
+    return ApiResponse::success(message: $response['message'], statusCode: $response['statusCode']);
   }
+  // public function restore($id)
+  // {
+  //   $response = $this->pageService->restore($id);
 
-  public function destroy($id)
-  {
-    $response = $this->pageService->deletePage($id);
-    return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null) : ApiResponse::success(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
-   
-  }
+  //   return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null) : ApiResponse::success(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
+  // }
 
-  public function restore($id)
-  {
-    $response = $this->pageService->restorePage($id);
+  // public function getPageBySlug(string $slug)
+  // {
+  //   $response  = $this->pageService->getPageBySlug($slug);
+  //   return ApiResponse::success(message: $response['message'], data: $response['data']);
+  // }
 
-    return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null) : ApiResponse::success(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
-  }
+  // public function getPageById($id)
+  // {
+  //   $response = $this->pageService->getPageById($id);
+  //   return $response['success'] ? ApiResponse::success(message: $response['message'], data: $response['data']) : ApiResponse::success(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
+  // }
+
+  // public function getPages()
+  // {
+  //   $response = $this->pageService->getPages();
+  //   return $response['success'] ? ApiResponse::success(message: $response['message'] ?? null, data: $response['data']->toArray(request() ?? [])) : ApiResponse::success(message: $response['message'] ?? null, errors: $response['errors'] ?? null);
+  // }
 }

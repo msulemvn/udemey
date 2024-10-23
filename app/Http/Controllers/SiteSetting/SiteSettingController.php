@@ -18,81 +18,33 @@ class SiteSettingController extends Controller
         $this->siteSettingService = $siteSettingService;
     }
 
-    public function createSetting(CreateSiteSettingRequest $request)
+    public function store(CreateSiteSettingRequest $request)
     {
-        $validatedData = $request->all();
-        $response = $this->siteSettingService->createSetting($validatedData);
-
-        return $response['success'] ?
-            ApiResponse::success(
-                data: $response['data'] ?? null,
-                message: $response['message'],
-                statusCode:Response::HTTP_CREATED
-
-            ) :
-            ApiResponse::success(
-                message: 'Unable to create setting!',
-                errors: ['site setting' => ['Unable to create setting!']],
-            );
+        $response = $this->siteSettingService->store($request->all());
+        return ApiResponse::success(data: $response['data'] ?? null, message: $response['message'], statusCode: Response::HTTP_CREATED,);
     }
 
-    public function updateSetting(UpdateSiteSettingRequest $request, $id)
+    public function update(UpdateSiteSettingRequest $request, $id)
     {
-        $validatedData = $request->all();
-        $response = $this->siteSettingService->updateSetting($validatedData, $id);
-
-        return $response['success'] ?
-            ApiResponse::success(
-                data: $response['data'] ?? null,
-                message: $response['message'],
-            ) :
-            ApiResponse::success(
-                message: 'No setting found with the given id!',
-                errors: ['site setting' => ['No setting found with id: ' . $id]],
-            );
+        $response = $this->siteSettingService->update($request->all(), $id);
+        return ApiResponse::success(data: $response['data'] ?? null, message: $response['message']);
     }
 
-    public function deleteSetting($id)
+    public function destroy($id)
     {
-        $response = $this->siteSettingService->deleteSetting($id);
-        return $response['success'] ?
-            ApiResponse::success(
-                message: $response['message'],
-            ) :
-            ApiResponse::success(
-                message: 'No setting found with the given id!',
-                errors: ['site setting' => ['No setting found with id: ' . $id]],
-            );
+        $response = $this->siteSettingService->destroy($id);
+        return  ApiResponse::success(message: $response['message']);
     }
 
-    public function restoreSoftDeletedSetting($id)
+    public function restore($id)
     {
-        $response = $this->siteSettingService->restoreSetting($id);
-
-        return $response['success'] ?
-            ApiResponse::success(
-                data: $response['data']->toArray() ?? null,
-                message: 'Site setting restored successfully!',
-
-            ) :
-            ApiResponse::success(
-                message: 'No setting found with the given id!',
-                errors: ['site setting' => ['No setting found with id: ' . $id]],
-            );
+        $response = $this->siteSettingService->restore($id);
+        return ApiResponse::success(data: $response['data']->toArray() ?? null,message: 'Site setting restored successfully!',);
     }
 
-    public function getSettings()
+    public function index()
     {
-        $response = $this->siteSettingService->getSettings();
-
-        return $response['success'] ?
-            ApiResponse::success(
-                data: $response['data']->toArray(request() ?? []),
-                message: 'Setting retrieved successfully!'
-            ) :
-            ApiResponse::success(
-                message: 'No setting found with the given id!',
-                errors: ['site setting' => ['No setting found with id: ']],
-            );
+        $response = $this->siteSettingService->index();
+        return ApiResponse::success(data: $response['data']->toArray(request() ?? []),message: 'Setting retrieved successfully!');
     }
 }
