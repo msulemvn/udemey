@@ -311,7 +311,6 @@ class PermissionVariable
         'path' => 'api/get-site-settings',
         'permission' => 'User can see site settings',
         'roles' => ['admin'],
-        'postfix' => '*',
     ];
 
     public static function allRoutes(): array
