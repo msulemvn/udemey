@@ -22,3 +22,5 @@ require __DIR__ . '/comment/comment.php';
 require __DIR__ . '/enrollment/enrollment.php';
 require __DIR__ . '/page/page.php';
 require __DIR__ . '/siteSetting/siteSetting.php';
+require __DIR__ . '/article/article.php';
+require __DIR__ . '/subscription/subscription.php';
