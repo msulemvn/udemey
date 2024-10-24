@@ -31,7 +31,7 @@ class SiteSettingController extends Controller
     }
 
     public function destroy($id)
-    {
+    { 
         $response = $this->siteSettingService->destroy($id);
         return  ApiResponse::success(message: $response['message']);
     }
@@ -39,12 +39,12 @@ class SiteSettingController extends Controller
     public function restore($id)
     {
         $response = $this->siteSettingService->restore($id);
-        return ApiResponse::success(data: $response['data']->toArray() ?? null,message: 'Site setting restored successfully!',);
+        return ApiResponse::success(data: $response['data']->toArray() ?? null,message: $response['message'],);
     }
 
     public function index()
     {
         $response = $this->siteSettingService->index();
-        return ApiResponse::success(data: $response['data']->toArray(request() ?? []),message: 'Setting retrieved successfully!');
+        return ApiResponse::success(data: $response['data']->toArray(request() ?? []));
     }
 }

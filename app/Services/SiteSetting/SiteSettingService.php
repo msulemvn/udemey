@@ -29,7 +29,6 @@ class SiteSettingService
             $response = SiteSetting::create((new SiteSettingDTO($request))->toArray());
             $resource = new SiteSettingResource($response);
 
-
             return ['message' => 'Site setting created successfully!', 'data' => $resource->toArray($request)];
         } catch (\Illuminate\Validation\ValidationException $e) {
             return ApiResponse::error(
@@ -50,7 +49,10 @@ class SiteSettingService
     {
         try {
             $file = $request['logo_path'];
-            $response = SiteSetting::findOrFail($id);
+            $response = SiteSetting::find($id);
+            if (!$response) {
+                return ['errors' => ['setting' => ['The requested setting does not exist.']], 'message' => 'setting not found', 'statusCode' => Response::HTTP_NOT_FOUND];
+            }
             if($file) {
 
                 $timestamp = now()->timestamp;
@@ -82,7 +84,10 @@ class SiteSettingService
     public function destroy($id)
     {
         try {
-            $response = SiteSetting::findOrFail($id);
+            $response = SiteSetting::find($id);
+            if (!$response) {
+                return ['errors' => ['setting' => ['The requested setting does not exist.']], 'message' => 'setting not found'];
+            }
             // if (Storage::disk('public')->exists('uploads/' . $response->logo_path)) {
             //     Storage::disk('public')->delete('uploads/' . $response->logo_path);
             // } else {
@@ -100,7 +105,7 @@ class SiteSettingService
         try {
             $response = SiteSetting::onlyTrashed()->find($id);
             if (!$response) {
-                return ['errors' => ['page' => ['The requested setting does not exist.']], 'message' => 'setting not found'];
+                return ['errors' => ['setting' => ['The requested setting does not exist.']], 'message' => 'setting not found'];
             }
             $response->restore();
             return ['message' => 'setting restored successfully!', 'data' => $response];
@@ -115,9 +120,11 @@ class SiteSettingService
             $response = SiteSetting::latest()->first();
             if ($response) {
                 $resource = new SiteSettingResource($response);
-                return ['data' => $resource];
+                return ['data' => $resource, 'message' => 'Setting retrieved successfully!'];
             }
-            return ['message' => 'No site settings found.'];
+            return ['message' => 'No site settings found.', 'statusCode' => Response::HTTP_NOT_FOUND];
+
+            
         } catch (\Exception $e) {
             return ApiResponse::error(request: null, exception: $e);
         }
