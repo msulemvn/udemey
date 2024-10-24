@@ -42,7 +42,7 @@ class TwoFactorAuthenticationMail extends Mailable
      */
     public function build()
     {
-        return $this->view('twoFactorAuthentication')
+        return $this->view('emails.twoFactorAuthentication')
             ->subject('Two Factor Authentication Mail Subject')
             ->from('your-email@example.com', 'Your Name');
     }

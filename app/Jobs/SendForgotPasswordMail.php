@@ -38,11 +38,7 @@ class SendForgotPasswordMail implements ShouldQueue
 
     public function sendMail(Request $request)
     {
-        $data = [
-            'name' => 'John Doe',
-            'email' => 'john.doe@example.com',
-            'message' => 'Hello, this is a custom mail!',
-        ];
+        $data = $request['data'];
 
         SendForgotPasswordMail::dispatch($data);
 
