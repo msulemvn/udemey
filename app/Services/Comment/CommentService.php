@@ -20,9 +20,11 @@ class CommentService
     {
         //handled in validation if slug exists
         $commentableId = $request->commentableType::where('slug', $request->slug)->first()->id;
-        return ['data' =>  Comment::where('commentable_type', operator: $request->commentableType)
-            ->when($request->commentId, function ($query) use ($request) {
-                $query->where('id', $request->commentId);
+        return ['data' =>  Comment::where('commentable_type', $request->commentableType)
+            ->when($commentableId, function ($query) use ($commentableId) {
+                return $query->where('commentable_id', $commentableId);
+            })->when($request->commentId, function ($query) use ($request) {
+                return $query->where('id', $request->commentId);
             })
             ->get()
             ->toArray()];
