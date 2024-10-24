@@ -20,3 +20,5 @@ require __DIR__ . '/student/student.php';
 require __DIR__ . '/purchase/purchase.php';
 require __DIR__ . '/comment/comment.php';
 require __DIR__ . '/enrollment/enrollment.php';
+require __DIR__ . '/page/page.php';
+require __DIR__ . '/siteSetting/siteSetting.php';
