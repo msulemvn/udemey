@@ -20,7 +20,7 @@ class TwoFactorController extends Controller
     public function verify2FA(Request $request)
     {
         $response = $this->twoFactorService->verify2FA($request);
-        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'], statusCode: $response['statusCode'] ?? 200);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     /**
@@ -32,7 +32,7 @@ class TwoFactorController extends Controller
     public function generateSecretKey(Request $request)
     {
         $response = $this->twoFactorService->generateSecretKey($request);
-        return ApiResponse::success(message: $response['message'], data: $response['data'] ?? [], errors: $response['errors'], statusCode: $response['statusCode'] ?? 200);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     /**
@@ -44,7 +44,7 @@ class TwoFactorController extends Controller
     public function enable2FA(Request $request)
     {
         $response = $this->twoFactorService->enable2FA($request);
-        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? []);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
     /**
@@ -56,6 +56,6 @@ class TwoFactorController extends Controller
     public function disable2FA(Request $request)
     {
         $response = $this->twoFactorService->disable2FA($request);;
-        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? null);
+        return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 }
