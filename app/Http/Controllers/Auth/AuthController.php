@@ -13,16 +13,16 @@ use Spatie\Permission\Traits\HasPermissions;
 class AuthController extends Controller
 {
     use HasRoles, HasPermissions;
-    protected $AuthService;
+    protected $authService;
 
-    public function __construct(AuthService $AuthService)
+    public function __construct(AuthService $authService)
     {
-        $this->AuthService = $AuthService;
+        $this->authService = $authService;
     }
 
     public function login(LoginAuthRequest $request)
     {
-        $response = $this->AuthService->login($request);
+        $response = $this->authService->login($request);
         return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? []);
     }
 

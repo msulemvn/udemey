@@ -2,17 +2,25 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Jobs\SendTestMail;
 use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
+use App\Services\Auth\ResetPasswordService;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\Auth\ResetPasswordAuthRequest;
 
 class ResetPasswordController extends Controller
 {
+    protected $resetPasswordService;
+    public function __construct(ResetPasswordService $resetPasswordService)
+    {
+        $this->resetPasswordService = $resetPasswordService;
+    }
+
     /**
      * Handle the incoming request.
      *
@@ -21,23 +29,23 @@ class ResetPasswordController extends Controller
      */
     public function __invoke(ResetPasswordAuthRequest $request)
     {
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user) use ($request) {
-                $user->forceFill([
-                    'password' => Hash::make($request->password),
-                    'remember_token' => Str::random(60),
-                ])->save();
-                event(new PasswordReset($user));
-            }
-        );
+        $response = $this->resetPasswordService->resetPassword($request);
+        return  ApiResponse::success(message: $response['message']);
 
-        if ($status != Password::PASSWORD_RESET) {
-            throw ValidationException::withMessages([
-                'email' => [__($status)],
-            ]);
-        }
+        // $data = [
+        //     'name' => 'John Doe',
+        //     'email' => 'john.doe@example.com',
+        //     'message' => 'Hello, this is a custom mail!',
+        // ];
 
-        return  ApiResponse::success(message: __($status));
+        // // Dispatch the job
+        // SendTestMail::dispatch($data);
+
+        // return response()->json(['message' => 'Mail sent successfully!']);
+
+
+        // ResetPassword::createUrlUsing(function ($notifiable, string $token) {
+        //     return 'http://localhost:8080/reset-password?email=' . $notifiable->getEmailForPasswordReset() . '&token=' . $token;
+        // });
     }
 }
