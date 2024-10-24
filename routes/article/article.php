@@ -5,7 +5,7 @@ use App\Http\Controllers\Article\ArticleController;
 
 Route::middleware('auth:api')->group(function () {
     Route::controller(ArticleController::class)->group(function () {
-        Route::get('article/{id}', 'show');
+        Route::get('articles/{id}', 'show');
         Route::get('articles/{slug}',  'showBySlug');
 
         Route::middleware('role:admin')->group(function () {
