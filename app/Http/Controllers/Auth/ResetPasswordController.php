@@ -31,21 +31,5 @@ class ResetPasswordController extends Controller
     {
         $response = $this->resetPasswordService->resetPassword($request);
         return  ApiResponse::success(message: $response['message']);
-
-        // $data = [
-        //     'name' => 'John Doe',
-        //     'email' => 'john.doe@example.com',
-        //     'message' => 'Hello, this is a custom mail!',
-        // ];
-
-        // // Dispatch the job
-        // SendTestMail::dispatch($data);
-
-        // return response()->json(['message' => 'Mail sent successfully!']);
-
-
-        // ResetPassword::createUrlUsing(function ($notifiable, string $token) {
-        //     return 'http://localhost:8080/reset-password?email=' . $notifiable->getEmailForPasswordReset() . '&token=' . $token;
-        // });
     }
 }
