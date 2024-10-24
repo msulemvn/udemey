@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use PragmaRX\Google2FA\Google2FA;
@@ -29,10 +30,10 @@ class TwoFactorService
             $google2fa = new Google2FA();
             $secretKey = $google2fa->generateSecretKey(32);
             $user = Auth::user();
-            Cache::put('google2fa_secret_' . $user->id, $secretKey, 60);
-            return ['message' => 'Secret key generated successfully.', 'data' => ['type' => 'Time based (TOTP)', 'google2fa_secret' => $secretKey, 'label' => 'Udemey']];
+            $result = Cache::put('google2fa_secret_' . $user->id, $secretKey, 60);
+            return ['message' => $result ? 'Secret key generated successfully.' : 'Failed to generate secret key.', 'data' => ['type' => 'Time based (TOTP)', 'google2fa_secret' => $secretKey, 'label' => 'Udemey']];
         } catch (\Exception $e) {
-            return ['errors' => ['google2fa_secret' => ['Failed to generate secret key.']], 'request' => $request, 'exception' => $e];
+            ApiResponse::error(request: $request, exception: $e);
         }
     }
 
@@ -95,10 +96,10 @@ class TwoFactorService
                 // OTP is valid
                 $user->google2fa_secret = null;
                 /** @var \App\Models\User|null $user */
-                $user->save();
-                return ['message' => '2-Factor Authentication successfully disabled.'];
+                $result = $user->save();
+                return ['message' => $result ? '2-Factor Authentication successfully disabled.' : 'Failed to disable 2-Factor Authentication'];
             } catch (\Exception $e) {
-                return ['errors' => ['google2fa_secret' => ['Failed to disable 2-Factor Authentication']], 'request' => $data, 'exception' => $e];
+                ApiResponse::error(request: $data, exception: $e);
             }
         } else {
             return ['errors' => ['password' => ['Password is invalid']]];
