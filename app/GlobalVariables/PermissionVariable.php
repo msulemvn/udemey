@@ -198,6 +198,14 @@ class PermissionVariable
         'roles' => ['admin'],
     ];
 
+    public static array $getArticlesSlug = [
+        'path' => 'api/articles',
+        'permission' => 'User can see articles',
+        'roles' => ['admin'],
+        'postfix' => '*'
+    ];
+
+
     public static array $getArticle = [
         'path' => 'api/articles',
         'permission' => 'User can see article',
@@ -353,6 +361,7 @@ class PermissionVariable
             self::$getEnrollmentsSlug,
             //Article
             self::$getArticles,
+            self::$getArticlesSlug,
             self::$getArticle,
             self::$updateArticle,
             self::$createArticle,
