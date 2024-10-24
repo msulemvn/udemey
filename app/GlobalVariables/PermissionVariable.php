@@ -280,6 +280,40 @@ class PermissionVariable
         'postfix' => '*',
     ];
 
+    public static array $createSetting = [
+        'path' => 'api/create-site-setting',
+        'permission' => 'User can create site setting',
+        'roles' => ['admin'],
+    ];
+
+    public static array $updateSetting = [
+        'path' => 'api/update-site-setting',
+        'permission' => 'User can update site setting',
+        'roles' => ['admin'],
+        'postfix' => '*',
+    ];
+
+    public static array $deleteSetting = [
+        'path' => 'api/delete-site-setting',
+        'permission' => 'User can delete site setting',
+        'roles' => ['admin'],
+        'postfix' => '*',
+    ];
+
+    public static array $restoreSetting = [
+        'path' => 'api/restore-site-setting',
+        'permission' => 'User can restore site setting',
+        'roles' => ['admin'],
+        'postfix' => '*',
+    ];
+
+    public static array $getSettings = [
+        'path' => 'api/get-site-settings',
+        'permission' => 'User can see site settings',
+        'roles' => ['admin'],
+        'postfix' => '*',
+    ];
+
     public static function allRoutes(): array
     {
         return [
@@ -369,6 +403,12 @@ class PermissionVariable
             self::$getPage,
             self::$getPages,
             self::$restorePage,
+            //SiteSetting
+            self::$createSetting,
+            self::$updateSetting,
+            self::$deleteSetting,
+            self::$restoreSetting,
+            self::$getSettings,
         ];
     }
 
