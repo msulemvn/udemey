@@ -396,13 +396,6 @@ class PermissionVariable
             self::$activeSubscriptions,
             self::$canSubscribe,
             self::$checkSubscription,
-            //Page
-            self::$createPage,
-            self::$updatePage,
-            self::$deletePage,
-            self::$getPage,
-            self::$getPages,
-            self::$restorePage,
             //SiteSetting
             self::$createSetting,
             self::$updateSetting,
