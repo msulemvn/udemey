@@ -71,7 +71,6 @@ class ArticleService
     public function getArticleBySlug($slug)
     {
         $article = Article::where('slug', $slug)->first();
-
         if (!$article) {
             return ['message' => 'Article Not Found', 'statusCode' => Response::HTTP_NOT_FOUND];
         }
