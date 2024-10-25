@@ -18,22 +18,6 @@ class MenuController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index()
-    {
-        $response = $this->menuService->getAllMenus();
-        return ApiResponse::success(
-            data: $response['data']->toArray($response) ?? [], 
-            message: $response['message'] ?? null, 
-            errors: $response['errors'] ?? [], 
-            statusCode: $response['statusCode'] ?? 200
-        );
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param CreateMenuRequest $request
@@ -60,9 +44,13 @@ class MenuController extends Controller
     public function update(UpdateMenuRequest $request, $id)
     {
         $response = $this->menuService->updateMenu($request, $id);
-        
+        if (isset($response['data'])) {
+            $data = $response['data']->toArray($response);
+        } else {
+            $data = [];
+        }
         return ApiResponse::success(
-            data: $response['data']->toArray($response) ?? null, 
+            data: $data, 
             message: $response['message'] ?? null, 
             errors: $response['errors'] ?? [], 
             statusCode: $response['statusCode'] ?? 200
@@ -79,6 +67,27 @@ class MenuController extends Controller
     {
         $response = $this->menuService->deleteMenu($id);
         return ApiResponse::success(
+            message: $response['message'] ?? null, 
+            errors: $response['errors'] ?? [], 
+            statusCode: $response['statusCode'] ?? 200
+        );
+    }
+
+       /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index()
+    {
+        $response = $this->menuService->getAllMenus();
+        if (isset($response['data'])) {
+            $data = $response['data']->toArray($response);
+        } else {
+            $data = [];
+        }
+        return ApiResponse::success(
+            data: $data, 
             message: $response['message'] ?? null, 
             errors: $response['errors'] ?? [], 
             statusCode: $response['statusCode'] ?? 200
