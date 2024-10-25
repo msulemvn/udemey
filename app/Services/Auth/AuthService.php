@@ -6,6 +6,7 @@ use App\DTOs\Auth\AuthDTO;
 use App\Helpers\ApiResponse;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthService
 {
@@ -21,16 +22,23 @@ class AuthService
             $token = Auth::attempt((new AuthDTO($request))->toArray());
             $user = Auth::user();
             /** @var \App\Models\User|null $user */
-            $roleName = $user->getRoleNames()[0];
+            $roleName = $user?->getRoleNames()[0];
             if ($roleName) {
-                $data['role'] = $roleName;
+                $response['data']['role'] = $roleName;
                 $role = Role::findByName($roleName);
                 $permissions = $role->permissions()->pluck('name')->toArray();
-                $data['permissions'] = $permissions;
-                $data['2fa'] =  ($user->google2fa_secret) ? true : false;
+                $response['data']['permissions'] = $permissions;
+                $response['data']['2fa'] =  ($user->google2fa_secret) ? true : false;
             }
-            $data['access_token'] = $token;
-            return ['data' => $data];
+            if ($token) {
+                $response['message'] = 'Successfully logged in.';
+                $response['data']['access_token'] = $token;
+                ApiResponse::activity($request, 'User has successfully logged in', true);
+            } else {
+                $response['errors'] =  ['access_token' => ['Login failed, Please make sure email and password are correct.']];
+                $response['statusCode'] = Response::HTTP_UNAUTHORIZED;
+            }
+            return $response;
         } catch (\Exception $e) {
             return ApiResponse::error(request: $request, exception: $e);
         }

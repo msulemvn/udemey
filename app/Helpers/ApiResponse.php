@@ -57,11 +57,8 @@ class ApiResponse
             ]);
             ErrorLog::create($dto->toArray());
             Log::info('error_log_dto', $dto->toArray());
-            if (debug_backtrace()[1]['function'] == 'render') {
-                $response['errors']['server error'] = ['Something went wrong'];
-            }
-
-            return response()->json($response, $statusCode);
+            $response['errors']['server error'] = ['Something went wrong'];
+            return ApiResponse::success(errors: $response['errors'], statusCode: $statusCode);
         } catch (\Exception $e) {
             return ApiResponse::error(request: $request, exception: $e);
         }
@@ -74,6 +71,7 @@ class ApiResponse
     ) {
         try {
             ActivityLog::create((new ActivityLogDTO(['request' => $request, 'description' => $description, 'showable' => $showable]))->toArray());
+            return 1;
         } catch (\Exception $e) {
             return ApiResponse::error(request: $request, exception: $e);
         }
