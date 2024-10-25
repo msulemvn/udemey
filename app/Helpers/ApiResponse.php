@@ -7,6 +7,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use App\Models\ErrorLog;
 use App\DTOs\ErrorLog\ErrorLogDTO;
+use App\Models\ActivityLog;
+use App\DTOs\ActivityLog\ActivityLogDTO;
+
+
 
 class ApiResponse
 {
@@ -45,7 +49,7 @@ class ApiResponse
      */
     public static function error(mixed $request, mixed $exception,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
     {
-        if ($request && $exception) {
+        try {
             $dto = new ErrorLogDTO([
                 'request' => $request,
                 'exception' => $exception,
@@ -53,20 +57,25 @@ class ApiResponse
             ]);
             ErrorLog::create($dto->toArray());
             Log::info('error_log_dto', $dto->toArray());
-        }
+            if (debug_backtrace()[1]['function'] == 'render') {
+                $response['errors']['server error'] = ['Something went wrong'];
+            }
 
-        if (debug_backtrace()[1]['function'] == 'render') {
-            $response['errors']['server error'] = ['Something went wrong'];
+            return response()->json($response, $statusCode);
+        } catch (\Exception $e) {
+            return ApiResponse::error(request: $request, exception: $e);
         }
-
-        return response()->json($response, $statusCode);
     }
 
     public static function activity(
         $request,
         string $description,
         bool $showable = false,
-    ): void {
-
+    ) {
+        try {
+            ActivityLog::create((new ActivityLogDTO(['request' => $request, 'description' => $description, 'showable' => $showable]))->toArray());
+        } catch (\Exception $e) {
+            return ApiResponse::error(request: $request, exception: $e);
+        }
     }
 }
