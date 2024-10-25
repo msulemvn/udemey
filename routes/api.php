@@ -25,3 +25,5 @@ require __DIR__ . '/siteSetting/siteSetting.php';
 require __DIR__ . '/article/article.php';
 require __DIR__ . '/subscription/subscription.php';
 require __DIR__ . '/menu/menu.php';
+require __DIR__ . '/menuItem/menuItem.php';
+
