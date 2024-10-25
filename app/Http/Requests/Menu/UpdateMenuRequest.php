@@ -24,7 +24,7 @@ class UpdateMenuRequest extends BaseRequest
     public function rules()
     {
         return [
-            'name' => 'sometimes|required|string|max:255',
+            'name' => 'required|string|max:255',
             'slug' => 'sometimes|required|string|max:255|unique:menus,slug,' . $this->id,
         ];
     }
