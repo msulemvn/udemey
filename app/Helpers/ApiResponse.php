@@ -27,7 +27,7 @@ class ApiResponse
         array $data = [],
         array $errors = [],
         int $statusCode = Response::HTTP_OK,
-    ): JsonResponse {
+    ) {
         $response['message'] = $message ?? Response::$statusTexts[$statusCode];
         if ($data) {
             $response['data'] = $data;
@@ -47,7 +47,7 @@ class ApiResponse
      * @param int $statusCode The HTTP status code for the response.
      * @return JsonResponse
      */
-    public static function error(mixed $request, mixed $exception,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
+    public static function error(mixed $request, mixed $exception,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR)
     {
         try {
             $dto = new ErrorLogDTO([
@@ -70,8 +70,7 @@ class ApiResponse
         bool $showable = false,
     ) {
         try {
-            ActivityLog::create((new ActivityLogDTO(['request' => $request, 'description' => $description, 'showable' => $showable]))->toArray());
-            return 1;
+            ActivityLog::create((new ActivityLogDTO(data: ['request' => $request, 'description' => $description, 'showable' => $showable]))->toArray());
         } catch (\Exception $e) {
             return ApiResponse::error(request: $request, exception: $e);
         }

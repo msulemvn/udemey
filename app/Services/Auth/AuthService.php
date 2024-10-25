@@ -33,7 +33,7 @@ class AuthService
             if ($token) {
                 $response['message'] = 'Successfully logged in.';
                 $response['data']['access_token'] = $token;
-                ApiResponse::activity($request, 'User has successfully logged in', true);
+                ApiResponse::activity(request: $request, description: 'User has successfully logged in', showable: true);
             } else {
                 $response['errors'] =  ['access_token' => ['Login failed, Please make sure email and password are correct.']];
                 $response['statusCode'] = Response::HTTP_UNAUTHORIZED;

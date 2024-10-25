@@ -6,14 +6,14 @@ use App\DTOs\BaseDTO;
 
 class ActivityLogDTO extends BaseDTO
 {
-    private $request_log_id;
-    private $description;
-    private $showable;
+    public $request_log_id;
+    public $description;
+    public $showable;
 
     public function __construct($data)
     {
         $this->request_log_id = $data['request']->request_log_id;
-        $this->request_log_id = $data['description'];
-        $this->request_log_id = $data['showable'];
+        $this->description = $data['description'];
+        $this->showable = $data['showable'];
     }
 }
