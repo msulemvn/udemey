@@ -27,8 +27,8 @@ class CreateMenuItemRequest extends BaseRequest
             'title' => 'required|string',
             'order' => 'required|integer',
             'is_active' => 'required|boolean',
-            'menu_id' => 'required|integer',
-            'page_id' => 'nullable|integer',
+            'menu_id' => 'required|integer|exists:menus,id',
+            'page_id' => 'nullable|integer|exists:pages,id',
         ];
     }
 
@@ -46,8 +46,10 @@ class CreateMenuItemRequest extends BaseRequest
 
             'menu_id.required' => 'The menu ID field is required.',
             'menu_id.integer' => 'The menu ID must be an integer.',
+            'menu_id.exists' => 'The menu ID must exist in the menus table.',
 
             'page_id.integer' => 'The page ID must be an integer if provided.',
+            'page_id.exists' => 'The page ID must exist in the pages table.',
         ];
     }
 
