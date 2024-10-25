@@ -63,6 +63,14 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             \App\Services\Auth\SendEmailVerificationNotificationService::class
         );
+
+		$this->app->bind(
+			\App\Services\Menu\MenuService::class
+		);
+
+		$this->app->bind(
+			\App\Services\MenuItem\MenuItemService::class
+		);
     }
 
     /**

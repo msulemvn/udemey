@@ -17,6 +17,18 @@ class PermissionVariable
         'api/courses',
         'api/courses/*',
         'api/get-page-by-slug/*',
+        'api/create-menu',
+        'api/delete-menu/*',
+        'api/update-menu/*',
+        'api/get-menus',
+
+        'api/create-menu-item',
+        'api/delete-menu-item/*',
+        'api/update-menu-item/*',
+        'api/get-menu-items',
+
+        
+
     ];
 
     public static array $viewProfile = [
