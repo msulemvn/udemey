@@ -1,9 +1,7 @@
 <?php
-
 namespace App\Repositories;
 
 use App\DTOs\MenuItem\MenuItemDTO;
-use App\Models\Menu;
 use App\Interfaces\MenuItemInterface;
 use App\Models\MenuItem;
 
@@ -19,18 +17,18 @@ class MenuItemRepository implements MenuItemInterface
         return MenuItem::find($id);
     }
 
-    public function create(MenuItemDTO $dto)
+    public function create($data)
     {
-        return MenuItem::create($dto->toArray());
+        return MenuItem::create($data);
     }
 
-    public function update(MenuItemDTO $dto, $id)
+    public function update($data, $id)
     {
-        $menuItem = $this->getById($id);
+        $menuItem = MenuItem::find($id);
         if (!$menuItem) {
-            return null;
+            return false;
         }
-        $menuItem->update($dto->toArray());
+        $menuItem->update($data);
         return $menuItem;
     }
 
