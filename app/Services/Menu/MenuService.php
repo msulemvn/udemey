@@ -19,34 +19,6 @@ class MenuService
     }
 
     /**
-     * Get all menus.
-     *
-     * @param $request
-     * @return array
-     */
-    public function getAllMenus()
-    {
-        try {
-            $menus = $this->menuRepository->getAll();
-            if(!$menus){
-                return [
-                    'message' => 'No menu found!',
-                    'errors' => ['Menu' => ['No menu found!']],
-                    'statusCode' => Response::HTTP_NOT_FOUND
-                ];
-            }
-            $response = MenuResource::collection($menus);
-            return [
-                'data' => $response,
-                'message' => 'Menu retrieved successfully!',
-                'statusCode' => Response::HTTP_OK
-            ];
-        } catch (Exception $e) {
-            return ApiResponse::error(request: request(), exception: $e);
-        }
-    }
-
-    /**
      * Create menu.
      *
      * @param CreateMenuRequest $request
@@ -81,6 +53,7 @@ class MenuService
      * @param int $id
      * @return array
      */
+
     public function updateMenu($request, int $id)
     {
         try {
@@ -92,8 +65,15 @@ class MenuService
                     'statusCode' => Response::HTTP_NOT_FOUND
                 ];            
             }
+            
             $menuDTO = new MenuDTO($request->all());
-            $menu = $this->menuRepository->update($menuDTO, $id);
+            
+            if ($menuDTO->name || $request->input('slug')) {
+                $menu = $this->menuRepository->update($menuDTO, $id);
+            } else {
+                $menu = $menu;
+            }
+            
             return [
                 'data' => new MenuResource($menu),
                 'message' => 'Menu updated successfully!',
@@ -103,7 +83,6 @@ class MenuService
             return ApiResponse::error(request: $request, exception: $e);
         }
     }
-
     /**
      * Delete menu.
      *
@@ -126,6 +105,34 @@ class MenuService
                 'message' => 'Menu deleted successfully',
                 'statusCode' => Response::HTTP_OK
             ];        
+        } catch (Exception $e) {
+            return ApiResponse::error(request: request(), exception: $e);
+        }
+    }
+    
+    /**
+     * Get all menus.
+     *
+     * @param $request
+     * @return array
+     */
+    public function getAllMenus()
+    {
+        try {
+            $menus = $this->menuRepository->getAll();
+            if(!$menus){
+                return [
+                    'message' => 'No menu found!',
+                    'errors' => ['Menu' => ['No menu found!']],
+                    'statusCode' => Response::HTTP_NOT_FOUND
+                ];
+            }
+            $response = MenuResource::collection($menus);
+            return [
+                'data' => $response,
+                'message' => 'Menu retrieved successfully!',
+                'statusCode' => Response::HTTP_OK
+            ];
         } catch (Exception $e) {
             return ApiResponse::error(request: request(), exception: $e);
         }
