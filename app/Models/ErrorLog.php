@@ -9,4 +9,8 @@ class ErrorLog extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    public function http_request()
+    {
+        return $this->hasOne(HttpRequest::class);
+    }
 }

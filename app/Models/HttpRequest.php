@@ -23,4 +23,9 @@ class HttpRequest extends Model
     {
         return $this->hasOne(ErrorLog::class);
     }
+
+    public function activity_log()
+    {
+        return $this->hasOne(ActivityLog::class);
+    }
 }

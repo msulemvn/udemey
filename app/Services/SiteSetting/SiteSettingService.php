@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use App\Helpers\ApiResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
-use App\DTOs\SiteSettings\SiteSettingDTO;
+use App\DTOs\SiteSetting\SiteSettingDTO;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\SiteSetting\SiteSettingResource;
 
@@ -53,7 +53,7 @@ class SiteSettingService
             if (!$response) {
                 return ['errors' => ['setting' => ['The requested setting does not exist.']], 'message' => 'setting not found', 'statusCode' => Response::HTTP_NOT_FOUND];
             }
-            if($file) {
+            if ($file) {
 
                 $timestamp = now()->timestamp;
                 $originalFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
@@ -72,10 +72,9 @@ class SiteSettingService
                 $response->update($siteSettingDTO->toArray());
                 $resource = new SiteSettingResource($response);
 
-                return ['message' => 'Site setting updated successfully!','data' => $resource->toArray($request)];
-            }   
-        }
-        catch (\Exception $e) {
+                return ['message' => 'Site setting updated successfully!', 'data' => $resource->toArray($request)];
+            }
+        } catch (\Exception $e) {
             Log::error('Error uploading logo: ' . $e->getMessage());
             return ApiResponse::error(request: $request, exception: $e);
         }
@@ -123,8 +122,6 @@ class SiteSettingService
                 return ['data' => $resource, 'message' => 'Setting retrieved successfully!'];
             }
             return ['message' => 'No site settings found.', 'statusCode' => Response::HTTP_NOT_FOUND];
-
-            
         } catch (\Exception $e) {
             return ApiResponse::error(request: null, exception: $e);
         }

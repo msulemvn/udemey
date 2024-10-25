@@ -6,7 +6,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use App\Models\ErrorLog;
-use App\DTOs\ErrorLogs\ErrorLogsDTO;
+use App\DTOs\ErrorLog\ErrorLogDTO;
+use App\Models\ActivityLog;
+use App\DTOs\ActivityLog\ActivityLogDTO;
+
+
 
 class ApiResponse
 {
@@ -23,7 +27,7 @@ class ApiResponse
         array $data = [],
         array $errors = [],
         int $statusCode = Response::HTTP_OK,
-    ): JsonResponse {
+    ) {
         $response['message'] = $message ?? Response::$statusTexts[$statusCode];
         if ($data) {
             $response['data'] = $data;
@@ -43,22 +47,32 @@ class ApiResponse
      * @param int $statusCode The HTTP status code for the response.
      * @return JsonResponse
      */
-    public static function error(mixed $request, mixed $exception,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
+    public static function error(mixed $request, mixed $exception,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR)
     {
-        if ($request && $exception) {
-            $dto = new ErrorLogsDTO([
+        try {
+            $dto = new ErrorLogDTO([
                 'request' => $request,
                 'exception' => $exception,
                 'function' => debug_backtrace()[1]['function'],
             ]);
             ErrorLog::create($dto->toArray());
             Log::info('error_log_dto', $dto->toArray());
-        }
-
-        if (debug_backtrace()[1]['function'] == 'render') {
             $response['errors']['server error'] = ['Something went wrong'];
+            return ApiResponse::success(errors: $response['errors'], statusCode: $statusCode);
+        } catch (\Exception $e) {
+            return ApiResponse::error(request: $request, exception: $e);
         }
+    }
 
-        return response()->json($response, $statusCode);
+    public static function activity(
+        $request,
+        string $description,
+        bool $showable = false,
+    ) {
+        try {
+            ActivityLog::create((new ActivityLogDTO(data: ['request' => $request, 'description' => $description, 'showable' => $showable]))->toArray());
+        } catch (\Exception $e) {
+            return ApiResponse::error(request: $request, exception: $e);
+        }
     }
 }

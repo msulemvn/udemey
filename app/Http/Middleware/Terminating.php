@@ -3,10 +3,11 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use \App\Models\HttpRequest;
+use App\Helpers\ApiResponse;
+use Illuminate\Http\Request;
 use \App\DTOs\HttpRequest\HttpRequestDTO;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class Terminating
@@ -21,10 +22,13 @@ class Terminating
     public function handle(Request $request, Closure $next): Response
     {
         // Log the DTO
-        $httpRequest = HttpRequest::create((new HttpRequestDTO($request))->toArray());
-        $request['request_log_id'] = $httpRequest->id;
-
-        return $next($request);
+        try {
+            $httpRequest = HttpRequest::create((new HttpRequestDTO($request))->toArray());
+            $request['request_log_id'] = $httpRequest->id;
+            return $next($request);
+        } catch (\Exception $e) {
+            return ApiResponse::error(request: $request, exception: $e);
+        }
     }
 
     /**

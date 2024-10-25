@@ -24,7 +24,7 @@ class LoginAuthRequest extends BaseRequest
     public function rules()
     {
         return [
-            'email' => 'required|string|email',
+            'email' => 'required|string|email|exists:users,email',
             'password' => 'required|string',
         ];
     }
@@ -34,6 +34,7 @@ class LoginAuthRequest extends BaseRequest
         return [
             'email.email' => 'The email must be a valid email address.',
             'password.required' => 'The password field is required.',
+            'email.exists' => 'Login failed, Please make sure email and password are correct.',
         ];
     }
 }
