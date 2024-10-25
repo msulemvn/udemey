@@ -14,6 +14,13 @@ class MenuItemResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'order' => $this->order,
+            'is_active' => $this->is_active,
+            'menu_id' => $this->menu_id,
+            'page_id' => $this->page_id,
+        ];
     }
 }
