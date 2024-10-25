@@ -23,3 +23,5 @@ require __DIR__ . '/enrollment/enrollment.php';
 require __DIR__ . '/page/page.php';
 require __DIR__ . '/siteSetting/siteSetting.php';
 require __DIR__ . '/menu/menu.php';
+require __DIR__ . '/menuItem/menuItem.php';
+
