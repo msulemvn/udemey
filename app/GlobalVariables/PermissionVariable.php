@@ -22,6 +22,13 @@ class PermissionVariable
         'api/update-menu/*',
         'api/get-menus',
 
+        'api/create-menu-item',
+        'api/delete-menu-item/*',
+        'api/update-menu-item/*',
+        'api/get-menu-items',
+
+        
+
     ];
 
     public static array $viewProfile = [
