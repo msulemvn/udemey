@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use App\Models\ErrorLog;
-use App\DTOs\ErrorLogs\ErrorLogsDTO;
+use App\DTOs\ErrorLog\ErrorLogDTO;
 
 class ApiResponse
 {
@@ -46,7 +46,7 @@ class ApiResponse
     public static function error(mixed $request, mixed $exception,  int $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
     {
         if ($request && $exception) {
-            $dto = new ErrorLogsDTO([
+            $dto = new ErrorLogDTO([
                 'request' => $request,
                 'exception' => $exception,
                 'function' => debug_backtrace()[1]['function'],
@@ -60,5 +60,13 @@ class ApiResponse
         }
 
         return response()->json($response, $statusCode);
+    }
+
+    public static function activity(
+        $request,
+        string $description,
+        bool $showable = false,
+    ): void {
+
     }
 }

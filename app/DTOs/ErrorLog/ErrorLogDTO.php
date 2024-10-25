@@ -1,10 +1,10 @@
 <?php
 
-namespace App\DTOs\ErrorLogs;
+namespace App\DTOs\ErrorLog;
 
 use App\DTOs\BaseDTO;
 
-class ErrorLogsDTO extends BaseDTO
+class ErrorLogDTO extends BaseDTO
 {
     public $request_log_id;
     public $line_number;

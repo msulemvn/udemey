@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTOs\SiteSettings;
+namespace App\DTOs\SiteSetting;
 
 use App\DTOs\BaseDTO;
 
