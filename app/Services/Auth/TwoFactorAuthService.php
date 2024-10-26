@@ -40,7 +40,7 @@ class TwoFactorAuthService
     /**
      * Enable Google 2-Factor Authentication for the current user.
      *
-     * @param Request $request
+     * @param $request
      * @return mixed
      */
     public function enable2FA($data)

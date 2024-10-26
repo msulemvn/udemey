@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\User\RegisterController;
 use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\TwoFactorAuthController;
 
@@ -22,7 +23,7 @@ Route::post('/login', [AuthController::class, 'login'])
 Route::post('/refresh', [AuthController::class, 'refresh'])
     ->name('refresh');
 
-Route::post('/forgot-password', PasswordResetController::class)
+Route::post('/forgot-password', PasswordResetLinkController::class)
     ->name('password.email');
 
 Route::post('/reset-password', PasswordResetController::class)

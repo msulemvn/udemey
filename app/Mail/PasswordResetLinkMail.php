@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class PasswordResetMail extends Mailable
+class PasswordResetLinkMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
@@ -29,7 +29,7 @@ class PasswordResetMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: config('app.name') . ' - Password Information',
+            subject: config('app.name') . ' - Password Reset',
         );
     }
 
@@ -40,7 +40,7 @@ class PasswordResetMail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.reset')
+        return $this->view('emails.forgot')
             ->subject(subject: config('app.name') . ' - Password Reset')
             ->from('your-email@example.com', config('app.name'));
     }

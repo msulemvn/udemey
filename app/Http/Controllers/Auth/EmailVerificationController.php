@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Services\Auth\EmailVerificationService;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Http\Requests\Auth\EmailVerificationRequest;
+
 
 class EmailVerificationController extends Controller
 {
@@ -23,7 +25,7 @@ class EmailVerificationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(): JsonResponse
+    public function __invoke(EmailVerificationRequest $request): JsonResponse
     {
         $user = Auth::user();
         /** @var \App\Models\User|null $user */

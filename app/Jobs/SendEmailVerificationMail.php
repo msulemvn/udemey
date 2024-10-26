@@ -2,15 +2,14 @@
 
 namespace App\Jobs;
 
+use App\Mail\EmailVerificationMail;
 use Illuminate\Http\Request;
-use App\Mail\VerifyEmailMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 class SendEmailVerificationMail implements ShouldQueue
 {
@@ -33,7 +32,7 @@ class SendEmailVerificationMail implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->data['email'])->send(new VerifyEmailMail($this->data));
+        Mail::to($this->data['email'])->send(new EmailVerificationMail($this->data));
     }
 
     public function sendMail(Request $request)
@@ -47,7 +46,7 @@ class SendEmailVerificationMail implements ShouldQueue
         SendEmailVerificationMail::dispatch($data);
 
         // Assert mail was sent
-        Mail::assertSent(VerifyEmailMail::class, function ($mail) use ($data) {
+        Mail::assertSent(EmailVerificationMail::class, function ($mail) use ($data) {
             return $mail->data === $data;
         });
     }

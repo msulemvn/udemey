@@ -2,8 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\TestMail;
-use App\Mail\TwoFactorAuthenticationMail;
+use App\Mail\TwoFactorAuthMail;
 use Illuminate\Http\Request;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Mail;
@@ -11,7 +10,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 class Send2FAMail implements ShouldQueue
 {
@@ -34,7 +32,7 @@ class Send2FAMail implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->data['email'])->send(new TwoFactorAuthenticationMail($this->data));
+        Mail::to($this->data['email'])->send(new TwoFactorAuthMail($this->data));
     }
 
     public function sendMail(Request $request)
@@ -48,7 +46,7 @@ class Send2FAMail implements ShouldQueue
         Send2FAMail::dispatch($data);
 
         // Assert mail was sent
-        Mail::assertSent(TwoFactorAuthenticationMail::class, function ($mail) use ($data) {
+        Mail::assertSent(TwoFactorAuthMail::class, function ($mail) use ($data) {
             return $mail->data === $data;
         });
     }
