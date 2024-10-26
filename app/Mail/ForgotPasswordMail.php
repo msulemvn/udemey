@@ -31,7 +31,7 @@ class ForgotPasswordMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Forgot Password Mail',
+            subject: config('app.name') . ' - Password Reset',
         );
     }
 
@@ -43,8 +43,8 @@ class ForgotPasswordMail extends Mailable
     public function build()
     {
         return $this->view('emails.password')
-            ->subject('Forgot Password Mail Subject')
-            ->from('your-email@example.com', 'Your Name');
+            ->subject(subject: config('app.name') . ' - Password Reset')
+            ->from('your-email@example.com', config('app.name'));
     }
 
     /**
