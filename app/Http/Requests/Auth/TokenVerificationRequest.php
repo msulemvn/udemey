@@ -5,7 +5,7 @@ namespace App\Http\Requests\Auth;
 use App\Http\Requests\BaseRequest;
 
 
-class VerifyTokenAuthRequest extends BaseRequest
+class TokenVerificationRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.

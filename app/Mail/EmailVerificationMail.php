@@ -3,13 +3,11 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ForgotPasswordMail extends Mailable
+class EmailVerificationMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
@@ -31,7 +29,7 @@ class ForgotPasswordMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Forgot Password Mail',
+            subject: 'Verify Email Mail',
         );
     }
 
@@ -42,9 +40,9 @@ class ForgotPasswordMail extends Mailable
      */
     public function build()
     {
-        return $this->view('forgotPassword')
-            ->subject('Forgot Password Mail Subject')
-            ->from('your-email@example.com', 'Your Name');
+        return $this->view('emails.verify')
+            ->subject(subject: config('app.name') . ' - Email Verification')
+            ->from('your-email@example.com', config('app.name'));
     }
 
     /**

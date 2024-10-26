@@ -3,13 +3,11 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class TwoFactorAuthenticationMail extends Mailable
+class PasswordResetLinkMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
@@ -31,7 +29,7 @@ class TwoFactorAuthenticationMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Two Factor Authentication Mail',
+            subject: config('app.name') . ' - Password Reset',
         );
     }
 
@@ -42,9 +40,9 @@ class TwoFactorAuthenticationMail extends Mailable
      */
     public function build()
     {
-        return $this->view('twoFactorAuthentication')
-            ->subject('Two Factor Authentication Mail Subject')
-            ->from('your-email@example.com', 'Your Name');
+        return $this->view('emails.forgot')
+            ->subject(subject: config('app.name') . ' - Password Reset')
+            ->from('your-email@example.com', config('app.name'));
     }
 
     /**

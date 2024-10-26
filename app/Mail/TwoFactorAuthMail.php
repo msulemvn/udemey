@@ -3,13 +3,11 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class VerifyEmailMail extends Mailable
+class TwoFactorAuthMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
@@ -31,7 +29,7 @@ class VerifyEmailMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Verify Email Mail',
+            subject: 'Two Factor Authentication Mail',
         );
     }
 
@@ -42,9 +40,9 @@ class VerifyEmailMail extends Mailable
      */
     public function build()
     {
-        return $this->view('verifyEmail')
-            ->subject('Verify Email Mail Subject')
-            ->from('your-email@example.com', 'Your Name');
+        return $this->view('emails.2fa')
+            ->subject(subject: config('app.name' . ' Login Code: ' . '123456'))
+            ->from('your-email@example.com', config('app.name'));
     }
 
     /**

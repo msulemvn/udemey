@@ -3,11 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\User\RegisterController;
-use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\Auth\SendPasswordResetLinkController;
-use App\Http\Controllers\Auth\SendEmailVerificationNotificationController;
-use App\Http\Controllers\Auth\TwoFactorController;
+use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Auth\TwoFactorAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,10 +23,10 @@ Route::post('/login', [AuthController::class, 'login'])
 Route::post('/refresh', [AuthController::class, 'refresh'])
     ->name('refresh');
 
-Route::post('/forgot-password', SendPasswordResetLinkController::class)
+Route::post('/forgot-password', PasswordResetLinkController::class)
     ->name('password.email');
 
-Route::post('/reset-password', ResetPasswordController::class)
+Route::post('/reset-password', PasswordResetController::class)
     ->name('password.update');
 
 /*
@@ -37,18 +36,18 @@ Route::post('/reset-password', ResetPasswordController::class)
 */
 
 Route::middleware('auth:api')->group(function () {
-    Route::post('/email/verification-notification', SendEmailVerificationNotificationController::class)
+    Route::post('/email/verification-notification', EmailVerificationController::class)
         ->middleware(['throttle:6,1'])
         ->name('verification.send');
 
-    Route::get('/verify-email/{id}/{hash}', VerifyEmailController::class)
+    Route::get('/verify-email/{id}/{hash}', EmailVerificationController::class)
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
 
     Route::post('/logout', [AuthController::class, 'logout'])
         ->name('logout');
 
-    Route::controller(TwoFactorController::class)->group(function () {
+    Route::controller(TwoFactorAuthController::class)->group(function () {
         Route::get('/generate-secret-key', 'generateSecretKey');
         Route::post('/enable-2fa', 'enable2FA');
         Route::post('/disable-2fa', 'disable2FA');

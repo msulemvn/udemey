@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class TwoFactorService
+class TwoFactorAuthService
 {
     /**
      * Generate two-factor authentication
@@ -40,7 +40,7 @@ class TwoFactorService
     /**
      * Enable Google 2-Factor Authentication for the current user.
      *
-     * @param Request $request
+     * @param $request
      * @return mixed
      */
     public function enable2FA($data)

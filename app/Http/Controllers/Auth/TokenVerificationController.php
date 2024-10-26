@@ -7,10 +7,10 @@ use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Password;
 use Symfony\Component\HttpFoundation\Response;
-use App\Http\Requests\Auth\VerifyTokenAuthRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Http\Requests\Auth\TokenVerificationRequest;
 
-class VerifyTokenController extends Controller
+class TokenVerificationController extends Controller
 {
     /**
      * Handle the incoming request.
@@ -18,7 +18,7 @@ class VerifyTokenController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(VerifyTokenAuthRequest $request): JsonResponse
+    public function __invoke(TokenVerificationRequest $request): JsonResponse
     {
         $validatedData = $request->safe()->only(['email', 'token']);
         $user = User::where('email', $validatedData['email'])->first();

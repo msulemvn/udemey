@@ -4,7 +4,7 @@ namespace App\Http\Requests\Auth;
 
 use App\Http\Requests\BaseRequest;
 
-class SendPasswordResetLinkAuthRequest extends BaseRequest
+class ForgotPasswordRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
