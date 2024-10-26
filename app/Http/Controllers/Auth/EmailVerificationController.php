@@ -10,11 +10,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class EmailVerificationController extends Controller
 {
-    private $sendEmailVerificationService;
+    private $emailVerification;
 
-    public function __construct(EmailVerificationService $sendEmailVerificationService)
+    public function __construct(EmailVerificationService $emailVerification)
     {
-        $this->sendEmailVerificationService = $sendEmailVerificationService;
+        $this->emailVerification = $emailVerification;
     }
 
     /**

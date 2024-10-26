@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Auth\VerifyTokenAuthRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class VerifyTokenController extends Controller
+class TokenVerificationController extends Controller
 {
     /**
      * Handle the incoming request.

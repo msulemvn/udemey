@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Auth;
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Services\Auth\ResetPasswordService;
+use App\Services\Auth\PasswordResetService;
 use App\Http\Requests\Auth\ResetPasswordAuthRequest;
 
 class PasswordResetController extends Controller
 {
     protected $resetPasswordService;
-    public function __construct(ResetPasswordService $resetPasswordService)
+    public function __construct(PasswordResetService $passwordReset)
     {
-        $this->resetPasswordService = $resetPasswordService;
+        $this->resetPasswordService = $passwordReset;
     }
 
     /**

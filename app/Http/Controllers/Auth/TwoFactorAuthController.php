@@ -6,20 +6,19 @@ use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\Auth\TwoFactorAuthService;
-use Symfony\Component\HttpFoundation\Response;
 
 class TwoFactorAuthController extends Controller
 {
-    private $twoFactorService;
+    private $twoFactor;
 
-    public function __construct(TwoFactorAuthService $twoFactorService)
+    public function __construct(TwoFactorAuthService $twoFactor)
     {
-        $this->twoFactorService = $twoFactorService;
+        $this->twoFactor = $twoFactor;
     }
 
     public function verify2FA(Request $request)
     {
-        $response = $this->twoFactorService->verify2FA($request);
+        $response = $this->twoFactor->verify2FA($request);
         return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
@@ -31,7 +30,7 @@ class TwoFactorAuthController extends Controller
      */
     public function generateSecretKey(Request $request)
     {
-        $response = $this->twoFactorService->generateSecretKey($request);
+        $response = $this->twoFactor->generateSecretKey($request);
         return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
@@ -43,7 +42,7 @@ class TwoFactorAuthController extends Controller
      */
     public function enable2FA(Request $request)
     {
-        $response = $this->twoFactorService->enable2FA($request);
+        $response = $this->twoFactor->enable2FA($request);
         return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 
@@ -55,7 +54,7 @@ class TwoFactorAuthController extends Controller
      */
     public function disable2FA(Request $request)
     {
-        $response = $this->twoFactorService->disable2FA($request);;
+        $response = $this->twoFactor->disable2FA($request);;
         return ApiResponse::success(message: $response['message'] ?? null, data: $response['data'] ?? [], errors: $response['errors'] ?? [], statusCode: $response['statusCode'] ?? 200);
     }
 }
