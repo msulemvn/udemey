@@ -12,7 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class SendVerifyEmailMail implements ShouldQueue
+class SendEmailVerificationMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     protected $data;
@@ -44,7 +44,7 @@ class SendVerifyEmailMail implements ShouldQueue
             'message' => 'Hello, this is a custom mail!',
         ];
 
-        SendVerifyEmailMail::dispatch($data);
+        SendEmailVerificationMail::dispatch($data);
 
         // Assert mail was sent
         Mail::assertSent(VerifyEmailMail::class, function ($mail) use ($data) {

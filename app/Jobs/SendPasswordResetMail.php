@@ -2,8 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\TestMail;
-use App\Mail\TwoFactorAuthenticationMail;
+use App\Mail\ForgotPasswordMail;
 use Illuminate\Http\Request;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Mail;
@@ -13,7 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class SendTwoFactorAuthenticationMail implements ShouldQueue
+class SendPasswordResetMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     protected $data;
@@ -34,21 +33,17 @@ class SendTwoFactorAuthenticationMail implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->data['email'])->send(new TwoFactorAuthenticationMail($this->data));
+        Mail::to($this->data['email'])->send(new ForgotPasswordMail($this->data));
     }
 
     public function sendMail(Request $request)
     {
-        $data = [
-            'name' => 'John Doe',
-            'email' => 'john.doe@example.com',
-            'message' => 'Hello, this is a custom mail!',
-        ];
+        $data = $request['data'];
 
-        SendTwoFactorAuthenticationMail::dispatch($data);
+        SendPasswordResetMail::dispatch($data);
 
         // Assert mail was sent
-        Mail::assertSent(TwoFactorAuthenticationMail::class, function ($mail) use ($data) {
+        Mail::assertSent(ForgotPasswordMail::class, function ($mail) use ($data) {
             return $mail->data === $data;
         });
     }

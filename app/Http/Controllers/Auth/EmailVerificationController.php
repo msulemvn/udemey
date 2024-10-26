@@ -4,17 +4,17 @@ namespace App\Http\Controllers\Auth;
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Services\Auth\SendEmailVerificationNotificationService;
+use App\Services\Auth\EmailVerificationService;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class SendEmailVerificationNotificationController extends Controller
+class EmailVerificationController extends Controller
 {
-    private $sendEmailVerificationNotificationService;
+    private $sendEmailVerificationService;
 
-    public function __construct(SendEmailVerificationNotificationService $sendEmailVerificationNotificationService)
+    public function __construct(EmailVerificationService $sendEmailVerificationService)
     {
-        $this->sendEmailVerificationNotificationService = $sendEmailVerificationNotificationService;
+        $this->sendEmailVerificationService = $sendEmailVerificationService;
     }
 
     /**
@@ -33,7 +33,7 @@ class SendEmailVerificationNotificationController extends Controller
         }
 
         /** @var \App\Models\User|null $user */
-        $user->sendEmailVerificationNotification();
+        $user->sendEmailVerification();
 
         return ApiResponse::success(message: 'Email verification link sent successfully.');
     }

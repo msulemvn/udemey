@@ -5,14 +5,14 @@ namespace App\Http\Controllers\Auth;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Services\Auth\TwoFactorService;
+use App\Services\Auth\TwoFactorAuthService;
 use Symfony\Component\HttpFoundation\Response;
 
-class TwoFactorController extends Controller
+class TwoFactorAuthController extends Controller
 {
     private $twoFactorService;
 
-    public function __construct(TwoFactorService $twoFactorService)
+    public function __construct(TwoFactorAuthService $twoFactorService)
     {
         $this->twoFactorService = $twoFactorService;
     }
