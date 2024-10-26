@@ -1,4 +1,4 @@
-<!-- resources/views/emails/verifyEmail.blade.php -->
+<!-- resources/views/emails/verify.blade.php -->
 
 <h1>Verify Email Mail</h1>
 
