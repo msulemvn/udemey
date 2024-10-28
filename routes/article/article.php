@@ -13,6 +13,7 @@ Route::middleware('auth:api')->group(function () {
             Route::post('create-article', 'store');
             Route::put('update-article/{id}', 'update');
             Route::delete('delete-article/{id}', 'destroy');
+            Route::get('article/{id}', 'show');
         });
     });
 });
