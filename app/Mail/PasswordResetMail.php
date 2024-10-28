@@ -42,7 +42,7 @@ class PasswordResetMail extends Mailable
     {
         return $this->view('emails.reset')
             ->subject(subject: config('app.name') . ' - Password Reset')
-            ->from('your-email@example.com', config('app.name'));
+            ->from('udemey@example.com', config('app.name'));
     }
 
     /**

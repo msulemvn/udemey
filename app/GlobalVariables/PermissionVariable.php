@@ -9,6 +9,7 @@ class PermissionVariable
         'api/login',
         'api/register',
         'api/forgot-password',
+        'api/reset-password',
         'api/verify-token',
         'api/categories',
         'api/categories/*',
@@ -27,7 +28,7 @@ class PermissionVariable
         'api/update-menu-item/*',
         'api/get-menu-items',
 
-        
+
 
     ];
 
@@ -52,12 +53,6 @@ class PermissionVariable
     public static array $changePassword = [
         'path' => 'api/change-password',
         'permission' => 'User can change password',
-        'roles' => ['admin', 'student']
-    ];
-
-    public static array $resetPassword = [
-        'path' => 'api/reset-password',
-        'permission' => 'User can reset password',
         'roles' => ['admin', 'student']
     ];
 
@@ -339,7 +334,6 @@ class PermissionVariable
             //Auth
             self::$viewProfile,
             self::$changePassword,
-            self::$resetPassword,
             self::$canRefresh,
             self::$canLogout,
             //2FA
