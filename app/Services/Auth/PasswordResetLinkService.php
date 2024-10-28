@@ -17,10 +17,8 @@ class PasswordResetLinkService
     {
         $user = User::where('email', $request->email)->first();
         try {
-            $token = PasswordReset::where('email', $user->email)->first()->token ?? PasswordReset::create([
-                'email' => $user->email,
-                'token' => Hash::make(Str::random(60)),
-            ])->token;
+            $token = Str::random(60);
+            PasswordReset::createToken($user->email, $token);
             $status = SendPasswordResetLinkMail::dispatch([
                 'name' => $user->name,
                 'email' => $user->email,

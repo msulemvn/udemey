@@ -4,9 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\User\RegisterController;
 use App\Http\Controllers\Auth\PasswordResetController;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\TwoFactorAuthController;
+use App\Http\Controllers\Auth\ChangePasswordController;
+use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,9 @@ Route::post('/forgot-password', PasswordResetLinkController::class)
 
 Route::post('/reset-password', PasswordResetController::class)
     ->name('password.update');
+
+Route::post('/change-password', ChangePasswordController::class)
+    ->name('password.change');
 
 /*
 |--------------------------------------------------------------------------
