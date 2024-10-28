@@ -40,14 +40,6 @@ Route::post('/change-password', ChangePasswordController::class)
 */
 
 Route::middleware('auth:api')->group(function () {
-    Route::post('/email/verification-notification', EmailVerificationController::class)
-        ->middleware(['throttle:6,1'])
-        ->name('verification.send');
-
-    Route::get('/verify-email/{id}/{hash}', EmailVerificationController::class)
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
-
     Route::post('/logout', [AuthController::class, 'logout'])
         ->name('logout');
 
