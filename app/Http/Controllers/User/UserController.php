@@ -19,9 +19,13 @@ class UserController extends Controller
     public function profile()
     {
         $response = $this->userService->profile();
-        return ApiResponse::success(data: $response['data' ?? null]);
+        return ApiResponse::success(data: $response['data'] ?? []);
     }
-
+    public function profiles()
+    {
+        $response = $this->userService->profiles();
+        return ApiResponse::success(data: $response['data'] ?? []);
+    }
 
     public function changePassword(ChangePasswordUserRequest $request)
     {

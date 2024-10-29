@@ -38,6 +38,12 @@ class PermissionVariable
         'roles' => ['admin', 'student']
     ];
 
+    public static array $viewProfiles = [
+        'path' => 'api/profiles',
+        'permission' => 'User can view profiles',
+        'roles' => ['admin']
+    ];
+
     public static array $canRefresh = [
         'path' => 'api/refresh',
         'permission' => 'User can refresh',
@@ -340,6 +346,7 @@ class PermissionVariable
         return [
             //Auth
             self::$viewProfile,
+            self::$viewProfiles,
             self::$changePassword,
             self::$canRefresh,
             self::$canLogout,
