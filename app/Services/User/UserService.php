@@ -69,15 +69,16 @@ class UserService
     }
     public function profiles()
     {
-        return ['data' => User::get()->filter(function ($user) {
-            return $user->google2fa_secret !== null;
-        })->map(function ($user) {
-            return [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                '2fa' => $user->google2fa_secret ? true : false,
-            ];
-        })->toArray()];
+        return ['data' => User::get()
+            ->filter->google2fa_secret
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    '2fa' => (bool) $user->google2fa_secret,
+                ];
+            })->values()
+            ->all()];
     }
 }

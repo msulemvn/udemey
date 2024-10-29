@@ -2,12 +2,13 @@
 
 namespace App\Services\Auth;
 
+use App\Models\User;
 use App\Helpers\ApiResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use PragmaRX\Google2FA\Google2FA;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
+use Symfony\Component\HttpFoundation\Response;
 
 class TwoFactorAuthService
 {
@@ -42,7 +43,7 @@ class TwoFactorAuthService
      * @param $request
      * @return mixed
      */
-    public function enable2FA($data)
+    public function enable2FA($request)
     {
         $user = Auth::user();
         // Check if 2FA already enabled
@@ -58,7 +59,7 @@ class TwoFactorAuthService
 
 
 
-        $otp = $data->input('one_time_password'); // Get OTP from user input
+        $otp = $request->input('one_time_password'); // Get OTP from user input
 
         $google2fa = new Google2FA();
         /** @var \PragmaRX\Google2FA\Google2FA|null $google2fa */
@@ -77,10 +78,10 @@ class TwoFactorAuthService
     /**
      * Disable Google 2-Factor Authentication for the current user.
      *
-     * @param Request $request
+     * @param mixed
      * @return mixed
      */
-    public function disable2FA($data)
+    public function disable2FA($request)
     {
         $user = Auth::user();
         // Check if 2FA already enabled
@@ -88,7 +89,7 @@ class TwoFactorAuthService
             return ['message' => '2-Factor Authentication is already disabled.'];
         }
 
-        $password = $data->input('password');
+        $password = $request->input('password');
         // Verify password
         if (Hash::check($password, $user->password)) {
             try {
@@ -98,10 +99,35 @@ class TwoFactorAuthService
                 $result = $user->save();
                 return ['message' => $result ? '2-Factor Authentication successfully disabled.' : 'Failed to disable 2-Factor Authentication'];
             } catch (\Exception $e) {
-                ApiResponse::error(request: $data, exception: $e);
+                ApiResponse::error(request: $request, exception: $e);
             }
         } else {
             return ['errors' => ['password' => ['Password is invalid']]];
+        }
+    }
+
+    /**
+     * Disable Google 2-Factor Authentication for the current user.
+     *
+     * @param mixed $request
+     * @return mixed
+     */
+    public function reset2FA($request)
+    {
+        $user = User::find($request->userId);
+        // Check if 2FA already enabled
+        if (!$user->google2fa_secret) {
+            return ['message' => '2-Factor Authentication is already disabled.'];
+        }
+
+        try {
+            // OTP is valid
+            $user->google2fa_secret = null;
+            /** @var \App\Models\User|null $user */
+            $result = $user->save();
+            return ['message' => $result ? '2-Factor Authentication successfully reset.' : 'Failed to reset 2-Factor Authentication'];
+        } catch (\Exception $e) {
+            ApiResponse::error(request: $request, exception: $e);
         }
     }
 

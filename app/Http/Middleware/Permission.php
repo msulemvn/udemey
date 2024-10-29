@@ -27,7 +27,6 @@ class Permission
                 return $next($request);
             }
         }
-
         $user = Auth::user();
         if ($user) {
             /** @var \App\Models\User|null $user */

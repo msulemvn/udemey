@@ -77,6 +77,13 @@ class PermissionVariable
         'permission' => 'User can disable 2FA',
         'roles' => ['admin', 'student']
     ];
+
+    public static array $reset2FA = [
+        'path' => 'api/reset-2fa',
+        'permission' => 'User can reset 2FA',
+        'roles' => ['admin'],
+        'postfix' => '*'
+    ];
     public static array $verify2FA = [
         'path' => 'api/verify-2fa',
         'permission' => 'User can verify 2FA',
@@ -354,6 +361,7 @@ class PermissionVariable
             self::$generateSecret,
             self::$enable2FA,
             self::$disable2FA,
+            self::$reset2FA,
             self::$verify2FA,
             //Comment
             self::$getComments,
