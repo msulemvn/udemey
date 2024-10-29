@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use PragmaRX\Google2FA\Google2FA;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class TwoFactorAuthService
@@ -127,107 +126,5 @@ class TwoFactorAuthService
         }
 
         return ['message' => 'one_time_password verified successfully'];
-    }
-
-    /**
-     * Check if the request is valid
-     *
-     * @param int $userId
-     * @param bool $attempt
-     * @return bool
-     */
-    protected function isValidRequest($userId, $attempt)
-    {
-        return $userId && $attempt;
-    }
-
-    /**
-     * Get the user instance
-     *
-     * @param int $userId
-     * @return User|null
-     */
-    protected function getUser($userId)
-    {
-        return User::find($userId);
-    }
-
-    /**
-     * Check if the user is valid
-     *
-     * @param User $user
-     * @return bool
-     */
-    protected function isValidUser($user)
-    {
-        return $user && $user->uses_two_factor_auth;
-    }
-
-    /**
-     * Verify one-time password
-     *
-     * @param User $user
-     * @param string $otp
-     * @return bool
-     */
-    protected function verifyOtp($user, $otp)
-    {
-        $google2fa = new Google2FA();
-        return $google2fa->verifyKey($user->google2fa_secret, $otp);
-    }
-
-    /**
-     * Get the authentication guard
-     *
-     * @param bool $remember
-     * @param bool $attempt
-     * @return string
-     */
-    protected function getGuard($remember, $attempt)
-    {
-        $guard = config('auth.defaults.guard');
-        if ($remember) {
-            $guard = config('auth.defaults.remember_me_guard', $guard);
-        }
-        if ($attempt) {
-            $guard = config('auth.defaults.attempt_guard', $guard);
-        }
-        return $guard;
-    }
-
-    /**
-     * Get the authentication credentials
-     *
-     * @param User $user
-     * @return array
-     */
-    protected function getCredentials($user)
-    {
-        return [$user->getAuthIdentifierName() => $user->getAuthIdentifier(), 'password' => $user->getAuthPassword()];
-    }
-
-    /**
-     * Authenticate the user
-     *
-     * @param string $guard
-     * @param array $credentials
-     * @param bool $remember
-     * @return bool
-     */
-    protected function authenticate($guard, $credentials, $remember)
-    {
-        return Auth::guard($guard)->attempt($credentials, $remember);
-    }
-
-    /**
-     * Clear session data
-     *
-     * @param mixed $request
-     */
-    protected function clearSession($request)
-    {
-        $request->session()->remove('2fa:user:id');
-        $request->session()->remove('2fa:auth:remember');
-        $request->session()->remove('2fa:auth:attempt');
     }
 }
